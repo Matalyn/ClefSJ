@@ -428,11 +428,17 @@ def resultAddClient():
 	phoneNumber = request.form['phoneNumber']
 	conn = mysql.connect()
 	cursor = conn.cursor()
-	cursor.execute("insert into client values('"+email+"', '"+firstName+"', '"+lastName+"', '"+address+"', '"+city+"', '"+province+"', '"+postcode+"', '"+phoneNumber+"')")
-	conn.commit()
-	cursor.execute("select * from client where email='"+email+"'")
-	client = cursor.fetchone()
-	return render_template('resultAddClient.html', client = client)
+	if cursor.execute("SELECT * FROM client WHERE email=?", (email,)).fetchone() is not None:
+		error = 'User with email {} is already registered.'.format(email)
+		flash(error)
+		return render_template('addClient.html')
+
+	else:
+		cursor.execute("insert into client values('"+email+"', '"+firstName+"', '"+lastName+"', '"+address+"', '"+city+"', '"+province+"', '"+postcode+"', '"+phoneNumber+"')")
+		conn.commit()
+		cursor.execute("select * from client where email='"+email+"'")
+		client = cursor.fetchone()
+		return render_template('resultAddClient.html', client = client)
 
 @app.route('/changeClient', methods = ['POST', 'GET'])
 #add new client
@@ -728,11 +734,16 @@ def resultAddAdmin():
 	adminType = cursor.fetchone()[4]
 	if not adminType == 'super':
 		return render_template("invalidPriority.html")
-	cursor.execute("insert into admin values('"+email+"', '"+password+"', '"+firstName+"', '"+lastName+"','regular','active', 'no')")
-	conn.commit()
-	cursor.execute("select * from admin where email='"+email+"'")
-	admin = cursor.fetchone()
-	return render_template('resultAddAdmin.html', admin=admin)
+	if cursor.execute("SELECT * FROM admin WHERE email=?", (email,)).fetchone() is not None:
+		error = 'Admin with email {} is already registered.'.format(email)
+		flash(error)
+		return render_template('addAdmin.html')
+	else:
+		cursor.execute("insert into admin values('"+email+"', '"+password+"', '"+firstName+"', '"+lastName+"','regular','active', 'no')")
+		conn.commit()
+		cursor.execute("select * from admin where email='"+email+"'")
+		admin = cursor.fetchone()
+		return render_template('resultAddAdmin.html', admin=admin)
 
 @app.route('/activateAdmin', methods = ['POST', 'GET'])
 #bureau
