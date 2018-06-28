@@ -12,19 +12,19 @@ app.secret_key = "development_key"
 #app configaration section for mysql server connection
 #this set of configuration is for production environment 
 mysql = MySQL()
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-app.config['MYSQL_DATABASE_USER'] = 'clefadmin'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'atabyru8a'
-app.config['MYSQL_DATABASE_DB'] = 'clefadmin_db'
+app.config['MYSQL_DATABASE_HOST'] = 'xxxxx'
+app.config['MYSQL_DATABASE_USER'] = 'xxxxx'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'xxxxx'
+app.config['MYSQL_DATABASE_DB'] = 'xxxxxx'
 mysql.init_app(app)
 
 #this set of configuration is for development environment
 #mysql = MySQL()
-#app.config['MYSQL_DATABASE_HOST'] = '129.128.136.21'
-#app.config['MYSQL_DATABASE_PORT'] = 3306
-#app.config['MYSQL_DATABASE_USER'] = 'root'
-#app.config['MYSQL_DATABASE_PASSWORD'] = 'ic7CR8s'
-#app.config['MYSQL_DATABASE_DB'] = 'shinkey'
+#app.config['MYSQL_DATABASE_HOST'] = 'xxxx'
+#app.config['MYSQL_DATABASE_PORT'] = xxxx
+#app.config['MYSQL_DATABASE_USER'] = 'xxxx'
+#app.config['MYSQL_DATABASE_PASSWORD'] = 'xxxx'
+#app.config['MYSQL_DATABASE_DB'] = 'xxxxx'
 #mysql.init_app(app)
 
 
