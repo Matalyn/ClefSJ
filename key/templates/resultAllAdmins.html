@@ -1,0 +1,42 @@
+{% extends 'layout.html'%}
+
+{% block main %}
+	<div class="container">
+		<br/>
+		 <h1 class="text-center" style="color: #f0ad4e">All Admins</h1>
+		<br/>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Account Email</th>
+					<th>Password</th>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Type</th>
+					<th>Status</th>
+					<th>Current Login</th>
+				</tr>
+			</thead>
+			<tbody>
+				{%for admin in admins%}
+				<tr>
+					<!--email-->
+					<td>{{admin[0]}}</td>
+					<!--password-->
+					<td>{{admin[1]}}</td>
+					<!--firstname-->
+					<td>{{admin[2]}}</td>
+					<!--lastname-->
+					<td>{{admin[3]}}</td>
+					<!--type-->
+					<td>{{admin[4]}}</td>
+					<!--status-->
+					<td>{{admin[5]}}</td>
+					<!--current admin-->
+					<td>{{admin[6]}}</td>
+				</tr>
+				{%endfor%}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}

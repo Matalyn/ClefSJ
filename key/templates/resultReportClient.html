@@ -1,0 +1,146 @@
+{% extends 'layout.html'%}
+
+{% block main %}
+	<div class="container">
+		<br/>
+		 <h1 class="text-center" style="color: #f0ad4e">Client Report</h1>
+		<br/>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Email</th>
+					<th>FistName</th>
+					<th>Last Name</th>
+					<th>Address</th>
+					<th>City</th>
+					<th>Province</th>
+					<th>Postcode</th>
+					<th>phoneNumber</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<!--email-->
+					<td>{{client[0]}}</td>
+					<!--fistName-->
+					<td>{{client[1]}}</td>
+					<!--lastName-->
+					<td>{{client[2]}}</td>
+					<!--address-->
+					<td>{{client[3]}}</td>
+					<!--city-->
+					<td>{{client[4]}}</td>
+					<!--privince-->
+					<td>{{client[5]}}</td>
+					<!--postcode-->
+					<td>{{client[6]}}</td>
+					<!--phoneNumber-->
+					<td>{{client[7]}}</td>
+				</tr>
+			</tbody>
+		</table>
+		
+	<br/>
+		<P class='text-center'> currently this client holding:</P>
+		
+				<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>key Number</th>
+					<th>copy Number</th>
+					<th>room</th>
+					<th>opens</th>
+					<th>lendDate</th>
+					<th>expectedReturnDate</th>
+				</tr>
+			</thead>
+			<tbody>
+				{%for key in lend%}
+				<tr>
+					<!--keyNumber-->
+					<td>{{key[0]}}</td>
+					<!--copyNumber-->
+					<td>{{key[1]}}</td>
+					<!--room-->
+					<td>{{key[2]}}</td>
+					<!--opens-->
+					<td>{{key[3]}}</td>
+					<!--lendDate-->
+					<td>{{key[4]}}</td>
+					<!--expectedRetuenDate-->
+					<td>{{key[5]}}</td>
+				</tr>
+				{%endfor%}
+			</tbody>
+		</table>
+		
+			<br/>
+		<P class='text-center'>  this client lost before:</P>
+		
+				<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>key Number</th>
+					<th>copy Number</th>
+					<th>room</th>
+					<th>opens</th>
+					<th>lendDate</th>
+					<th>dateLost</th>
+				</tr>
+			</thead>
+			<tbody>
+				{%for key in lost%}
+				<tr>
+					<!--keyNumber-->
+					<td>{{key[0]}}</td>
+					<!--copyNumber-->
+					<td>{{key[1]}}</td>
+					<!--room-->
+					<td>{{key[2]}}</td>
+					<!--opens-->
+					<td>{{key[3]}}</td>
+					<!--lendDate-->
+					<td>{{key[4]}}</td>
+					<!--expectedRetuenDate-->
+					<td>{{key[5]}}</td>
+				</tr>
+				{%endfor%}
+			</tbody>
+		</table>
+		
+		
+			<br/>
+		<P class='text-center'>  this client's lend-return history:</P>
+		
+				<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>key Number</th>
+					<th>copy Number</th>
+					<th>room</th>
+					<th>opens</th>
+					<th>lendDate</th>
+					<th>dateLost</th>
+				</tr>
+			</thead>
+			<tbody>
+				{%for key in returnhistory%}
+				<tr>
+					<!--keyNumber-->
+					<td>{{key[0]}}</td>
+					<!--copyNumber-->
+					<td>{{key[1]}}</td>
+					<!--room-->
+					<td>{{key[2]}}</td>
+					<!--opens-->
+					<td>{{key[3]}}</td>
+					<!--lendDate-->
+					<td>{{key[4]}}</td>
+					<!--expectedRetuenDate-->
+					<td>{{key[5]}}</td>
+				</tr>
+				{%endfor%}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}

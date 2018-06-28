@@ -1,0 +1,74 @@
+{% extends 'layout.html'%}
+
+{% block main %}
+	<div class="container">
+		<h3 class="text-center"><strong>FACULTÉ SAINT-JEAN</strong></h3>
+		<h4  class="text-center">Formulaire Loss de clé</h4>
+		<br/>
+		<h5>Coordonnées de Loss</h5>
+		<p class="uppercase">
+			<!--name-->
+			{{client[1]}} {{client[2]}}
+			<!--street address-->
+			<br/>{{client[3]}}
+			<br/>{{client[4]}}, {{client[5]}}, {{client[6]}}
+			<br/>{{client[7]}}
+			<br/>{{client[0]}}
+		</p>
+				<p>When returning, print this as a receipt, send this together with the payback check to client.
+				<p>Veuillez prendre connaisance de ces reglements concernant les depots sur les remprunts et retours de cle
+				<br/>
+				<br/>			Un montant de $20.00 est requis en depot pour chaque cle de bureau ou de salle
+				<br/>			Un montant de $80.00 est requis en depot pour la clef de la prte d'entree
+				<br/>
+				<br/>En cas de perte de cle emprunte ou si la cle n'est past remise a la date obiligatoire indiquee, les montants suivants vous seront factures:
+					<br/>
+				<br/>			$100.00 pour chaque clef de bureau ou de salle
+				<br/>			$500.00 pour la clef de la porte d'entree
+				<br/>
+				<br/>De plus dans chaques cas votre depot ne sera pas remis
+				<br/>Le remboursement se fera uniquement par cheque dans les 30 jours suivant le retour de la clef empruntee
+				</p>
+
+		<br/>
+			<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Key Number</th>
+					<th>Copy Number</th>
+					<th>Loss Penalty Amount</th>
+					<th>Payment Method
+					<th>Lend Date</th>
+					<th>Loss Date</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<!--Key Number-->
+					<td>{{loss[0]}}</td>
+					<!--copy Number-->
+					<td>{{loss[1]}}</td>
+					<!--Deposit Amount-->
+					<td>{{penaltyValue}}</td>
+					<!--Payment Method-->
+					<td>{{loss[5]}}</td>
+					<!--Lend Date-->
+					<td>{{loss[3]}}</td>
+					<!--Loss Date-->
+					<td>{{loss[4]}}</td>
+				</tr>
+				
+				
+			
+			</tbody>
+		</table>
+		
+		<br/>
+		<p>Signiture de l'emprunteur:				
+			<br/>Admin: {{currentUser}}
+			<br/>initiales de la receptionniste
+		</p>
+		<br/>
+			<br/>
+	</div><a class='btn btn-warning' href='#' onclick="printInfo(this)">Print</a>
+{% endblock %}

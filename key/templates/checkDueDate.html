@@ -1,0 +1,37 @@
+{% extends 'layout.html'%}
+
+{% block main %}
+<div class="container">
+	 <br/>
+  <h1 class="text-center" style="color: #f0ad4e">check keys near due</h1>
+	<br/>
+  <div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+      <form class="" method="post" action="{{url_for('resultReportOffices')}}">
+				<fieldset>
+					
+					<div class="form-group">
+          <label for="dueDate" class="sr-only">dueDate</label>
+          <div class="input-group date form_date cosl-sm-10" data-date="" data-date-format="yyyy MM dd" data-link-field="dueDate" data-link-format="yyyy mm dd">
+            <input name="dueDate" class="form-control" type="date" value="" placeholder="expected Date de Revenir" readonly>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+					  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+          </div>
+					<input type="hidden" id="dueDate" value="" /><br/>
+        </div>		
+					
+        <div class="form-group"><!--button submit-->
+          <div class="cols-sm-10">
+              <div class="text-center">
+              <button class=" btn btn-lg btn-warning" name="apply" type="submit">Next</button>
+              </div><!--end text-center-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+				</fieldset>
+      </form>
+    </div>
+    <div class="col-sm-3"></div>
+  </div><!--end row-->
+</div>
+{% endblock %}

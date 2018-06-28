@@ -1,0 +1,38 @@
+{% extends 'layout.html'%}
+
+{% block main %}
+<div class="container">
+  <br/>
+  <h1 class="text-center" style="color: #f0ad4e">Activate une Admin</h1>
+	<br/>
+  <div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+      <form class="" method="post" action="{{url_for('resultActivateAdmin')}}" onsubmit="return validateFormDeleteAdmin(this)">
+				<fieldset>
+       	<div class="form-group">
+					<label for="email" class="sr-only">emailSelection</label>
+					<div class="cols-sm-10">
+						<select class="form-control selectpicker" data-live-search="true" name="email">
+							<option selected disabled class="text-hide" value="">Select account email to Activate</option>
+							{%for admin in admins%}
+							<option value="{{admin[0]}}">{{admin[0]}}</option>
+							{%endfor%}
+						</select>
+					</div><!--end cols-sm-10-->
+				</div><!--end form-group-->
+				<br/>					
+        <div class="form-group"><!--button submit-->
+          <div class="cols-sm-10">
+              <div class="text-center">
+              <button class=" btn btn-lg btn-warning" name="apply" type="submit" onclick="return transectionConfirm()">appliquer</button>
+              </div><!--end text-center-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+				</fieldset>
+      </form>
+    </div>
+    <div class="col-sm-3"></div>
+  </div><!--end row-->
+</div>
+{% endblock %}

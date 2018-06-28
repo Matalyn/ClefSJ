@@ -1,0 +1,41 @@
+{% extends 'layout.html'%}
+<!--This html is a replacing extention of the 'main' block of layout.html.-->
+<!--It allows users to choose from a list of lending keys to return-->
+<!--Each key options will show the clients address information as well-->
+{% block main %}
+<div class="container">
+	<br/>
+  <h1 class="text-center" style="color: #f0ad4e">Revenir</h1>
+	<br/>
+  <div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+      <form method="post" action="{{url_for('resultReturn')}}" onsubmit="return validateFormReturn(this)">
+				<fieldset>		
+				<div class="form-group">
+					<label for="keyNumber_copyNumber" class="sr-only">lendingkeySelection</label>
+					<div class="cols-sm-10">
+						<select class="form-control selectpicker" data-live-search="true" name="keyNumber_copyNumber">
+							<option selected disabled value="" class="text-hide">Select a lending key to return</option>
+							{%for key in keys%}
+							<option value="{{key[0]}} {{(key[1])}}">{{key[0]}}-{{(key[1])}}, {{key[2]}} {{key[3]}}, {{key[4]}}, {{key[5]}} {{key[6]}}, {{key[7]}}</option>
+							{%endfor%}
+						</select>
+					</div><!--end cols-sm-10-->
+					<a href="{{url_for('changeClient')}}">Update Client Information</a>
+				</div><!--end form-group-->    
+				<br/>
+        <div class="form-group"><!--button submit-->
+          <div class="cols-sm-10">
+              <div class="text-center">
+              	<button class=" btn btn-lg btn-warning" name="apply" type="submit" onclick="return transectionConfirm()">Confirm</button>
+              </div><!--end text-center-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+				</fieldset>
+      </form>
+    </div><!--end cols-sm-6-->
+    <div class="col-sm-3"></div>
+  </div><!--end row-->
+</div>
+{% endblock %}

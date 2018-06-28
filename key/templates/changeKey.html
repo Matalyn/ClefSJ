@@ -1,0 +1,52 @@
+{% extends 'layout.html'%}
+
+{% block main %}
+<div class="container">
+  <br/>
+  <h1 class="text-center" style="color: #f0ad4e">Update key-room Information</h1>
+	<br/>
+  <div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+      <form class="" method="post" action="{{url_for('resultChangeKey')}}">
+				<fieldset>
+				
+					
+				<div class="form-group">
+					<label for="keyNumber" class="sr-only">select a key-room to change</label>
+					<div class="cols-sm-10">
+					<select class="form-control selectpicker" data-live-search="true" name="keyNumber">
+						<option selected disabled class="text-hide">select a key-room to change</option>
+						{%for key in keys%}
+						<option value="{{key[0]}}">{{key[0]}}, room: {{key[1]}}</option>
+						{%endfor%}
+					</select>
+					</div>
+				</div>
+					
+				<div class="form-group">
+          <label for='room' class="sr-only">of room: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-building-o" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" name="room" placeholder="room"/>
+            </div><!-- end input-group-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+				
+       
+					
+        <div class="form-group"><!--button submit-->
+          <div class="cols-sm-10">
+              <div class="text-center">
+              <button class=" btn btn-lg btn-warning" name="apply" type="submit">Next</button>
+              </div><!--end text-center-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+				</fieldset>
+      </form>
+    </div>
+    <div class="col-sm-3"></div>
+  </div><!--end row-->
+</div>
+{% endblock %}

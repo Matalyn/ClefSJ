@@ -1,0 +1,46 @@
+{% extends 'layout.html'%}
+
+{% block main %}
+	<div class="container">
+		<br/>
+		<h1 class="text-center" style="color: #f0ad4e">Keys Passed Due</h1>
+		<br/>
+			<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Key Number</th>
+					<th>Copy Number</th>
+					<th>on Date</th>
+					<th>due date</th>
+					<th>firstName</th>
+					<th>lastName</th>
+					<th>Phone Number</th>
+					<th>Email</th>
+				</tr>
+			</thead>
+			<tbody>
+				{%for key in keys%}
+				<tr>
+					<!--Key Number-->
+					<td>{{key[0]}}</td>
+					<!--Kopy Number-->
+					<td>{{key[1]}}</td>
+					<!--lend Date-->
+					<td>{{key[2]}}</td>
+					<!--due date-->
+					<td>{{key[3]}}</td>
+					<!--first Name-->
+					<td>{{key[4]}}</td>
+					<!--last Name-->
+					<td>{{key[5]}}</td>
+					<!--phoneNumber-->
+					<td>{{key[6]}}</td>
+					<!--email-->
+					<td>{{key[7]}}</td>
+				</tr>
+				{%endfor%}
+			</tbody>
+			</table>
+			<br/>
+	</div>
+{% endblock %}

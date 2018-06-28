@@ -1,0 +1,40 @@
+{% extends 'layout.html'%}
+
+{% block main %}
+	<div class="container">
+		<br/>
+		<h1 class="text-center" style="color: #f0ad4e">Keys Updated</h1>
+		<br/>
+			<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Key Number</th>
+					<th>Copy Number</th>
+					<th>Deposit Amount</th>
+					<th>Opens</th>
+					<th>Status</th>
+					<th>room</th>
+				</tr>
+			</thead>
+			<tbody>
+				{%for key in keys%}
+				<tr>
+					<!--Key Number-->
+					<td>{{key[0]}}</td>
+					<!--Kopy Number-->
+					<td>{{key[1]}}</td>
+					<!--Deposit Amount-->
+					<td>{{key[2]}}</td>
+					<!-- opens-->
+					<td>{{key[3]}}</td>
+					<!-- status -->
+					<td>{{key[4]}}</td>
+					<!-- Room -->
+					<td>{{room}}</td>
+				</tr>
+				{%endfor%}
+			</tbody>
+			</table>
+			<br/>
+	</div>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends 'layout.html'%}
+<!--This html is a replacing extention of the 'main' block of layout.html.-->
+<!--It requires user to input copyNumber, clientEmail, paymentMethod and return deadline.-->
+{% block main %}
+	<div class="container">
+	<br/>
+  <h1 class="text-center" style="color: #f0ad4e">Lend info confirmation</h1>
+	<br/>
+	<P class="text-center">The deposit value for key {{keyNumber}} is $ {{depositValue[0]}}, please finish following information and confirm</P>
+	<div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+      <form class="" method="post" action="{{url_for('resultLend')}}" onsubmit="return validateFormInfoLend(this)">
+				<fieldset>			
+				<div class="form-group">
+					<label for="copyNumber" class="sr-only">copyNumberSelection</label>
+					<div class="cols-sm-10">
+						<select class="form-control selectpicker" data-live-search="true" name="copyNumber">
+							<option selected disabled value="" class="text-hide">Select an available key copy</option>
+							{%for copy in copies%}
+							<option value="{{copy[1]}}">{{copy[1]}}</option>
+							{%endfor%}
+						</select>
+					</div><!--end cols-sm-10-->
+				</div><!--end form-group-->
+					
+				<div class="form-group">
+					<a href="{{url_for('addClient')}}">new client? click here to add client</a> 
+					<label for="email" class="sr-only">clientEmailSelection</label>
+					<div class="cols-sm-10">
+						<select class="form-control selectpicker" data-live-search="true" name="email">
+							<option selected disabled value="" class="text-hide">Select a client</option>
+							{%for client in clients%}
+							<option value="{{client[0]}}">{{client[1]}} {{client[2]}}, {{client[3]}}, {{client[4]}} {{client[5]}}, {{client[6]}}</option>
+							{%endfor%}
+						</select>
+					</div><!--end cols-sm-10-->
+					<a href="{{url_for('changeClient')}}">update client information</a>
+				</div><!--end form-group-->
+
+				<div class="form-group">
+					<label for="paymentMethod" class="sr-only">method of Payments</label>
+					<div class="cols-sm-10">
+						<select class="form-control selectpicker" name="paymentMethod">
+							<option selected disabled value="" class="text-hide">moyen de paiement</option>
+							<option value="debit">Debit</option>
+							<option value="credit">Credit</option>
+							<option value="cash">Cash</option>
+						</select>
+					</div><!--end cols-sm-10-->
+				</div><!--end form-group-->
+				
+				<div class="form-group">
+          <label for="dateInput1" class="sr-only">LendDate</label>
+          <div class="input-group date form_date cosl-sm-10" data-date="" data-date-format="yyyy MM dd" data-link-field="dateInput1" data-link-format="yyyy mm dd">
+            <input name="lendDate" class="form-control" type="text" value="" placeholder="lent Date" readonly>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+					  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+          </div><!--end inpput-group-->
+					<input type="hidden" id="dateInput1" value="" />
+					<br/>
+        </div><!--end form-group-->
+					
+					
+				<div class="form-group">
+          <label for="dateInput" class="sr-only">expectedDateReturn</label>
+          <div class="input-group date form_date cosl-sm-10" data-date="" data-date-format="yyyy MM dd" data-link-field="dateInput" data-link-format="yyyy mm dd">
+            <input name="expectedReturnDate" class="form-control" type="text" value="" placeholder="expected deadline of return" readonly>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+					  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+          </div><!--end inpput-group-->
+					<input type="hidden" id="dateInput" value="" />
+					<br/>
+        </div><!--end form-group-->
+					
+				<div class="invisible">
+					<div class="form-group">
+						<label for="keyNum" class="sr-only">keyNumberSelection</label>
+						<div class="cols-sm-10">
+							<select class="form-control selectpicker" name="keyNumber">
+								<option selected="select" value="{{keyNumber}}">{{keyNumber}}</option>
+							</select>
+						</div><!--end cols-sm-10-->
+					</div><!--end form-group-->
+				</div><!--end invisible-->
+					
+				<div class="invisible">
+					<div class="form-group">
+						<label for="depositValue" class="sr-only">depositValueSelection</label>
+						<div class="cols-sm-10">
+						<select class="form-control selectpicker" name="depositValue">
+							<option selected="select" value="{{depositValue[0]}}">{{depositValue[0]}}</option>
+						</select>
+						</div><!--end cols-sm-10-->
+					</div><!--end form-group-->
+				</div><!--end invisible-->
+					
+        <div class="form-group"><!--button submit-->
+          <div class="cols-sm-10">
+          	<div class="text-center">
+            	<button class=" btn btn-lg btn-warning" name="apply" type="submit" onclick="return transectionConfirm()">confirm</button>
+            </div><!--end text-center-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+				</fieldset>
+      </form>
+    </div><!--end cols-sm-6-->
+    <div class="col-sm-3"></div>
+  </div><!--end row-->
+	</div><!--end container-->
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'layout.html'%}
+<!--This html is a replacing extention of the 'main' block of layout.html.-->
+<!--It allows admins to confirm the penalty value and payment method-->
+{% block main %}
+	<div class="container">
+	<br/>
+  <h1 class="text-center" style="color: #f0ad4e">Perte info confirmation</h1>
+	<br/>
+	<P class="text-center">The loss penalty for key {{keyNumber}} is $ {{penaltyValue}}, please enter payment method and confirm</P>
+	<div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+      <form class="" method="post" action="{{url_for('resultLoss')}}" onsubmit="return validateFormInfoLoss(this)">
+				<fieldset>
+				<div class="form-group">
+					<label for="methodPay" class="sr-only">method of Payments</label>
+					<div class="cols-sm-10">
+						<select class="form-control selectpicker" name="methodPay">
+							<option selected disabled value="" class="text-hide">moyen de paiement</option>
+							<option value="debit">Debit</option>
+							<option value="credit">Credit</option>
+							<option value="cash">Cash</option>
+						</select>
+					</div><!--end cols-sm-10-->
+				</div><!--end form-group-->		
+				<div class="invisible">
+				<div class="form-group">
+					<label for="keyNumber" class="sr-only">passingKeyNumber</label>
+					<div class="cols-sm-10">
+						<select class="form-control selectpicker" name="keyNumber">
+							<option selected="select" value="{{keyNumber}}">{{keyNumber}}</option>
+						</select>
+					</div><!--end cols-sm-10-->
+				</div><!--end form-group-->
+				</div><!--end invisible-->			
+				<div class="invisible">
+					<div class="form-group">
+						<label for="copyNumber" class="sr-only">passingCopyNumber</label>
+						<div class="cols-sm-10">
+							<select class="form-control selectpicker" name="copyNumber">
+								<option selected="select" value="{{copyNumber}}">{{copyNumber}}</option>
+							</select>
+						</div><!--end cols-sm-10-->
+					</div><!--end form-group-->
+				</div><!--end invisible-->	
+				<div class="invisible">
+					<div class="form-group">
+						<label for="penaltyValue" class="sr-only">passingPenaltyValues</label>
+						<div class="cols-sm-10">
+						<select class="form-control selectpicker" name="penaltyValue">
+							<option selected="select" value="{{penaltyValue}}">{{penaltyValue}}</option>
+						</select>
+						</div><!--end cols-sm-10-->
+					</div><!--end form-group-->
+				</div><!--end invisible-->			
+        <div class="form-group"><!--button submit-->
+          <div class="cols-sm-10">
+          	<div class="text-center">
+              	<button class=" btn btn-lg btn-warning" name="apply" type="submit" onclick="return transectionConfirm()">confirm</button>
+            </div><!--end text-center-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+				</fieldset>
+      </form>
+    </div><!--end cols-sm-6-->
+    <div class="col-sm-3"></div>
+  </div><!--end row-->
+</div><!--end container-->
+{% endblock %}

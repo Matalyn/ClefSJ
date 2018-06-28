@@ -1,0 +1,41 @@
+{% extends 'layout.html'%}
+
+{% block main %}
+<div class="container">
+	 <br/>
+  <h1 class="text-center" style="color: #f0ad4e">report Offices by keuNumber</h1>
+	<br/>
+  <div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+      <form class="" method="post" action="{{url_for('resultReportOffices')}}">
+				<fieldset>
+					
+				<div class="form-group">
+					<label for="keyNumber" class="sr-only">select an keyNumber to check its offices</label>
+					<div class="cols-sm-10">
+					<select class="form-control selectpicker" data-live-search="true" name="keyNumber">
+						<option selected disabled class="text-hide">select a key to check</option>
+						{%for key in keys%}
+						<option value="{{key[0]}}">{{key[0]}}</option>
+						{%endfor%}
+					</select>
+					</div>
+				</div>
+        
+				<br/>
+					
+        <div class="form-group"><!--button submit-->
+          <div class="cols-sm-10">
+              <div class="text-center">
+              <button class=" btn btn-lg btn-warning" name="apply" type="submit">review office report</button>
+              </div><!--end text-center-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+				</fieldset>
+      </form>
+    </div>
+    <div class="col-sm-3"></div>
+  </div><!--end row-->
+</div>
+{% endblock %}

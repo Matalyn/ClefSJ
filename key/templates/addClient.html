@@ -1,0 +1,101 @@
+{% extends 'layout.html'%}
+<!--This html is a replacing extention of the 'main' block of layout.html.-->
+<!--It requires users to input informations needed for creating a new client-->
+<!--Icluding .-->
+{% block main %}
+<div class="container">
+  <br/>
+  <h1 class="text-center" style="color: #f0ad4e">Ajouter un Client</h1>
+	<br/>
+  <div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+      <form class="" method="post" action="{{url_for('resultAddClient')}}" onsubmit="return validateFormAddClient(this)">
+				<fieldset>
+        <div class="form-group">
+          <label for='email' class="sr-only">Email: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-envelope-o" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" name="email" value="" placeholder="Client email"/>
+            </div><!-- end input-group-->
+          </div><!--end cols        <div class="form-group-sm-10-->
+        </div><!--end form-group-->      
+        <div class="form-group">
+          <label for='firstName' class="sr-only">firstName: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-id-card-o" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" name="firstName"  value="" placeholder="Client first name"/>
+            </div><!-- end input-group-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->       
+       <div class="form-group">
+          <label for='lastName' class="sr-only">Key Type: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-id-card" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" name="lastName"  value="" placeholder="Client last Name"/>
+            </div><!-- end input-group-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->    
+        <div class="form-group">
+          <label for='address' class="sr-only">address: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-map-signs" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" name="address"  value="" placeholder="Address"/>
+            </div><!-- end input-group-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+        <div class="form-group">
+          <label for='city' class="sr-only">city: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-map-o" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" name="city"  value="" placeholder="City"/>
+            </div><!-- end input-group-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->		
+				 <div class="form-group">
+          <label for='province' class="sr-only">province: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-globe" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" name="province"  value="" placeholder="Province"/>
+            </div><!-- end input-group-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+				<div class="form-group">
+          <label for='postcode' class="sr-only">postcode: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-map-pin" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" name="postcode"  value="" placeholder="Postcode"/>
+            </div><!-- end input-group-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->				
+				<div class="form-group">
+          <label for='phoneNumber' class="sr-only">phoneNumber: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-phone" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" name="phoneNumber"  value="" placeholder="Phone Number"/>
+            </div><!-- end input-group-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+				<br/>					
+        <div class="form-group"><!--button submit-->
+          <div class="cols-sm-10">
+              <div class="text-center">
+              <button class=" btn btn-lg btn-warning" name="apply" type="submit"  onclick="return transectionConfirm()">appliquer</button>
+              </div><!--end text-center-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+				</fieldset>
+      </form>
+    </div>
+    <div class="col-sm-3"></div>
+  </div><!--end row-->
+</div>
+{% endblock %}

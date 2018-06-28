@@ -1,0 +1,97 @@
+{% extends 'layout.html'%}
+<!--This html is a replacing extention of the 'main' block of layout.html.-->
+<!--It allows users to inputes required information to create a new key.-->
+<!--Including keyNumber, copyNumberStart, copyNumberEnd, depositValue, initalStatus, opens, room-->
+{% block main %}
+<div class="container">
+  <br/>
+  <h1 class="text-center" style="color: #f0ad4e">Ajouter une clé</h1>
+	<br/>
+  <div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+      <form class="" method="post" action="{{url_for('resultAddKey')}}" onsubmit="return validateFormAddKey(this)">
+				<fieldset>
+        <div class="form-group">
+          <label for='keyNumber' class="sr-only">Key Number: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
+              <input value="" type="text" class="form-control" name="keyNumber" placeholder="Key Number: "/>
+            </div><!-- end input-group-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->				
+				<div class="form-group">
+          <label for='copyNumberStart' class="sr-only">Copy Number Starts at: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-hourglass-start" aria-hidden="true"></i></span>
+              <input type="number" class="form-control" name="copyNumberStart"  value=""  placeholder="Copy Number Starts at: "/>
+            </div><!-- end input-group-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->				
+				<div class="form-group">
+          <label for='copyNumberEnd' class="sr-only">Copy Number Ends at: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-hourglass-end" aria-hidden="true"></i></span>
+              <input type="number" class="form-control" name="copyNumberEnd" value=""  placeholder="Copy Number Ends at: "/>
+            </div><!-- end input-group-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+				<div class="form-group">
+					<label for="depositValue" class="sr-only">Value:</label>
+					<div class="cols-sm-10">
+					<select class="form-control selectpicker" name="depositValue">
+						<option selected disabled value=""  class="text-hide">Select a deposit/loss penalty Value</option>
+						<option value="20">Deposit fee 20, loss penalty 100</option>
+						<option value="80">Deposit fee 80, loss penalty 500</option>
+					</select>
+					</div><!--end cols-sm-10-->
+				</div><!--end form-group-->
+				<div class="form-group">
+					<label for="status" class="sr-only">status:</label>
+					<div class="cols-sm-10">
+					<select class="form-control selectpicker" name="status">
+						<option selected disabled value=""  class="text-hide">Choose inital key status</option>
+						<option>Available</option>
+						<option>Lending</option>
+						<option>Missing</option>
+						<option>Lost</option>
+					</select>
+					</div><!--end cols-sm-10-->
+				</div><!--end form-group-->
+				<div class="form-group">
+					<label for="opens" class="sr-only">opens:</label>
+					<div class="cols-sm-10">
+					<select class="form-control selectpicker" name="opens">
+						<option selected disabled value=""  class="text-hide">Key opens</option>
+						<option>door</option>
+						<option>mailBox</option>
+					</select>
+					</div><!--end cols-sm-10-->
+				</div><!--end form-group-->	
+				<div class="form-group">
+          <label for='room' class="sr-only">of room: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-building-o" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" value=""  name="room" placeholder="Room"/>
+            </div><!-- end input-group-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group--> 
+				<br/>		
+        <div class="form-group"><!--for button submit-->
+          <div class="cols-sm-10">
+              <div class="text-center">
+              <button class=" btn btn-lg btn-warning" name="apply" type="submit" onclick="return transectionConfirm()">add</button>
+              </div><!--end text-center-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+				</fieldset>
+      </form>
+    </div><!--end cols-sm-6-->
+    <div class="col-sm-3"></div>
+  </div><!--end row-->
+</div><!--end container-->
+{% endblock %}

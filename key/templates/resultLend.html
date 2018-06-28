@@ -1,0 +1,70 @@
+{% extends 'layout.html'%}
+<!--This html is a replacing extention of the 'main' block of layout.html.-->
+<!--It shows the information, as a receipt to be printed, of a lending operation-->
+<!--Including keyNumber, copyNumber, client information, lend date and return deadline-->
+{% block main %}
+	<div class="container">
+		<h3 class="text-center"><strong>FACULTÉ SAINT-JEAN</strong></h3>
+		<h4  class="text-center">Formulaire d'emprunt de clé</h4>
+		<br/>
+		<h5>Coordonnées de l'emprunteur</h5>
+		<p class="uppercase">
+			<!--name-->
+			{{client[1]}} {{client[2]}}
+			<!--street address-->
+			<br/>{{client[3]}}
+			<br/>{{client[4]}}, {{client[5]}}, {{client[6]}}
+			<br/>{{client[7]}}
+			<br/>{{client[0]}}
+		</p><!--end p-->
+		<p>Veuillez prendre connaisance de ces reglements concernant les depots sur les remprunts et retours de cle
+			<br/>
+			<br/>			Un montant de $20.00 est requis en depot pour chaque cle de bureau ou de salle
+			<br/>			Un montant de $80.00 est requis en depot pour la clef de la prte d'entree
+			<br/>
+			<br/>En cas de perte de cle emprunte ou si la cle n'est past remise a la date obiligatoire indiquee, les montants suivants vous seront factures:
+			<br/>
+			<br/>			$100.00 pour chaque clef de bureau ou de salle
+			<br/>			$500.00 pour la clef de la porte d'entree
+			<br/>
+			<br/>De plus dans chaques cas votre depot ne sera pas remis
+			<br/>Le remboursement se fera uniquement par cheque dans les 30 jours suivant le retour de la clef empruntee
+		</p><!--end p-->
+		<br/>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Key Number</th>
+					<th>Copy Number</th>
+					<th>Deposit Amount</th>
+					<th>Payment Method</th>
+					<th>Lend Date</th>
+					<th>Expected Return Dea</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<!--Key Number-->
+					<td>{{lent[0]}}</td>
+					<!--Kopy Number-->
+					<td>{{lent[1]}}</td>
+					<!--Deposit Amount-->
+					<td>{{depositValue}}</td>
+					<!--Payment Method-->
+					<td>{{lent[4]}}</td>
+					<!--Lend Date-->
+					<td>{{lent[3]}}</td>
+					<!--Expected Return Deadline-->
+					<td>{{lent[5]}}</td>
+				</tr>
+			</tbody>
+		</table>	
+		<br/>
+		<p>
+			<br/>Signiture de l'emprunteur:
+			<br/>Admin: {{currentUser}}
+			<br/>initiales de la receptionniste
+		</p>
+		<br/>
+	</div><a class='btn btn-warning' href='#' onclick="printInfo(this)">Print</a>
+{% endblock %}

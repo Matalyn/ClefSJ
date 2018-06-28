@@ -1,0 +1,40 @@
+{% extends 'layout.html'%}
+{% block main %}
+	<div class="container">
+		<h3 class="text-center"><strong>FACULTÉ SAINT-JEAN</strong></h3>
+		<h4  class="text-center">Formulaire d'emprunt de clé</h4>
+		<br/>
+		<h5>Coordonnées de l'emprunteur</h5>
+		<p class="uppercase">
+			xingqi guo
+			<br/>9740 106 street nw 1501
+			<br/>edmonton, ab, t5k298
+			<br/>(780)710-5246
+			<br/>xingqi1@ualberta.ca
+		</p>
+
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Key number</th>
+					<th>Copy number</th>
+					<th>date lend</th>
+					<th>payment method</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr onclick="window.document.location='http://127.0.0.1:5000/lend';">
+					<!--key number-->
+					<td>{{key[0]}}</td>
+					<!--copy number-->
+					<td>{{key[1]}}</td>
+					<!--type-->
+					<td>{{key[3]}}</td>
+					<!--room-->
+					<td>{{key[4]}}</td>
+				</tr>
+			</tbody>
+		</table>
+		
+	</div>
+{% endblock %}

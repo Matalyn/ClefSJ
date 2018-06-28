@@ -1,0 +1,121 @@
+{% extends 'layout.html'%}
+{% block main %}
+<div class="container">
+  <br/>
+  <h1 class="text-center" style="color: #f0ad4e">Update Client Information</h1>
+	<br/>
+  <div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+      <form class="" method="post" action="{{url_for('resultChangeClient')}}" onsubmit="return validateFormInfoChangeClient(this)">
+				<fieldset>
+	
+				<div class="invisible">
+					<div class="-group">
+						<label for="oldEmail" class="sr-only">record old email</label>
+						<div class="cols-sm-10">
+							<select class="form-control selectpicker" name="oldEmail">
+									<option selected="select" value="{{client[0]}}">{{client[0]}}</option>
+							</select>
+						</div>
+					</div>
+				</div>
+					
+				<div class="form-group">
+          <label for='newEmail' class="sr-only">new Email: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-envelope-o" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" name="newEmail" value="{{client[0]}}" placeholder="email"/>
+            </div><!-- end input-group-->
+          </div><!--end cols        <div class="form-group-sm-10-->
+        </div><!--end form-group-->
+					
+        
+        <div class="form-group">
+          <label for='firstName' class="sr-only">firstName: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-id-card" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" name="firstName" value="{{client[1]}}" placeholder="firstName"/>
+            </div><!-- end input-group-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+          
+        <div class="form-group">
+          <label for='lastName' class="sr-only">lastName: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-id-card-o" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" name="lastName" value="{{client[2]}}" placeholder="lastName"/>
+            </div><!-- end input-group-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+        
+        <div class="form-group">
+          <label for='address' class="sr-only">address: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-map-signs" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" name="address" value="{{client[3]}}" placeholder="address"/>
+            </div><!-- end input-group-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+   
+        <div class="form-group">
+          <label for='city' class="sr-only">city: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-map-o" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" name="city" value="{{client[4]}}" placeholder="city"/>
+            </div><!-- end input-group-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+					
+				 <div class="form-group">
+          <label for='province' class="sr-only">province: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-globe" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" name="province" value="{{client[5]}}" placeholder="province"/>
+            </div><!-- end input-group-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+					
+					
+				<div class="form-group">
+          <label for='postcode' class="sr-only">postcode: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-map-pin" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" name="postcode" value="{{client[6]}}" placeholder="postcode"/>
+            </div><!-- end input-group-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+					
+				<div class="form-group">
+          <label for='phoneNumber' class="sr-only">phoneNumber: </label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-phone" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" name="phoneNumber" value="{{client[7]}}" placeholder="phoneNumber"/>
+            </div><!-- end input-group-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+
+				<br/>
+					
+        <div class="form-group"><!--button submit-->
+          <div class="cols-sm-10">
+              <div class="text-center">
+              <button class=" btn btn-lg btn-warning" name="apply" type="submit" onclick="return transectionConfirm()">Update</button>
+              </div><!--end text-center-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+				</fieldset>
+      </form>
+    </div>
+    <div class="col-sm-3"></div>
+  </div><!--end row-->
+</div>
+{% endblock %}

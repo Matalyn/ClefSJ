@@ -1,0 +1,52 @@
+{% extends 'layout.html'%}
+
+{% block main %}
+	<div class="container">
+		<br/>
+		 <h1 class="text-center" style="color: #f0ad4e">Client Updated</h1>
+		<br/>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Client Email</th>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Address</th>
+					<th>City</th>
+					<th>Province</th>
+					<th>Postcode</th>
+					<th>Phone Number</th>
+
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<!--email-->
+					<td>{{client[0]}}</td>
+					<!--password-->
+					<td>{{client[1]}}</td>
+					<!--firstname-->
+					<td>{{client[2]}}</td>
+					<!--lastname-->
+					<td>{{client[3]}}</td>
+					<!--number-->
+					<td>{{client[4]}}</td>
+					<!--room-->
+					<td>{{client[5]}}</td>
+					<td>{{client[6]}}</td>
+					<td>{{client[7]}}</td>
+				</tr>
+			</tbody>
+		</table>
+		
+				<div class="form-group"><!--button submit-->
+          <div class="cols-sm-10">
+              <div class="text-center">
+              <a class=" btn btn-lg btn-warning" href="{{url_for('lend')}}">back to lending</a>
+              </div><!--end text-center-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+
+					
+	</div>
+{% endblock %}

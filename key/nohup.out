@@ -1,0 +1,84 @@
+ * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+129.128.136.112 - - [01/Sep/2017 15:52:23] "GET /signin HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 15:52:28] "POST /signin HTTP/1.1" 302 -
+129.128.136.112 - - [01/Sep/2017 15:52:28] "GET /lend HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 15:52:36] "GET /lend HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 15:52:38] "GET /signout HTTP/1.1" 302 -
+129.128.136.112 - - [01/Sep/2017 15:52:38] "GET /signin HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 15:52:39] "POST /signin HTTP/1.1" 302 -
+129.128.136.112 - - [01/Sep/2017 15:52:39] "GET /lend HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 15:52:41] "GET /return HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 15:52:42] "GET /lend HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 15:52:44] "POST /infoLend HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 15:52:53] "POST /resultLend HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 15:57:37] "GET /lend HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 15:57:39] "POST /infoLend HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 15:57:41] "GET /changeClient HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 15:57:44] "GET /lend HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 15:57:46] "POST /infoLend HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 15:57:54] "POST /resultLend HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 16:04:34] "GET /reportKey HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 16:04:36] "POST /resultReportKey HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 16:04:39] "GET /reportKey HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 16:04:42] "POST /resultReportKey HTTP/1.1" 200 -
+[2017-09-01 16:21:03,383] ERROR in app: Exception on /signout [GET]
+Traceback (most recent call last):
+  File "/home/sshadmin/myproject/venv/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/sshadmin/myproject/venv/local/lib/python2.7/site-packages/flask/app.py", line 1614, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/sshadmin/myproject/venv/local/lib/python2.7/site-packages/flask/app.py", line 1517, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/sshadmin/myproject/venv/local/lib/python2.7/site-packages/flask/app.py", line 1612, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/sshadmin/myproject/venv/local/lib/python2.7/site-packages/flask/app.py", line 1598, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "key.py", line 817, in signout
+    currentUser = cursor.fetchone()[0]
+TypeError: 'NoneType' object has no attribute '__getitem__'
+129.128.136.112 - - [01/Sep/2017 16:21:03] "GET /signout HTTP/1.1" 500 -
+129.128.136.112 - - [01/Sep/2017 16:21:13] "GET /signin HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 16:21:15] "POST /signin HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 16:21:16] "POST /signin HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 16:21:22] "POST /signin HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 16:21:23] "POST /signin HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 16:23:57] "POST /signin HTTP/1.1" 302 -
+129.128.136.112 - - [01/Sep/2017 16:23:57] "GET /lend HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 16:24:00] "GET /resultAllAdmins HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 16:24:01] "GET /addAdmin HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 16:24:02] "GET /activateAdmin HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 16:24:03] "GET /deactivateAdmin HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 16:24:04] "GET /reportKey HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 16:24:07] "GET /addClient HTTP/1.1" 200 -
+129.128.136.112 - - [01/Sep/2017 16:24:09] "GET /lend HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:55:33] "GET /signin HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:55:33] "GET /static/signin.css HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:55:33] "GET /static/ie10-viewport-bug-workaround.js HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:55:54] "POST /signin HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:56:42] "POST /signin HTTP/1.1" 302 -
+129.128.137.140 - - [08/Sep/2017 08:56:42] "GET /lend HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:56:42] "GET /static/sticky-footer-navbar.css HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:56:42] "GET /static/navbar-key.css HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:56:42] "GET /static/bootstrap-datetimepicker.min.css HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:56:42] "GET /static/bootstrap-select.min.css HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:56:42] "GET /static/bootstrap-select.min.js HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:56:42] "GET /static/bootstrap-datetimepicker.js HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:56:49] "GET /resultAllAdmins HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:56:58] "GET /addAdmin HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:58:22] "POST /resultAddAdmin HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:58:30] "GET /resultAllAdmins HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:58:49] "GET /signout HTTP/1.1" 302 -
+129.128.137.140 - - [08/Sep/2017 08:58:49] "GET /signin HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:59:05] "POST /signin HTTP/1.1" 302 -
+129.128.137.140 - - [08/Sep/2017 08:59:05] "GET /lend HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:59:08] "GET /resultAllAdmins HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:59:12] "GET /addAdmin HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:59:13] "GET /activateAdmin HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:59:15] "GET /deactivateAdmin HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:59:19] "GET /lend HTTP/1.1" 200 -
+129.128.137.140 - - [08/Sep/2017 08:59:34] "GET /signout HTTP/1.1" 302 -
+129.128.137.140 - - [08/Sep/2017 08:59:34] "GET /signin HTTP/1.1" 200 -
+Traceback (most recent call last):
+  File "key.py", line 2, in <module>
+    from flask import Flask, request, session, abort, redirect, render_template, url_for, flash
+ImportError: No module named flask

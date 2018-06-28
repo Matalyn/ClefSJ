@@ -1,0 +1,25 @@
+{% extends 'layout.html'%}
+
+{% block main %}
+	<div class="container">
+		<br/>
+		 <h1 class="text-center" style="color: #f0ad4e">Bureau Deleted</h1>
+		<br/>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Room</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<!--email-->
+					<td>{{office[0]}}</td>
+					<!--password-->
+					<td>{{office[1]}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
