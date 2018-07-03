@@ -429,7 +429,7 @@ def resultAddClient():
 	if user is not None:
 		error = 'User with email {} is already registered.'.format(email)
 		flash(error)
-		return render_template('addClient.html')
+		return redirect(url_for('addClient'))
 
 	else:
 		cursor.execute("insert into client values('"+email+"', '"+firstName+"', '"+lastName+"', '"+address+"', '"+city+"', '"+province+"', '"+postcode+"', '"+phoneNumber+"')")
