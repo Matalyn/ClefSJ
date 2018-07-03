@@ -824,17 +824,3 @@ def signout():
 if __name__ == "__main__":
 	app.run(host='0.0.0.0')
 	#app.run()
-
-@app.route('/changepasswordhash', methods = ['GET'])
-def changePasswordHash():
-	conn = mysql.connect()
-	cursor = conn.cursor()
-	cursor.execute("SELECT * FROM admin")
-	admins = cursor.fetchall()
-	for admin in admins:
-		cursor.execute("UPDATE admin SET password = %s WHERE email = %s", (generate_password_hash(admin[1]), admin[0]))
-
-	conn.commit()
-	return redirect(url_for(lend))
-
-
