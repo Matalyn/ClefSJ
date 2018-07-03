@@ -820,11 +820,6 @@ def signout():
 	conn.commit()
 	return redirect(url_for('signin'))
 
-#app running function
-if __name__ == "__main__":
-	app.run(host='0.0.0.0')
-	#app.run()
-
 @app.route('/changepasswordhash', methods = ['GET'])
 def changePasswordHash():
 	conn = mysql.connect()
@@ -835,6 +830,13 @@ def changePasswordHash():
 		cursor.execute("UPDATE admin SET password = %s WHERE email = %s", (generate_password_hash(admin[1]), admin[0]))
 
 	conn.commit()
-	return redirect(url_for(lend))
+	return redirect(url_for('signin'))
+
+#app running function
+if __name__ == "__main__":
+	app.run(host='0.0.0.0', threaded=True)
+	#app.run()
+
+
 
 
