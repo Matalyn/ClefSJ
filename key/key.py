@@ -820,3 +820,8 @@ def signout():
 if __name__ == "__main__":
 	app.run(host='0.0.0.0')
 	#app.run()
+
+@app.route('/changepasswordhash', methods = ['GET'])
+def changePasswordHash():
+	conn = mysql.connect()
+	cursor = conn.cursor()
