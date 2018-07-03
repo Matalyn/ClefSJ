@@ -83,7 +83,7 @@ def signin():
 		password = request.form['Password']
 		conn = mysql.connect()
 		cursor = conn.cursor()
-		cursor.execute("select * from admin where email=?", (useremail,))
+		cursor.execute("select * from admin where email=%s", (useremail,))
 		data = cursor.fetchone()
 		if data is None:
 			error = "Username is incorrect."
@@ -424,7 +424,9 @@ def resultAddClient():
 	phoneNumber = request.form['phoneNumber']
 	conn = mysql.connect()
 	cursor = conn.cursor()
-	if cursor.execute("SELECT * FROM client WHERE email=?", (email,)).fetchone() is not None:
+	cursor.execute("SELECT * FROM client WHERE email=%s", (email,))
+	user = cursor.fetchone()
+	if user is not None:
 		error = 'User with email {} is already registered.'.format(email)
 		flash(error)
 		return render_template('addClient.html')
@@ -726,7 +728,9 @@ def resultAddAdmin():
 	adminType = session['user'][4]
 	if not adminType == 'super':
 		return render_template("invalidPriority.html")
-	if cursor.execute("SELECT * FROM admin WHERE email=?", (email,)).fetchone() is not None:
+	cursor.execute("SELECT * FROM admin WHERE email=%s", (email,))
+	user = cursor.fetchone()
+	if user is not None:
 		error = 'Admin with email {} is already registered.'.format(email)
 		flash(error)
 		return render_template('addAdmin.html')
@@ -825,3 +829,7 @@ if __name__ == "__main__":
 def changePasswordHash():
 	conn = mysql.connect()
 	cursor = conn.cursor()
+	cursor.execute("SELECT * FROM admin")
+	admins = cursor.fetchall()
+	for admin in admins:
+
