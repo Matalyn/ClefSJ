@@ -1,5 +1,6 @@
-#importe libraries
+#import libraries
 from flask import Flask, request, session, abort, redirect, render_template, url_for, flash
+from werkzeug.security import check_password_hash, generate_password_hash
 from flaskext.mysql import MySQL
 import datetime
 
@@ -30,9 +31,8 @@ mysql.init_app(app)
 
 def getCurrentUser():
 	#this function return current user in string info restored in database
-	cursor = mysql.connect().cursor()
-	cursor.execute("select email from admin where current='yes'")
-	return cursor.fetchone()[0]
+	return session['user']
+
 
 def getTodayString():
 	#return today's date string in format "yyyy-mm-dd"
@@ -83,21 +83,17 @@ def signin():
 		password = request.form['Password']
 		conn = mysql.connect()
 		cursor = conn.cursor()
-		cursor.execute("select * from admin where email='"+ useremail+"' and password='"+password+"'")
+		cursor.execute("select * from admin where email=?", (useremail,))
 		data = cursor.fetchone()
 		if data is None:
-			error = "Username or Password is wrong."
+			error = "Username is incorrect."
+		elif not check_password_hash(data[1], password):
+			error = "Password is incorrect."
 		elif data[5] == 'deactivated':
-			error = "Accocunt needs to be activated."
+			error = "Account needs to be activated."
 		else:
-			flash("looged in successfully")
-			#set all current values of admins to be no to prevent possible mutple login errors
-			#if some one didnt log out and log in twice with a 2nd account
-			cursor.execute("update admin set current='no' where email!=''")
-			conn.commit()
-			#set the current user now
-			cursor.execute("update admin set current='yes' where email='"+useremail+"'")
-			conn.commit()
+			flash("Logged in successfully")
+			session['user'] = data
 			session['logged_in'] = True
 			return redirect(url_for('lend'))
 	return render_template('signin.html', error=error)
@@ -155,7 +151,7 @@ def resultLend():
 	expectedReturnDate = regulateDatePickerString(expectedReturnDate)
 	depositValue = request.form['depositValue']
 	#get current user info in string
-	currentUser = getCurrentUser()
+	currentUser = session['user']
 	#pull client info
 	conn = mysql.connect()
 	cursor = conn.cursor()
@@ -693,8 +689,7 @@ def resultAllAdmins():
 	conn = mysql.connect()
 	cursor = conn.cursor()
 	#check if user have the authority to access admin
-	cursor.execute("select * from admin where current='yes'")
-	adminType = cursor.fetchone()[4]
+	adminType = session['user'][4]
 	if not adminType == 'super':
 		return render_template("invalidPriority.html")
 	cursor.execute("select * from admin order by type;")
@@ -708,9 +703,7 @@ def addAdmin():
 		abort(401)
 	conn = mysql.connect()
 	cursor = conn.cursor()
-	#check if user have the authority to access admin
-	cursor.execute("select * from admin where current='yes'")
-	adminType = cursor.fetchone()[4]
+	adminType = session['user'][4]
 	if not adminType == 'super':
 		return render_template("invalidPriority.html")
 	return render_template('addAdmin.html')
@@ -730,8 +723,7 @@ def resultAddAdmin():
 	conn = mysql.connect()
 	cursor = conn.cursor()
 	#check if user have the authority to access admin
-	cursor.execute("select * from admin where current='yes'")
-	adminType = cursor.fetchone()[4]
+	adminType = session['user'][4]
 	if not adminType == 'super':
 		return render_template("invalidPriority.html")
 	if cursor.execute("SELECT * FROM admin WHERE email=?", (email,)).fetchone() is not None:
@@ -739,7 +731,7 @@ def resultAddAdmin():
 		flash(error)
 		return render_template('addAdmin.html')
 	else:
-		cursor.execute("insert into admin values('"+email+"', '"+password+"', '"+firstName+"', '"+lastName+"','regular','active', 'no')")
+		cursor.execute("insert into admin values('"+email+"', '"+generate_password_hash(password)+"', '"+firstName+"', '"+lastName+"','regular','active', 'no')")
 		conn.commit()
 		cursor.execute("select * from admin where email='"+email+"'")
 		admin = cursor.fetchone()
@@ -753,8 +745,7 @@ def activateAdmin():
 	conn = mysql.connect()
 	cursor = conn.cursor()
 	#check if user have the authority to access admin
-	cursor.execute("select * from admin where current='yes'")
-	adminType = cursor.fetchone()[4]
+	adminType = session['user'][4]
 	if not adminType == 'super':
 		return render_template("invalidPriority.html")
 	cursor.execute("select * from admin where type!='super' and status='deactivated'")
@@ -770,8 +761,7 @@ def resultActivateAdmin():
 	conn = mysql.connect()
 	cursor = conn.cursor()
 	#check if user have the authority to access admin
-	cursor.execute("select * from admin where current='yes'")
-	adminType = cursor.fetchone()[4]
+	adminType = session['user'][4]
 	if not adminType == 'super':
 		return render_template("invalidPriority.html")
 	#activate reguer user
@@ -790,8 +780,7 @@ def deactivateAdmin():
 	conn = mysql.connect()
 	cursor = conn.cursor()
 	#check if user have the authority to access admin
-	cursor.execute("select * from admin where current='yes'")
-	adminType = cursor.fetchone()[4]
+	adminType = session['user'][4]
 	if not adminType == 'super':
 		return render_template("invalidPriority.html")
 	cursor.execute("select * from admin where type!='super' and status='active'")
@@ -807,8 +796,7 @@ def resultDeactivateAdmin():
 	conn = mysql.connect()
 	cursor = conn.cursor()
 	#check if user have the authority to access admin
-	cursor.execute("select * from admin where current='yes'")
-	adminType = cursor.fetchone()[4]
+	adminType = session['user'][4]
 	if not adminType == 'super':
 		return render_template("invalidPriority.html")
 	cursor.execute("update admin set status='deactivated' where email='"+email+"'")
@@ -822,11 +810,9 @@ def resultDeactivateAdmin():
 #signout
 def signout():
 	session.pop('logged_in', None)
+	session.pop('user', None)
 	conn = mysql.connect()
 	cursor = conn.cursor()
-	cursor.execute("select email from admin where current='yes'")
-	currentUser = cursor.fetchone()[0]
-	cursor.execute("update admin set current='no' where email='"+currentUser+"'")
 	conn.commit()
 	return redirect(url_for('signin'))
 
