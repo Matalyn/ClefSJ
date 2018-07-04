@@ -1,41 +1,42 @@
-{% extends 'layout.html'%}
+{% extends 'layout.html' %}
 
 {% block main %}
-<div class="container">
-	 <br/>
-  <h1 class="text-center" style="color: #f0ad4e">Update a Room</h1>
-	<br/>
-  <div class="row">
-    <div class="col-sm-3"></div>
-    <div class="col-sm-6">
-      <form class="" method="post" action="{{url_for('infoUpdateRoom')}}" onsubmit="return validateFormUpdateRoom(this)">
-				<fieldset>
-					
-				<div class="form-group">
-					<label for="keyNumber" class="sr-only">select a key Number to Update</label>
-					<div class="cols-sm-10">
-					<select class="form-control selectpicker" data-live-search="true" name="keyNumber">
-						<option selected disabled value="" class="text-hide">select a key Number to Update</option>
-						{%for key in keys%}
-						<option value="{{key[0]}}">{{key[0]}}</option>
-						{%endfor%}
-					</select>
-					</div>
-				</div>
+  <div class="container">
+    <br/>
+    <h1 class="text-center" style="color: #f0ad4e">Update a Room</h1>
+    <br/>
+    <div class="row">
+      <div class="col-sm-3"></div>
+      <div class="col-sm-6">
+        <form class="" method="post" action="{{ url_for('infoUpdateRoom') }}"
+              onsubmit="return validateFormUpdateRoom(this)">
+          <fieldset>
 
-					
-        <div class="form-group"><!--button submit-->
-          <div class="cols-sm-10">
-              <div class="text-center">
-              <button class=" btn btn-lg btn-warning" name="apply" type="submit">Next</button>
-              </div><!--end text-center-->
-          </div><!--end cols-sm-10-->
-        </div><!--end form-group-->
-					
-			</fieldset>		
-      </form>
-    </div>
-    <div class="col-sm-3"></div>
-  </div><!--end row-->
-</div>
+            <div class="form-group">
+              <label for="room" class="sr-only">Select a room to update</label>
+              <div class="cols-sm-10">
+                <select class="form-control selectpicker" data-live-search="true" name="room">
+                  <option selected disabled value="" class="text-hide">Select a room to update</option>
+                  {% for room in rooms %}
+                    <option value="{{ room[0] }}">{{ room[1] }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+
+            <div class="form-group"><!--button submit-->
+              <div class="cols-sm-10">
+                <div class="text-center">
+                  <button class=" btn btn-lg btn-warning" name="apply" type="submit">Next</button>
+                </div><!--end text-center-->
+              </div><!--end cols-sm-10-->
+            </div><!--end form-group-->
+
+          </fieldset>
+        </form>
+      </div>
+      <div class="col-sm-3"></div>
+    </div><!--end row-->
+  </div>
 {% endblock %}

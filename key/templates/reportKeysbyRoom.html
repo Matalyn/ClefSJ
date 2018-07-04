@@ -17,7 +17,7 @@
 					<select class="form-control selectpicker" data-live-search="true" name="room">
 						<option selected disabled value="" class="text-hide">Select a room to check</option>
 						{%for office in offices%}
-						<option>{{office[0]}}</option>
+						<option value="{{ office.0 }}">{{office[1]}}</option>
 						{%endfor%}
 					</select>
 					</div>
