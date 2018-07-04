@@ -695,7 +695,7 @@ def resultReportKeysbyRoom():
     room = request.form['room']
     #pull all copies that opens that room, with its keyNumber and what door it opens(room door or mailbox)
     cursor = mysql.connect().cursor()
-    cursor.execute("select c.keyNumber, c.copyNumber, c.opens from unlocks u, clef c where u.keyNumber=c.keyNumber and u.id="+str(room[0])+";")
+    cursor.execute("select c.keyNumber, c.copyNumber, c.opens from unlocks u, clef c where u.keyNumber=c.keyNumber and u.roomID="+str(room[0]))
     keys = cursor.fetchall()
     #render html with a table that shows records of keyNumber, copuNumber and what door it opens.
     return render_template('resultReportKeysbyRoom.html', keys=keys, room = room)
