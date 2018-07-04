@@ -522,7 +522,6 @@ def resultAddRoom():
     if not session.get('logged_in'):
         abort(401)
     room = request.form['room']
-    keyNumber = request.form['keyNumber']
     conn = mysql.connect()
     cursor = conn.cursor()
     cursor.execute("insert into room values(%s)", (room,))
