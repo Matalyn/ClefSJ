@@ -524,7 +524,7 @@ def resultAddRoom():
     room = request.form['room']
     conn = mysql.connect()
     cursor = conn.cursor()
-    cursor.execute("insert into room values(%s)", (room,))
+    cursor.execute("insert into room (address) values(%s)", (room,))
     conn.commit()
     cursor.execute("SELECT * FROM clef")
     keys = cursor.fetchall()
