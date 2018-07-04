@@ -425,7 +425,7 @@
 			function validateFormInfoUpdateRoom(thisForm){
 			with(thisForm){
 				var keyNumberValues = thisForm.keys.values;
-				if (keyNumberValues == null){
+				if (keyNumberValues.length == 0){
 					alert("Key number is not selected.");
 					return false;
 					}

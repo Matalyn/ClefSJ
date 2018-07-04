@@ -81,6 +81,7 @@
                   <option selected disabled value="" class="text-hide">Room</option>
                   {% for room in rooms %}
                     <option value="{{ room.0 }}">{{ room.1 }}</option>
+                  {% endfor %}
                 </select>
               </div><!--end cols-sm-10-->
             </div><!--end form-group-->
