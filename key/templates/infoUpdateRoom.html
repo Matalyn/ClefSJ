@@ -13,17 +13,30 @@
           <fieldset>
 
             <h3 class="text-center">{{ room.1 }}</h3>
+            <br>
             <div class="form-group">
-              <label for="keys" class="sr-only">Select keys which open this room</label>
+              <label for="keys" class="sr-only">Select keys to add to this room</label>
               <div class="cols-sm-10">
                 <select class="form-control selectpicker" data-live-search="true" name="keys" multiple>
                   <option selected disabled value="" class="text-hide">Choose keys to add</option>
                   {% for key in keys %}
-                    <option value="{{ key[0] }}">{{ key[1] }}</option>
+                    <option value="{{ key[0] }}">{{ key[0] }}</option>
                   {% endfor %}
                 </select>
               </div>
             </div>
+
+            <div class="form-group">
+                <label for="delete_keys" class="sr-only">Select keys to delete from this room</label>
+                <div class="cols-sm-10">
+                  <select class="form-control selectpicker" data-live-search="true" name="delete_keys" multiple>
+                    <option selected disabled value="" class="text-hide">Choose keys to delete</option>
+                    {% for key in delete_keys %}
+                      <option value="{{ key[0] }}">{{ key[0] }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
 
 
             <div class="form-group"><!--button submit-->
@@ -38,7 +51,7 @@
 
           </fieldset>
 
-        <input type="hidden" name="roomID" value="{{ room.0 }}">
+          <input type="hidden" name="roomID" value="{{ room.0 }}">
         </form>
       </div>
       <div class="col-sm-3"></div>

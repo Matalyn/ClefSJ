@@ -592,9 +592,11 @@ def infoUpdateRoom():
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM room WHERE id=%s", (roomID,))
     room = cursor.fetchone()
-    cursor.execute("SELECT * FROM clef")
+    cursor.execute("SELECT DISTINCT keyNumber FROM clef WHERE keyNumber NOT IN (SELECT keyNumber FROM unlocks WHERE roomID = %s)", (int(roomID),))
     keys = cursor.fetchall()
-    return render_template('infoUpdateRoom.html', room = room, keys = keys)
+    cursor.execute("SELECT DISTINCT keyNumber FROM unlocks WHERE roomID=%s", (int(roomID),))
+    delete_keys = cursor.fetchall()
+    return render_template('infoUpdateRoom.html', room = room, keys = keys, delete_keys = delete_keys)
 
 @app.route('/resultUpdateRoom', methods = ['POST', 'GET'])
 #bureau
@@ -602,12 +604,19 @@ def resultUpdateRoom():
     if not session.get('logged_in'):
         abort(401)
     keyNumbers = request.form.getlist('keys')
+    deleteKeyNumbers = request.form.getlist('delete_keys')
     roomID = request.form['roomID']
     conn = mysql.connect()
     cursor = conn.cursor()
     for keyNumber in keyNumbers:
         try:
             cursor.execute("INSERT INTO unlocks VALUES (%s, %s)", (str(keyNumber), int(roomID)))
+            conn.commit()
+        except:
+            continue
+    for deleteKeyNumber in deleteKeyNumbers:
+        try:
+            cursor.execute("DELETE FROM unlocks WHERE keyNumber=%s AND roomID=%s", (str(deleteKeyNumber), int(roomID)))
             conn.commit()
         except:
             continue
