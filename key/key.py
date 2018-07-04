@@ -526,9 +526,9 @@ def resultAddRoom():
     cursor = conn.cursor()
     cursor.execute("insert into room (address) values(%s)", (room,))
     conn.commit()
-    cursor.execute("SELECT * FROM clef")
+    cursor.execute("SELECT DISTINCT keyNumber FROM clef")
     keys = cursor.fetchall()
-    cursor.execute("SELECT * FROM room WHERE address=%s", (room,))
+    cursor.execute("SELECT DISTINCT FROM room WHERE address=%s", (room,))
     room = cursor.fetchone()
     return render_template('infoUpdateRoom.html', keys=keys, room=room)
 
