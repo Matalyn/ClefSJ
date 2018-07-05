@@ -242,7 +242,7 @@
 				var depositValueValue = thisForm.depositValue.value;
 				var statusValue = thisForm.status.value;
 				var opensValue = thisForm.opens.value;
-				var roomValue = thisForm.room.value;
+				var roomValues = thisForm.room.values;
 				if (keyNumberValue == "" ){
 					alert("Key number should not be empty.");
 					return false;
@@ -267,7 +267,7 @@
 					alert("Opens should not be empty.");
 					return false;
 					}
-				if (roomValue == "" ){
+				if (roomValues.length == 0 ){
 					alert("Room should not be empty.");
 					return false;
 					}
@@ -378,15 +378,9 @@
 			};
 			
 			function validateFormAddRoom(thisForm){
-			//get the values of the input field with id='keyNumber_copyNumber'
 			with(thisForm){
-				var keyNumberValue = thisForm.keyNumber.value;
 				var roomValue = thisForm.room.value;
-				if (keyNumberValue == "" ){
-					alert("Key number is not selected.");
-					return false;
-					}
-				if (roomValue == "" ){
+				if (roomValue == null ){
 					alert("New room should not be empty.");
 					return false;
 					}
@@ -397,9 +391,9 @@
 			function validateFormDeleteRoom(thisForm){
 			//get the values of the input field with id='keyNumber_copyNumber'
 			with(thisForm){
-				var keyNumberValue = thisForm.keyNumber.value;
-				if (keyNumberValue == "" ){
-					alert("Key number is not selected.");
+				var roomID = thisForm.room.value;
+				if (roomID == null){
+					alert("Room is not selected.");
 					return false;
 					}
 				}
@@ -418,27 +412,21 @@
 			};
 			
 			function validateFormUpdateRoom(thisForm){
-			//get the values of the input field with id='keyNumber_copyNumber'
 			with(thisForm){
-				var keyNumberValue = thisForm.keyNumber.value;
-				if (keyNumberValue == "" ){
-					alert("Key number is not selected.");
+				var room = thisForm.room.value;
+				if (room == null){
+					alert("Room is not selected.");
 					return false;
 					}
 				}
 			};
 			
 			function validateFormInfoUpdateRoom(thisForm){
-			//get the values of the input field with id='keyNumber_copyNumber'
 			with(thisForm){
-				var oldRoomValue = thisForm.oldRoom.value;
-				var newRoomValue = thisForm.newRoom.value;
-				if (oldRoomValue == "" ){
-					alert("Old room value is not selected.");
-					return false;
-					}
-				if (newRoomValue == "" ){
-					alert("New room value should not be empty.");
+				var keyNumberValues = thisForm.keys.values;
+				var deleteKeyValues = thisForm.delete_keys.values;
+				if ((keyNumberValues.length == 0) && (deleteKeyValues.length == 0)){
+					alert("No keys are selected");
 					return false;
 					}
 				}
@@ -459,7 +447,7 @@
 			//get the values of the input field with id='keyNumber_copyNumber'
 			with(thisForm){
 				var roomValue = thisForm.room.value;
-				if (roomValue == "" ){
+				if (roomValue == null ){
 					alert("Room is not selected.");
 					return false;
 					}
@@ -516,9 +504,9 @@
 				}
 			};
 			
-			function transectionConfirm(){
-			//confirm window before all final step of transections
-				return confirm("Are you sure to finish this transection?")
+			function transactionConfirm(){
+			//confirm window before all final step of transactions
+				return confirm("Are you sure you want to complete this transaction?")
 			}
 			
 			function printInfo(ele){

@@ -1,52 +1,50 @@
-{% extends 'layout.html'%}
+{% extends 'layout.html' %}
 
 {% block main %}
-<div class="container">
-	 <br/>
-  <h1 class="text-center" style="color: #f0ad4e">delete a room</h1>
-	<br/>
-  <div class="row">
-    <div class="col-sm-3"></div>
-    <div class="col-sm-6">
-      <form class="" method="post" action="{{url_for('resultDeleteRoom')}}" onsubmit="return validateFormInfoDeleteRoom(this)">
-				<fieldset>
-					
-				<div class="form-group">
-					<label for="room" class="sr-only">select a key Number to add</label>
-					<div class="cols-sm-10">
-					<select class="form-control selectpicker" data-live-search="true" name="room">
-						<option selected disabled value="" class="text-hide">select a room to delete</option>
-						{%for room in rooms%}
-						<option value="{{room[0]}}">{{room[0]}}</option>
-						{%endfor%}
-					</select>
-					</div>
-				</div>
-					
-				<div class="invisible">
-				<div class="form-group">
-					<label for="keyNum" class="sr-only">select an keyNumber</label>
-					<div class="cols-sm-10">
-					<select class="form-control selectpicker" name="keyNumber">
-						<option selected="select" value="{{keyNumber}}">{{keyNumber}}</option>
-					</select>
-					</div>
-				</div>
-				</div>
+  <div class="container">
+    <br/>
+    <h1 class="text-center" style="color: #f0ad4e">delete a room</h1>
+    <br/>
+    <div class="row">
+      <div class="col-sm-3"></div>
+      <div class="col-sm-6">
+        <form class="" method="post" action="{{ url_for('resultDeleteRoom') }}">
+          <fieldset>
 
-					
-        <div class="form-group"><!--button submit-->
-          <div class="cols-sm-10">
-              <div class="text-center">
-              <button class=" btn btn-lg btn-warning" name="apply" type="submit" onclick="return transectionConfirm()">Next</button>
-              </div><!--end text-center-->
-          </div><!--end cols-sm-10-->
-        </div><!--end form-group-->
-					
-			</fieldset>		
-      </form>
-    </div>
-    <div class="col-sm-3"></div>
-  </div><!--end row-->
-</div>
+            <h3>These keys will have their association with room {{ room.1 }} deleted. Are you sure you want to
+              continue?</h3>
+
+            <table class="table table-hover">
+              <thead>
+              <tr>
+                <th>Key Number</th>
+              </tr>
+              </thead>
+              <tbody>
+              {% for key in keys %}
+                <tr>
+                  <!--key number-->
+                  <td>{{ key[0] }}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+
+            <div class="form-group"><!--button submit-->
+              <div class="cols-sm-10">
+                <div class="text-center">
+                  <button class=" btn btn-lg btn-warning" name="apply" type="submit"
+                          onclick="return transactionConfirm()">Next
+                  </button>
+                </div><!--end text-center-->
+              </div><!--end cols-sm-10-->
+            </div><!--end form-group-->
+
+            <input type="hidden" name="roomID" id="roomID" value="{{ room.0 }}">
+          </fieldset>
+        </form>
+      </div>
+      <div class="col-sm-3"></div>
+    </div><!--end row-->
+  </div>
 {% endblock %}
