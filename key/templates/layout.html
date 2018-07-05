@@ -392,8 +392,8 @@
 			function validateFormDeleteRoom(thisForm){
 			//get the values of the input field with id='keyNumber_copyNumber'
 			with(thisForm){
-				var keyNumberValue = thisForm.keyNumber.value;
-				if (keyNumberValue == "" ){
+				var roomID = thisForm.room.value;
+				if (keyNumberValue == null){
 					alert("Key number is not selected.");
 					return false;
 					}

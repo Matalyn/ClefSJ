@@ -12,12 +12,12 @@
 				<fieldset>
 					
 				<div class="form-group">
-					<label for="keyNumber" class="sr-only">select a key Number to delete</label>
+					<label for="room" class="sr-only">Select a room to delete</label>
 					<div class="cols-sm-10">
 					<select class="form-control selectpicker" data-live-search="true" name="keyNumber">
-						<option selected disabled value="" class="text-hide">select a key Number</option>
-						{%for key in keys%}
-						<option value="{{key[0]}}">{{key[0]}}</option>
+						<option selected disabled value="" class="text-hide">Select a room</option>
+						{%for room in rooms%}
+						<option value="{{room[0]}}">{{room[1]}}</option>
 						{%endfor%}
 					</select>
 					</div>

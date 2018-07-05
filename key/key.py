@@ -153,21 +153,28 @@ def resultLend():
     #get current user info in string
     currentUser = session['user']
     #pull client info
+
     conn = mysql.connect()
     cursor = conn.cursor()
-    cursor.execute("select * from client where email='"+email+"'")
-    client = cursor.fetchone()
-    #commit new lend record into table lent
-    cursor.execute("insert into lent values('"+keyNumber+"', '"+copyNumber+"', '"+email+"', '"+lendDate+"', '"+paymentMethod+"', '"+expectedReturnDate+"', '"+currentUser+"');")
-    conn.commit()
-    #commit status of the key copy just lent out
-    cursor.execute("update clef set status='lent' where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"';")
-    conn.commit()
-    #pull this copies info
-    cursor.execute("select * from lent where keyNumber='"+keyNumber+"'and copyNumber='"+copyNumber+"';")
-    lent = cursor.fetchone()
-    #render html with client address info, key just lentout info, its depositValue and admin
-    return render_template('resultLend.html', client = client, lent = lent, depositValue = depositValue, currentUser = currentUser)
+
+    try:
+        cursor.execute("select * from client where email='"+email+"'")
+        client = cursor.fetchone()
+        #commit new lend record into table lent
+        cursor.execute("insert into lent values('"+keyNumber+"', '"+copyNumber+"', '"+email+"', '"+lendDate+"', '"+paymentMethod+"', '"+expectedReturnDate+"', '"+currentUser+"');")
+        #commit status of the key copy just lent out
+        cursor.execute("update clef set status='lent' where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"';")
+        #pull this copies info
+        cursor.execute("select * from lent where keyNumber='"+keyNumber+"'and copyNumber='"+copyNumber+"';")
+        lent = cursor.fetchone()
+        #render html with client address info, key just lentout info, its depositValue and admin
+        conn.commit()
+        return render_template('resultLend.html', client = client, lent = lent, depositValue = depositValue, currentUser = currentUser)
+    except:
+        error = "There was a problem lending out this key. Please try again."
+        flash(error)
+        conn.rollback()
+        return redirect(url_for('lend'))
 
 @app.route('/return', methods = ['POST', 'GET'])
 #The 1/2 step of return, client address confirmation
@@ -199,32 +206,37 @@ def resultReturn():
     keyNumber = numberList[0]
     copyNumber = numberList[1]
     #pull client email, lendDate, paymenthod of lending from table lent
-    conn = mysql.connect()
-    cursor = conn.cursor()
-    #get client email, lendDate and paymentMethod
-    cursor.execute("select email, lendDate, paymentMethod from lent where keyNumber='"+keyNumber+"' and copyNumber="+copyNumber+"")
-    lend = cursor.fetchone()
-    email = lend[0]
-    lendDate = str(lend[1])
-    lendpaymentMethod = lend[2]
-    #pull client address using client email
-    cursor.execute("select * from client where email ='"+email+"';")
-    client = cursor.fetchone()
-    #pull depositValue using keyNumber
-    cursor.execute("select distinct depositValue from clef where keyNumber='"+keyNumber+"'")
-    depositValue = cursor.fetchone()
-    #commit the return records into return history table
-    cursor.execute("insert into returnhistory (keyNumber, copyNumber, email, lendDate, returnDate, lendPaymentMethod, admin) values('"+keyNumber+"', '"+copyNumber+"', '"+email+"', '"+lendDate+"', '"+returnDate+"', '"+lendpaymentMethod+"', '"+currentUser+"')")
-    conn.commit()
-    #delete the lending records from lend table
-    cursor.execute("delete from lent where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"'")
-    conn.commit()
-    #Update clef table to set status of the key copy just returned back to 'available'
-    cursor.execute("update clef set status='available' where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"'")
-    conn.commit()
-    #render html receipt with client address, depositValue, returnDate(today), lendDate, keyNumber and admin
-    return render_template('resultReturn.html', client = client, depositValue = depositValue, returnDate = returnDate, lendDate = lendDate, keyNumber = keyNumber, currentUser = currentUser)
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        #get client email, lendDate and paymentMethod
+        cursor.execute("select email, lendDate, paymentMethod from lent where keyNumber='"+keyNumber+"' and copyNumber="+copyNumber+"")
+        lend = cursor.fetchone()
+        email = lend[0]
+        lendDate = str(lend[1])
+        lendpaymentMethod = lend[2]
+        #pull client address using client email
+        cursor.execute("select * from client where email ='"+email+"';")
+        client = cursor.fetchone()
+        #pull depositValue using keyNumber
+        cursor.execute("select distinct depositValue from clef where keyNumber='"+keyNumber+"'")
+        depositValue = cursor.fetchone()
+        #commit the return records into return history table
+        cursor.execute("insert into returnhistory (keyNumber, copyNumber, email, lendDate, returnDate, lendPaymentMethod, admin) values('"+keyNumber+"', '"+copyNumber+"', '"+email+"', '"+lendDate+"', '"+returnDate+"', '"+lendpaymentMethod+"', '"+currentUser+"')")
+        #delete the lending records from lend table
+        cursor.execute("delete from lent where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"'")
+        #Update clef table to set status of the key copy just returned back to 'available'
+        cursor.execute("update clef set status='available' where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"'")
+        #render html receipt with client address, depositValue, returnDate(today), lendDate, keyNumber and admin
+        conn.commit()
 
+        return render_template('resultReturn.html', client = client, depositValue = depositValue, returnDate = returnDate, lendDate = lendDate, keyNumber = keyNumber, currentUser = currentUser)
+
+    except:
+        error = "There was a problem returning this key. Please try again."
+        flash(error)
+        conn.rollback()
+        return redirect(url_for('retrieve'))
 @app.route('/reportPassedDueKeys', methods = ['POST', 'GET'])
 #pret
 def reportPassedDueKeys():
@@ -287,31 +299,35 @@ def resultLoss():
     penaltyValue = request.form['penaltyValue']
     methodPay = request.form['methodPay']
     #pull client email and lendDate from table lent
-    conn = mysql.connect()
-    cursor = conn.cursor()
-    cursor.execute("select email, lendDate from lent where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"'")
-    lend = cursor.fetchone()
-    email = lend[0]
-    lendDate = str(lend[1])
-    #pull client address from table client by client email
-    cursor.execute("select * from client where email='"+email+"'")
-    client = cursor.fetchone()
-    #commit loss record into losshistory table
-    cursor.execute("insert into losshistory values('"+keyNumber+"', '"+copyNumber+"', '"+email+"', '"+lendDate+"', '"+lossDate+"', '"+methodPay+"','"+currentUser+"') ")
-    conn.commit()
-    #delete lend record of the key copy just lost
-    cursor.execute("delete from lent where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"'")
-    conn.commit()
-    #update the status of the key just lost into 'loss'
-    cursor.execute("update clef set status='lost' where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"'")
-    conn.commit()
-    #puill newly lost key inforamtion form table losshistory
-    #the reason to not using the informaiton above but pull it back from database is to validate this transection
-    #to see if the loss record is succesfully added
-    cursor.execute("select * from losshistory where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"'")
-    loss = cursor.fetchone()
-    #render html receipt with penaltyValue, client address informaiton, key inforamiton of the key just lost and admin
-    return render_template('resultLoss.html', penaltyValue = penaltyValue, client = client, loss = loss, currentUser = currentUser)
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute("select email, lendDate from lent where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"'")
+        lend = cursor.fetchone()
+        email = lend[0]
+        lendDate = str(lend[1])
+        #pull client address from table client by client email
+        cursor.execute("select * from client where email='"+email+"'")
+        client = cursor.fetchone()
+        #commit loss record into losshistory table
+        cursor.execute("insert into losshistory values('"+keyNumber+"', '"+copyNumber+"', '"+email+"', '"+lendDate+"', '"+lossDate+"', '"+methodPay+"','"+currentUser+"') ")
+        #delete lend record of the key copy just lost
+        cursor.execute("delete from lent where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"'")
+        #update the status of the key just lost into 'loss'
+        cursor.execute("update clef set status='lost' where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"'")
+        #puill newly lost key inforamtion form table losshistory
+        #the reason to not using the informaiton above but pull it back from database is to validate this transection
+        #to see if the loss record is succesfully added
+        cursor.execute("select * from losshistory where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"'")
+        loss = cursor.fetchone()
+        #render html receipt with penaltyValue, client address informaiton, key inforamiton of the key just lost and admin
+        conn.commit()
+        return render_template('resultLoss.html', penaltyValue = penaltyValue, client = client, loss = loss, currentUser = currentUser)
+    except:
+        error = "There was a problem recording the loss of this key. Please try again."
+        flash(error)
+        conn.rollback()
+        return redirect(url_for('loss'))
 
 @app.route('/addKey', methods = ['POST', 'GET'])
 #perte
@@ -338,16 +354,21 @@ def resultAddKey():
     rooms = request.form.getlist('room')
     conn = mysql.connect()
     cursor = conn.cursor()
-    for copyNumber in range(copyNumberStart, copyNumberEnd):
-        copyNumber = unicode(copyNumber)
-        cursor.execute("insert into clef values('"+keyNumber+"', '"+copyNumber+"','"+depositValue+"', '"+opens+"', '"+status+"')")
+    try:
+        for copyNumber in range(copyNumberStart, copyNumberEnd):
+            copyNumber = unicode(copyNumber)
+            cursor.execute("insert into clef values('"+keyNumber+"', '"+copyNumber+"','"+depositValue+"', '"+opens+"', '"+status+"')")
+            for room in rooms:
+                cursor.execute("insert into unlocks values('"+keyNumber+"', "+str(room[0])+")")
+        cursor.execute("select * from clef where keyNumber='"+keyNumber+"' and copyNumber>='"+str(copyNumberStart)+"' and copyNumber<='"+str(copyNumberEnd)+"'")
+        keys = cursor.fetchall()
         conn.commit()
-        for room in rooms:
-            cursor.execute("insert into unlocks values('"+keyNumber+"', "+str(room[0])+")")
-            conn.commit()
-    cursor.execute("select * from clef where keyNumber='"+keyNumber+"' and copyNumber>='"+str(copyNumberStart)+"' and copyNumber<='"+str(copyNumberEnd)+"'")
-    keys = cursor.fetchall()
-    return render_template('resultAddKey.html', keys = keys)
+        return render_template('resultAddKey.html', keys = keys)
+    except:
+        error = "There was a problem adding this key. Please try again."
+        flash(error)
+        conn.rollback()
+        return redirect(url_for("addKey"))
 
 @app.route('/changeKey', methods = ['POST', 'GET'])
 #searh profile for one clinet
@@ -368,11 +389,17 @@ def resultChangeKey():
     room = request.form['room']
     conn = mysql.connect()
     cursor = conn.cursor()
-    cursor.execute("update room set room='"+room+"' where keyNumber='"+keyNumber+"'")
-    conn.commit()
-    cursor.execute("select * from clef where keyNumber='"+keyNumber+"'")
-    keys = cursor.fetchall()
-    return render_template('resultChangeKey.html', keys = keys, room = room)
+    try:
+        cursor.execute("update room set room='"+room+"' where keyNumber='"+keyNumber+"'")
+        cursor.execute("select * from clef where keyNumber='"+keyNumber+"'")
+        keys = cursor.fetchall()
+        conn.commit()
+        return render_template('resultChangeKey.html', keys = keys, room = room)
+    except:
+        error = "This key could not be changed. Please try again."
+        flash(error)
+        conn.rollback()
+        return redirect(url_for("changeKey"))
 
 
 @app.route('/reportClient', methods = ['POST', 'GET'])
@@ -437,11 +464,17 @@ def resultAddClient():
         return redirect(url_for('addClient'))
 
     else:
-        cursor.execute("insert into client values('"+email+"', '"+firstName+"', '"+lastName+"', '"+address+"', '"+city+"', '"+province+"', '"+postcode+"', '"+phoneNumber+"')")
-        conn.commit()
-        cursor.execute("select * from client where email='"+email+"'")
-        client = cursor.fetchone()
-        return render_template('resultAddClient.html', client = client)
+        try:
+            cursor.execute("insert into client values('"+email+"', '"+firstName+"', '"+lastName+"', '"+address+"', '"+city+"', '"+province+"', '"+postcode+"', '"+phoneNumber+"')")
+            cursor.execute("select * from client where email='"+email+"'")
+            client = cursor.fetchone()
+            conn.commit()
+            return render_template('resultAddClient.html', client = client)
+        except:
+            error = "There was a problem adding this client. Please try again."
+            flash(error)
+            conn.rollback()
+            return redirect(url_for("addClient"))
 
 @app.route('/changeClient', methods = ['POST', 'GET'])
 #add new client
@@ -480,11 +513,17 @@ def resultChangeClient():
     phoneNumber = request.form['phoneNumber']
     conn = mysql.connect()
     cursor = conn.cursor()
-    cursor.execute("update client set email='"+newEmail+"', firstName='"+firstName+"', lastName='"+lastName+"', address='"+address+"', city='"+city+"', province='"+province+"', postcode='"+postcode+"', phoneNumber='"+phoneNumber+"' where email='"+oldEmail+"'")
-    conn.commit()
-    cursor.execute("select * from client where email='"+newEmail+"'")
-    client = cursor.fetchone()
-    return render_template('resultChangeClient.html', client = client)
+    try:
+        cursor.execute("update client set email='"+newEmail+"', firstName='"+firstName+"', lastName='"+lastName+"', address='"+address+"', city='"+city+"', province='"+province+"', postcode='"+postcode+"', phoneNumber='"+phoneNumber+"' where email='"+oldEmail+"'")
+        cursor.execute("select * from client where email='"+newEmail+"'")
+        client = cursor.fetchone()
+        conn.commit()
+        return render_template('resultChangeClient.html', client = client)
+    except:
+        error = "There was a problem updating this client. Please try again."
+        flash(error)
+        conn.rollback()
+        return redirect(url_for("changeClient"))
 
 
 @app.route('/reportOffices', methods = ['POST', 'GET'])
@@ -524,13 +563,19 @@ def resultAddRoom():
     room = request.form['room']
     conn = mysql.connect()
     cursor = conn.cursor()
-    cursor.execute("insert into room (address) values(%s)", (room,))
-    conn.commit()
-    cursor.execute("SELECT DISTINCT keyNumber FROM clef")
-    keys = cursor.fetchall()
-    cursor.execute("SELECT * FROM room WHERE address=%s", (room,))
-    room = cursor.fetchone()
-    return render_template('infoUpdateRoom.html', keys=keys, room=room)
+    try:
+        cursor.execute("insert into room (address) values(%s)", (room,))
+        cursor.execute("SELECT DISTINCT keyNumber FROM clef")
+        keys = cursor.fetchall()
+        cursor.execute("SELECT * FROM room WHERE address=%s", (room,))
+        room = cursor.fetchone()
+        conn.commit()
+        return render_template('infoUpdateRoom.html', keys=keys, room=room)
+    except:
+        error = "There was a problem adding this room. Please try again."
+        flash(error)
+        conn.rollback()
+        return redirect(url_for("addRoom"))
 
 @app.route('/deleteRoom', methods = ['POST', 'GET'])
 #bureau
@@ -539,21 +584,22 @@ def deleteRoom():
         abort(401)
     conn = mysql.connect()
     cursor = conn.cursor()
-    cursor.execute("select distinct keyNumber from room")
-    keys = cursor.fetchall()
-    return render_template('deleteRoom.html', keys = keys)
+    cursor.execute("select * from room")
+    rooms = cursor.fetchall()
+    return render_template('deleteRoom.html', rooms = rooms)
 
 @app.route('/infoDeleteRoom', methods = ['POST', 'GET'])
 #bureau
 def infoDeleteRoom():
     if not session.get('logged_in'):
         abort(401)
-    keyNumber = request.form['keyNumber']
+    room = request.form['room']
     conn = mysql.connect()
     cursor = conn.cursor()
-    cursor.execute("select room from room where keyNumber='"+keyNumber+"'")
-    rooms = cursor.fetchall()
-    return render_template('infoDeleteRoom.html', rooms = rooms, keyNumber = keyNumber)
+    cursor.execute("SELECT keyNumber FROM unlocks WHERE roomID=%s", (int(room),))
+    keys = cursor.fetchall()
+    cursor.execute("SELECT * FROM room WHERE id=%s", (int(room),))
+    return render_template('infoDeleteRoom.html', room = room, keys = keys)
 
 @app.route('/resultDeleteRoom', methods = ['POST', 'GET'])
 #bureau
@@ -561,14 +607,20 @@ def resultDeleteRoom():
     if not session.get('logged_in'):
         abort(401)
     keyNumber = request.form['keyNumber']
-    room = request.form['room']
+    roomID = request.form['roomID']
     conn = mysql.connect()
     cursor = conn.cursor()
-    cursor.execute("delete from room where keyNumber='"+keyNumber+"' and room='"+room+"'")
-    conn.commit()
-    cursor.execute("select * from room where keyNumber='"+keyNumber+"'")
-    rooms = cursor.fetchall()
-    return render_template('resultDeleteRoom.html', rooms = rooms)
+    try:
+        cursor.execute("delete from room where id = %s", ())
+        conn.commit()
+        message = "Room successfully deleted"
+        flash(message)
+    except:
+        error = "There was a problem deleting this room."
+        conn.rollback()
+        flash(error)
+
+    return redirect(url_for('deleteRoom'))
 
 @app.route('/updateRoom', methods = ['POST', 'GET'])
 #bureau
@@ -610,19 +662,25 @@ def resultUpdateRoom():
     for keyNumber in keyNumbers:
         try:
             cursor.execute("INSERT INTO unlocks VALUES (%s, %s)", (str(keyNumber), int(roomID)))
-            conn.commit()
         except:
-            continue
+            error = "There was a problem adding keys to this room. Please try again."
+            flash(error)
+            conn.rollback()
+            return redirect(url_for('updateRoom'))
     for deleteKeyNumber in deleteKeyNumbers:
         try:
             cursor.execute("DELETE FROM unlocks WHERE keyNumber=%s AND roomID=%s", (str(deleteKeyNumber), int(roomID)))
-            conn.commit()
         except:
-            continue
+            error = "There was a problem deleting keys from this room. Please try again."
+            flash(error)
+            conn.rollback()
+            return redirect(url_for('updateRoom'))
+
     cursor.execute("SELECT * FROM room WHERE id=%s", (roomID,))
     room = cursor.fetchone()
     cursor.execute("SELECT * FROM clef WHERE keyNumber IN (SELECT keyNumber FROM unlocks WHERE roomID=%s)", (int(roomID),))
     keys = cursor.fetchall()
+    conn.commit()
     return render_template('resultReportKeysbyRoom.html', room = room, keys = keys)
 
 
@@ -751,13 +809,19 @@ def resultAddAdmin():
     if user is not None:
         error = 'Admin with email {} is already registered.'.format(email)
         flash(error)
-        return render_template('addAdmin.html')
+        return redirect(url_for("addAdmin"))
     else:
-        cursor.execute("insert into admin values('"+email+"', '"+generate_password_hash(password)+"', '"+firstName+"', '"+lastName+"','regular','active', 'no')")
-        conn.commit()
-        cursor.execute("select * from admin where email='"+email+"'")
-        admin = cursor.fetchone()
-        return render_template('resultAddAdmin.html', admin=admin)
+        try:
+            cursor.execute("insert into admin values('"+email+"', '"+generate_password_hash(password)+"', '"+firstName+"', '"+lastName+"','regular','active', 'no')")
+            cursor.execute("select * from admin where email='"+email+"'")
+            admin = cursor.fetchone()
+            conn.commit()
+            return render_template('resultAddAdmin.html', admin=admin)
+        except:
+            error = "There was a problem adding this admin. Please try again."
+            flash(error)
+            conn.rollback()
+            return redirect(url_for('addAdmin'))
 
 @app.route('/activateAdmin', methods = ['POST', 'GET'])
 #bureau
@@ -787,12 +851,18 @@ def resultActivateAdmin():
     if not adminType == 'super':
         return render_template("invalidPriority.html")
     #activate reguer user
-    cursor.execute("update admin set status='active' where email='"+email+"'")
-    conn.commit()
-    cursor.execute("select * from admin;")
-    admins = cursor.fetchall()
-    #show all admins left as a result
-    return render_template('resultAllAdmins.html', admins = admins)
+    try:
+        cursor.execute("update admin set status='active' where email='"+email+"'")
+        cursor.execute("select * from admin;")
+        admins = cursor.fetchall()
+        #show all admins left as a result
+        conn.commit()
+        return render_template('resultAllAdmins.html', admins = admins)
+    except:
+        error = "There was a problem activating this admin. Please try again."
+        flash(error)
+        conn.rollback()
+        return redirect(url_for("activateAdmin"))
 
 @app.route('/deactivateAdmin', methods = ['POST', 'GET'])
 #bureau
@@ -821,12 +891,18 @@ def resultDeactivateAdmin():
     adminType = session['user'][4]
     if not adminType == 'super':
         return render_template("invalidPriority.html")
-    cursor.execute("update admin set status='deactivated' where email='"+email+"'")
-    conn.commit()
-    cursor.execute("select * from admin;")
-    admins = cursor.fetchall()
-    #show all admins left as a result
-    return render_template('resultAllAdmins.html', admins = admins)
+    try:
+        cursor.execute("update admin set status='deactivated' where email='"+email+"'")
+        cursor.execute("select * from admin;")
+        admins = cursor.fetchall()
+        #show all admins left as a result
+        conn.commit()
+        return render_template('resultAllAdmins.html', admins = admins)
+    except:
+        error = "There was a problem deactivating this admin. Please try again."
+        flash(error)
+        conn.rollback()
+        return redirect(url_for("deactivateAdmin"))
 
 @app.route('/signout')
 #signout
@@ -844,10 +920,15 @@ def changePasswordHash():
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM admin")
     admins = cursor.fetchall()
-    for admin in admins:
-        cursor.execute("UPDATE admin SET password = %s WHERE email = %s", (generate_password_hash(admin[1]), admin[0]))
+    try:
+        for admin in admins:
+            cursor.execute("UPDATE admin SET password = %s WHERE email = %s", (generate_password_hash(admin[1]), admin[0]))
 
-    conn.commit()
+        conn.commit()
+    except:
+        error = "There was a problem changing password hashes."
+        flash(error)
+        conn.rollback()
     return redirect(url_for('signin'))
 
 #app running function
