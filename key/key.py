@@ -606,7 +606,6 @@ def infoDeleteRoom():
 def resultDeleteRoom():
     if not session.get('logged_in'):
         abort(401)
-    keyNumber = request.form['keyNumber']
     roomID = request.form['roomID']
     conn = mysql.connect()
     cursor = conn.cursor()
