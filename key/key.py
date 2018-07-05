@@ -969,7 +969,7 @@ def getResetLink():
         else:
             userinfo = [admin[0], admin[1]]
             token = serializer.dumps(userinfo)
-            link = "testkey.csj.ualberta.ca:5000/passwordReset/?token=" + token
+            link = "testkey.csj.ualberta.ca:5000/passwordReset?token=" + token
 
             text = "Your password reset link is " + link
 
