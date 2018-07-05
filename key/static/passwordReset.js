@@ -7,7 +7,7 @@ function validateFormPasswordReset(thisForm) {
             return false;
         }
         if (password.valueOf().trim() != password2.valueOf().trim()) {
-            alert(("Passwords must match."));
+            alert(("Passwords must match. Password1 = %s, Password2 = %s", password, password2));
             return false;
         }
     }
