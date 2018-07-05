@@ -973,8 +973,7 @@ def getResetLink():
 
             text = "Your password reset link is " + link
 
-            msg = Message(subject="Password Reset for Testkey", recipients=[email], sender="donotreply@testkey.csj.ualberta.ca",
-                          body=text)
+            msg = Message(subject="Password Reset for Testkey", recipients=[email], body=text)
             mail.send(msg)
 
             message = "Reset password sent"
