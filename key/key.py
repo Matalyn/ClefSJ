@@ -3,6 +3,8 @@ from flask import Flask, request, session, abort, redirect, render_template, url
 from werkzeug.security import check_password_hash, generate_password_hash
 from flaskext.mysql import MySQL
 import datetime
+from itsdangerous import URLSafeSerializer, BadSignature
+from flask_mail import Mail, Message
 
 #craete a flask app instance
 app = Flask(__name__)
@@ -18,6 +20,11 @@ app.config['MYSQL_DATABASE_USER'] = 'xxxxx'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'xxxxx'
 app.config['MYSQL_DATABASE_DB'] = 'xxxxxx'
 mysql.init_app(app)
+
+mail = Mail()
+mail.init_app(app)
+
+serializer = URLSafeSerializer('secret-key')
 
 #this set of configuration is for development environment
 #mysql = MySQL()
@@ -932,6 +939,94 @@ def changePasswordHash():
         flash(error)
         conn.rollback()
     return redirect(url_for('signin'))
+
+@app.route('/getResetLink', methods = ['GET', 'POST'])
+def getResetLink():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    if request.method == 'GET':
+        return render_template('getResetLink.html')
+
+    elif request.method == 'POST':
+        email = request.form['email']
+        cursor.execute('SELECT * FROM admin WHERE email=%s', (email,))
+        admin = cursor.fetchone()
+        if admin is None:
+            error = "User with this email does not exist."
+            flash(error)
+            return redirect(url_for('getResetLink'))
+        else:
+            userinfo = [admin[0], admin[1]]
+            token = serializer.dumps(userinfo)
+            link = "testkey.csj.ualberta.ca:5000/passwordReset/?token=" + token
+
+            text = "Your password reset link is " + link
+
+            msg = Message(subject="Password Reset for Testkey", recipients=[email], sender="donotreply@testkey.csj.ualberta.ca",
+                          body=text)
+            mail.send(msg)
+
+            message = "Reset password sent"
+            flash(message)
+            return redirect(url_for('signin'))
+
+@app.route('/passwordReset', methods = ['GET', 'POST'])
+def passwordReset():
+
+    if request.method == 'GET':
+        token = request.args.get('token')
+        try:
+            userinfo = serializer.loads(token)
+        except BadSignature:
+            error = "Invalid reset link. Please try again."
+            flash(error)
+            redirect(url_for('signin'))
+        except:
+            error = "There was a problem loading reset page. Please try again."
+            flash(error)
+            redirect(url_for('signin'))
+
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM admin WHERE email=%s", (userinfo[0]))
+        admin = cursor.fetchone()
+
+        if admin is None:
+            error = "User does not exist"
+        elif userinfo[1] != admin[1]:
+            error = "This password has already been changed."
+        elif admin[5] == 'deactivated':
+            error = "Account needs to be activated."
+        else:
+            return render_template('resetPassword.html', admin=admin)
+
+        flash(error)
+        return redirect(url_for('signin'))
+
+    elif request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        try:
+            cursor.execute("UPDATE admin SET password = %s WHERE email = %s", (generate_password_hash(password), email))
+            message = "Password successfully changed!"
+            flash(message)
+            conn.commit()
+            return redirect(url_for('signin'))
+
+        except:
+            error = "There was a problem changing your password. Please try again."
+            flash(error)
+            return redirect(url_for('signin'))
+
+
+
+
+
 
 #app running function
 if __name__ == "__main__":
