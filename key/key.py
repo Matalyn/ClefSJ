@@ -1003,15 +1003,20 @@ def passwordReset():
 
         if admin is None:
             error = "User does not exist"
+            flash(error)
+            return redirect(url_for('signin'))
         elif userinfo[1] != admin[1]:
             error = "This password has already been changed."
+            flash(error)
+            return redirect(url_for('signin'))
         elif admin[5] == 'deactivated':
             error = "Account needs to be activated."
+            flash(error)
+            return redirect(url_for('signin'))
         else:
             return render_template('resetPassword.html', admin=admin)
 
-        flash(error)
-        return redirect(url_for('signin'))
+
 
     elif request.method == 'POST':
         email = request.form['email']
