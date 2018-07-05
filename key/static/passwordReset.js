@@ -8,10 +8,10 @@ function validateFormPasswordReset(thisForm) {
         }
         if (password.valueOf() !== password2.valueOf()) {
             alert("Passwords must match.");
-            log(password.type());
-            log(password.valueOf());
-            log(password2.type());
-            log(password2.valueOf());
+            console.log(password.type());
+            console.log(password.valueOf());
+            console.log(password2.type());
+            console.log(password2.valueOf());
             return false;
         }
     }
