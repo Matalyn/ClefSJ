@@ -599,6 +599,7 @@ def infoDeleteRoom():
     cursor.execute("SELECT keyNumber FROM unlocks WHERE roomID=%s", (int(room),))
     keys = cursor.fetchall()
     cursor.execute("SELECT * FROM room WHERE id=%s", (int(room),))
+    room = cursor.fetchone()
     return render_template('infoDeleteRoom.html', room = room, keys = keys)
 
 @app.route('/resultDeleteRoom', methods = ['POST', 'GET'])
