@@ -611,7 +611,7 @@ def resultDeleteRoom():
     conn = mysql.connect()
     cursor = conn.cursor()
     try:
-        cursor.execute("delete from room where id = %s", ())
+        cursor.execute("delete from room where id = %s", (int(roomID),))
         conn.commit()
         message = "Room successfully deleted"
         flash(message)
@@ -754,8 +754,10 @@ def resultReportKeysbyRoom():
     room = request.form['room']
     #pull all copies that opens that room, with its keyNumber and what door it opens(room door or mailbox)
     cursor = mysql.connect().cursor()
-    cursor.execute("select c.keyNumber, c.copyNumber, c.opens from unlocks u, clef c where u.keyNumber=c.keyNumber and u.roomID="+str(room[0]))
+    cursor.execute("select c.keyNumber, c.copyNumber, c.opens from unlocks u JOIN clef c ON u.keyNumber=c.keyNumber WHERE u.roomID=%s", (int(room),))
     keys = cursor.fetchall()
+    cursor.execute("select * from room where id = %s", (int(room),))
+    room = cursor.fetchone()
     #render html with a table that shows records of keyNumber, copuNumber and what door it opens.
     return render_template('resultReportKeysbyRoom.html', keys=keys, room = room)
 
