@@ -6,8 +6,12 @@ function validateFormPasswordReset(thisForm) {
             alert(("Passwords cannot be empty."));
             return false;
         }
-        if (password.valueOf() != password2.valueOf()) {
-            alert(("Passwords must match. Password1 = %s, Password2 = %s", password.valueOf(), password2.valueOf()));
+        if (password.valueOf() !== password2.valueOf()) {
+            alert("Passwords must match.");
+            log(password.type());
+            log(password.valueOf());
+            log(password2.type());
+            log(password2.valueOf());
             return false;
         }
     }
