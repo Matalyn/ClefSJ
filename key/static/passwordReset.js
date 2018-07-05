@@ -6,7 +6,7 @@ function validateFormPasswordReset(thisForm) {
             alert(("Passwords cannot be empty."));
             return false;
         }
-        if (password.valueOf().trim() != password2.valueOf().trim()) {
+        if (password.valueOf() != password2.valueOf()) {
             alert(("Passwords must match. Password1 = %s, Password2 = %s", password, password2));
             return false;
         }
