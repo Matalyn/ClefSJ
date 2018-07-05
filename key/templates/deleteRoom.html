@@ -14,7 +14,7 @@
 				<div class="form-group">
 					<label for="room" class="sr-only">Select a room to delete</label>
 					<div class="cols-sm-10">
-					<select class="form-control selectpicker" data-live-search="true" name="keyNumber">
+					<select class="form-control selectpicker" data-live-search="true" name="room">
 						<option selected disabled value="" class="text-hide">Select a room</option>
 						{%for room in rooms%}
 						<option value="{{room[0]}}">{{room[1]}}</option>
@@ -30,7 +30,7 @@
               </div><!--end text-center-->
           </div><!--end cols-sm-10-->
         </div><!--end form-group-->
-					
+
 			</fieldset>		
       </form>
     </div>
