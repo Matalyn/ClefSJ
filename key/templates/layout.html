@@ -242,7 +242,7 @@
 				var depositValueValue = thisForm.depositValue.value;
 				var statusValue = thisForm.status.value;
 				var opensValue = thisForm.opens.value;
-				var roomValue = thisForm.room.value;
+				var roomValues = thisForm.room.values;
 				if (keyNumberValue == "" ){
 					alert("Key number should not be empty.");
 					return false;
@@ -267,7 +267,7 @@
 					alert("Opens should not be empty.");
 					return false;
 					}
-				if (roomValue == "" ){
+				if (roomValues.length == 0 ){
 					alert("Room should not be empty.");
 					return false;
 					}
@@ -378,7 +378,6 @@
 			};
 			
 			function validateFormAddRoom(thisForm){
-			//get the values of the input field with id='keyNumber_copyNumber'
 			with(thisForm){
 				var roomValue = thisForm.room.value;
 				if (roomValue == null ){
@@ -393,8 +392,8 @@
 			//get the values of the input field with id='keyNumber_copyNumber'
 			with(thisForm){
 				var roomID = thisForm.room.value;
-				if (keyNumberValue == null){
-					alert("Key number is not selected.");
+				if (roomID == null){
+					alert("Room is not selected.");
 					return false;
 					}
 				}
@@ -425,8 +424,9 @@
 			function validateFormInfoUpdateRoom(thisForm){
 			with(thisForm){
 				var keyNumberValues = thisForm.keys.values;
-				if (keyNumberValues.length == 0){
-					alert("Key number is not selected.");
+				var deleteKeyValues = thisForm.delete_keys.values;
+				if ((keyNumberValues.length == 0) && (deleteKeyValues.length == 0)){
+					alert("No keys are selected");
 					return false;
 					}
 				}
@@ -505,7 +505,7 @@
 			};
 			
 			function transactionConfirm(){
-			//confirm window before all final step of transections
+			//confirm window before all final step of transactions
 				return confirm("Are you sure you want to complete this transaction?")
 			}
 			
