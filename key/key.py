@@ -22,6 +22,16 @@ app.config['MYSQL_DATABASE_DB'] = 'xxxxxx'
 mysql.init_app(app)
 
 mail = Mail()
+
+app.config.update(
+	#EMAIL SETTINGS
+	MAIL_SERVER='smtp.gmail.com',
+	MAIL_PORT=465,
+	MAIL_USE_SSL=True,
+	MAIL_USERNAME = 'example@gmail.com',
+	MAIL_PASSWORD = 'example',
+    MAIL_DEFAULT_SENDER = 'example@gmail.com'
+	)
 mail.init_app(app)
 
 serializer = URLSafeSerializer('secret-key')
