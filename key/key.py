@@ -13,7 +13,7 @@ app = Flask(__name__)
 app.secret_key = "development_key"
 
 #app configaration section for mysql server connection
-#this set of configuration is for production environment 
+#this set of configuration is for production environment
 mysql = MySQL()
 app.config['MYSQL_DATABASE_HOST'] = 'xxxxx'
 app.config['MYSQL_DATABASE_USER'] = 'xxxxx'
@@ -152,7 +152,7 @@ def infoLend():
     return render_template('infoLend.html', copies = copies, clients = clients, depositValue = depositValue, keyNumber = keyNumber)
 
 @app.route('/resultLend', methods = ['POST', 'GET'])
-#The 3/3 step of lend, final confirmation and receipt 
+#The 3/3 step of lend, final confirmation and receipt
 def resultLend():
     #check if login session
     if not session.get('logged_in'):
@@ -195,7 +195,7 @@ def resultLend():
 
 @app.route('/return', methods = ['POST', 'GET'])
 #The 1/2 step of return, client address confirmation
-def retrieve():	
+def retrieve():
     #check if login session
     if not session.get('logged_in'):
         abort(401)
@@ -208,7 +208,7 @@ def retrieve():
     return render_template('return.html', keys = keys)
 
 @app.route('/resultReturn', methods=['POST', 'Get'])
-#The 2/2 step of return, final confirmation and receipt 
+#The 2/2 step of return, final confirmation and receipt
 def resultReturn():
     #check if login session
     if not session.get('logged_in'):
@@ -268,7 +268,7 @@ def reportPassedDueKeys():
 
 
 @app.route('/loss', methods = ['POST', 'GET'])
-#The 1/3 step of loss, lending key selectio and client address confirmation 
+#The 1/3 step of loss, lending key selectio and client address confirmation
 def loss():
     #check if login session
     if not session.get('logged_in'):
@@ -420,7 +420,7 @@ def resultChangeKey():
 
 
 @app.route('/reportClient', methods = ['POST', 'GET'])
-#The 1/2 step of 
+#The 1/2 step of
 def reportClient():
     if not session.get('logged_in'):
         abort(401)
@@ -969,7 +969,7 @@ def getResetLink():
         else:
             userinfo = [admin[0], admin[1]]
             token = serializer.dumps(userinfo)
-            link = "testkey.csj.ualberta.ca:5000/passwordReset?token=" + token
+            link = "testkey.csj.ualberta.ca:5000/resetPassword?token=" + token
 
             text = "Your password reset link is " + link
 
@@ -980,8 +980,8 @@ def getResetLink():
             flash(message)
             return redirect(url_for('signin'))
 
-@app.route('/passwordReset', methods = ['GET', 'POST'])
-def passwordReset():
+@app.route('/resetPassword', methods = ['GET', 'POST'])
+def resetPassword():
 
     if request.method == 'GET':
         token = request.args.get('token')
@@ -1038,7 +1038,42 @@ def passwordReset():
             return redirect(url_for('signin'))
 
 
-
+@app.route('/changePassword', methods = ['GET', 'POST'])
+def changePassword():
+    if not session.get('logged_in'):
+        abort(401)
+    if request.method == 'GET':
+        return render_template('changePassword.html')
+    elif request.method == 'POST':
+        oldPassword = request.form['oldPassword']
+        newPassword = request.form['newPassword']
+        newPasswordConfirm = request.form['newPasswordConfirm']
+        email = session['user'][0]
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute('SELECT password FROM admin WHERE email=%s', (email,))
+        oldPasswordHash = cursor.fetchone()
+        if not check_password_hash(oldPasswordHash[0], oldPassword):
+            error = "Current password is incorrect. Please try again."
+            flash(error)
+            return redirect(url_for('changePassword'))
+        elif str(newPassword) != str(newPasswordConfirm):
+            error = "New passwords do not match. Please try again."
+            flash(error)
+            return redirect(url_for('changePassword'))
+        else:
+            newPasswordHash = generate_password_hash(newPassword)
+            try:
+                cursor.execute("UPDATE admin SET password=%s WHERE email=%s", (newPasswordHash, email))
+                conn.commit()
+                message = "Password successfully changed!"
+                flash(message)
+                return redirect(url_for('lend'))
+            except:
+                error = "There was a problem updating your password. Please try again."
+                flash(error)
+                conn.rollback()
+                return redirect(url_for('changePassword'))
 
 
 
