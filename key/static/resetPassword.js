@@ -1,18 +1,21 @@
 function validateFormPasswordReset(thisForm) {
     with (thisForm) {
-        var password = thisForm.password.value;
-        var password2 = thisForm.password2.value;
-        if (password == "" || password2 == "") {
+        var password = thisForm.password.value.toString();
+        var password2 = thisForm.password2.value.toString();
+        if (password.valueOf() == "" || password2.valueOf() == "") {
             alert(("Passwords cannot be empty."));
             return false;
         }
-        if (password !== password2) {
+        else if (password.valueOf() !== password2.valueOf()) {
             alert("Passwords must match.");
             console.log(password.type());
             console.log(password.valueOf());
             console.log(password2.type());
             console.log(password2.valueOf());
             return false;
+        }
+        else {
+            return true;
         }
     }
 }
