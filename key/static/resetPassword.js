@@ -1,15 +1,15 @@
 function validateFormPasswordReset(thisForm) {
     with (thisForm) {
-        var password = thisForm.password.value;
-        var password2 = thisForm.password2.value;
-        if (password.valueOf() == "" || password2.valueOf() == "") {
+        var password_str = thisForm.password.value;
+        var password2_str = thisForm.password2.value;
+        if (password_str == "" || password2_str == "") {
             alert(("Passwords cannot be empty."));
             return false;
         }
-        else if (password.valueOf() !== password2.valueOf()) {
+        else if (password_str !== password2_str) {
             alert("Passwords must match.");
-            console.log(password.valueOf());
-            console.log(password2.valueOf());
+            console.log(password_str);
+            console.log(password2_str);
             return false;
         }
         else {
