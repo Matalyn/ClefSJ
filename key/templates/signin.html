@@ -31,6 +31,7 @@
             <div class="checkbox">
             </div>
             <button class="btn btn-primary btn-block btn-md btn-warning" type="submit">Se Connecter</button>
+            <a href="{{ url_for('getResetLink') }}" class="btn btn-primary btn-block btn-md btn-warning">Reset Password</a>
         </form>
 				{% if error %}<p class='error' align='center'><strong>Error: </strong> {{error}}{% endif%}
     </div> <!-- /container -->

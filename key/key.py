@@ -3,6 +3,8 @@ from flask import Flask, request, session, abort, redirect, render_template, url
 from werkzeug.security import check_password_hash, generate_password_hash
 from flaskext.mysql import MySQL
 import datetime
+from itsdangerous import URLSafeSerializer, BadSignature
+from flask_mail import Mail, Message
 
 #craete a flask app instance
 app = Flask(__name__)
@@ -11,13 +13,28 @@ app = Flask(__name__)
 app.secret_key = "development_key"
 
 #app configaration section for mysql server connection
-#this set of configuration is for production environment 
+#this set of configuration is for production environment
 mysql = MySQL()
 app.config['MYSQL_DATABASE_HOST'] = 'xxxxx'
 app.config['MYSQL_DATABASE_USER'] = 'xxxxx'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'xxxxx'
 app.config['MYSQL_DATABASE_DB'] = 'xxxxxx'
 mysql.init_app(app)
+
+mail = Mail()
+
+app.config.update(
+	#EMAIL SETTINGS
+	MAIL_SERVER='smtp.gmail.com',
+	MAIL_PORT=465,
+	MAIL_USE_SSL=True,
+	MAIL_USERNAME = 'example@gmail.com',
+	MAIL_PASSWORD = 'example',
+    MAIL_DEFAULT_SENDER = 'example@gmail.com'
+	)
+mail.init_app(app)
+
+serializer = URLSafeSerializer('secret-key')
 
 #this set of configuration is for development environment
 #mysql = MySQL()
@@ -135,7 +152,7 @@ def infoLend():
     return render_template('infoLend.html', copies = copies, clients = clients, depositValue = depositValue, keyNumber = keyNumber)
 
 @app.route('/resultLend', methods = ['POST', 'GET'])
-#The 3/3 step of lend, final confirmation and receipt 
+#The 3/3 step of lend, final confirmation and receipt
 def resultLend():
     #check if login session
     if not session.get('logged_in'):
@@ -178,7 +195,7 @@ def resultLend():
 
 @app.route('/return', methods = ['POST', 'GET'])
 #The 1/2 step of return, client address confirmation
-def retrieve():	
+def retrieve():
     #check if login session
     if not session.get('logged_in'):
         abort(401)
@@ -191,7 +208,7 @@ def retrieve():
     return render_template('return.html', keys = keys)
 
 @app.route('/resultReturn', methods=['POST', 'Get'])
-#The 2/2 step of return, final confirmation and receipt 
+#The 2/2 step of return, final confirmation and receipt
 def resultReturn():
     #check if login session
     if not session.get('logged_in'):
@@ -251,7 +268,7 @@ def reportPassedDueKeys():
 
 
 @app.route('/loss', methods = ['POST', 'GET'])
-#The 1/3 step of loss, lending key selectio and client address confirmation 
+#The 1/3 step of loss, lending key selectio and client address confirmation
 def loss():
     #check if login session
     if not session.get('logged_in'):
@@ -403,7 +420,7 @@ def resultChangeKey():
 
 
 @app.route('/reportClient', methods = ['POST', 'GET'])
-#The 1/2 step of 
+#The 1/2 step of
 def reportClient():
     if not session.get('logged_in'):
         abort(401)
@@ -932,6 +949,133 @@ def changePasswordHash():
         flash(error)
         conn.rollback()
     return redirect(url_for('signin'))
+
+@app.route('/getResetLink', methods = ['GET', 'POST'])
+def getResetLink():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    if request.method == 'GET':
+        return render_template('getResetLink.html')
+
+    elif request.method == 'POST':
+        email = request.form['email']
+        cursor.execute('SELECT * FROM admin WHERE email=%s', (email,))
+        admin = cursor.fetchone()
+        if admin is None:
+            error = "User with this email does not exist."
+            flash(error)
+            return redirect(url_for('getResetLink'))
+        else:
+            userinfo = [admin[0], admin[1]]
+            token = serializer.dumps(userinfo)
+            link = "testkey.csj.ualberta.ca:5000/resetPassword?token=" + token
+
+            text = "Your password reset link is " + link
+
+            msg = Message(subject="Password Reset for Testkey", recipients=[email], body=text)
+            mail.send(msg)
+
+            message = "Reset password sent"
+            flash(message)
+            return redirect(url_for('signin'))
+
+@app.route('/resetPassword', methods = ['GET', 'POST'])
+def resetPassword():
+
+    if request.method == 'GET':
+        token = request.args.get('token')
+        try:
+            userinfo = serializer.loads(token)
+        except BadSignature:
+            error = "Invalid reset link. Please try again."
+            flash(error)
+            redirect(url_for('signin'))
+        except:
+            error = "There was a problem loading reset page. Please try again."
+            flash(error)
+            redirect(url_for('signin'))
+
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM admin WHERE email=%s", (userinfo[0]))
+        admin = cursor.fetchone()
+
+        if admin is None:
+            error = "User does not exist"
+            flash(error)
+            return redirect(url_for('signin'))
+        elif userinfo[1] != admin[1]:
+            error = "This password has already been changed."
+            flash(error)
+            return redirect(url_for('signin'))
+        elif admin[5] == 'deactivated':
+            error = "Account needs to be activated."
+            flash(error)
+            return redirect(url_for('signin'))
+        else:
+            return render_template('resetPassword.html', admin=admin)
+
+
+
+    elif request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        try:
+            cursor.execute("UPDATE admin SET password = %s WHERE email = %s", (generate_password_hash(password), email))
+            message = "Password successfully changed!"
+            flash(message)
+            conn.commit()
+            return redirect(url_for('signin'))
+
+        except:
+            error = "There was a problem changing your password. Please try again."
+            flash(error)
+            return redirect(url_for('signin'))
+
+
+@app.route('/changePassword', methods = ['GET', 'POST'])
+def changePassword():
+    if not session.get('logged_in'):
+        abort(401)
+    if request.method == 'GET':
+        return render_template('changePassword.html')
+    elif request.method == 'POST':
+        oldPassword = request.form['oldPassword']
+        newPassword = request.form['newPassword']
+        newPasswordConfirm = request.form['newPasswordConfirm']
+        email = session['user'][0]
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute('SELECT password FROM admin WHERE email=%s', (email,))
+        oldPasswordHash = cursor.fetchone()
+        if not check_password_hash(oldPasswordHash[0], oldPassword):
+            error = "Current password is incorrect. Please try again."
+            flash(error)
+            return redirect(url_for('changePassword'))
+        elif str(newPassword) != str(newPasswordConfirm):
+            error = "New passwords do not match. Please try again."
+            flash(error)
+            return redirect(url_for('changePassword'))
+        else:
+            newPasswordHash = generate_password_hash(newPassword)
+            try:
+                cursor.execute("UPDATE admin SET password=%s WHERE email=%s", (newPasswordHash, email))
+                conn.commit()
+                message = "Password successfully changed!"
+                flash(message)
+                return redirect(url_for('lend'))
+            except:
+                error = "There was a problem updating your password. Please try again."
+                flash(error)
+                conn.rollback()
+                return redirect(url_for('changePassword'))
+
+
 
 #app running function
 if __name__ == "__main__":
