@@ -8,12 +8,11 @@ function validateFormPasswordReset(thisForm) {
         }
         else if (password_str !== password2_str) {
             alert("Passwords must match.");
-            console.log(password_str);
-            console.log(password2_str);
             return false;
         }
         else {
             return true;
         }
     }
+}
 }
