@@ -375,8 +375,8 @@ def resultAddKey():
         for copyNumber in range(copyNumberStart, copyNumberEnd):
             copyNumber = unicode(copyNumber)
             cursor.execute("insert into clef values('"+keyNumber+"', '"+copyNumber+"','"+depositValue+"', '"+opens+"', '"+status+"')")
-            for room in rooms:
-                cursor.execute("insert into unlocks values('"+keyNumber+"', "+str(room[0])+")")
+        for room in rooms:
+            cursor.execute("insert into unlocks values('"+keyNumber+"', "+str(room[0])+")")
         cursor.execute("select * from clef where keyNumber='"+keyNumber+"' and copyNumber>='"+str(copyNumberStart)+"' and copyNumber<='"+str(copyNumberEnd)+"'")
         keys = cursor.fetchall()
         conn.commit()
@@ -387,36 +387,79 @@ def resultAddKey():
         conn.rollback()
         return redirect(url_for("addKey"))
 
-@app.route('/changeKey', methods = ['POST', 'GET'])
-#searh profile for one clinet
-def changeKey():
+@app.route('/updateKey', methods = ['GET'])
+def updateKey():
     if not session.get('logged_in'):
         abort(401)
     cursor = mysql.connect().cursor()
-    cursor.execute("select distinct keyNumber, room from room ")
+    cursor.execute("select distinct keyNumber from clef")
     keys = cursor.fetchall()
-    return render_template('changeKey.html', keys = keys)
+    return render_template('updateKey.html', keys = keys)
 
-@app.route('/resultChangeKey', methods = ['POST', 'GET'])
-#searh profile for one clinet
-def resultChangeKey():
+@app.route('/infoUpdateKey', methods = ['POST'])
+def infoUpdateKey():
     if not session.get('logged_in'):
         abort(401)
-    keyNumber = request.form['keyNumber']
-    room = request.form['room']
     conn = mysql.connect()
     cursor = conn.cursor()
-    try:
-        cursor.execute("update room set room='"+room+"' where keyNumber='"+keyNumber+"'")
-        cursor.execute("select * from clef where keyNumber='"+keyNumber+"'")
-        keys = cursor.fetchall()
-        conn.commit()
-        return render_template('resultChangeKey.html', keys = keys, room = room)
-    except:
-        error = "This key could not be changed. Please try again."
-        flash(error)
-        conn.rollback()
-        return redirect(url_for("changeKey"))
+    if request.method == 'POST':
+        keyNumber = request.form['keyNumber']
+        cursor.execute('SELECT * FROM clef WHERE keyNumber = %s')
+        key = cursor.fetchone()
+        cursor.execute('SELECT copyNumber FROM clef WHERE keyNumber = %s ORDER BY copyNumber ASC', (keyNumber,))
+        copies = cursor.fetchall()
+        cursor.execute('SELECT id, address FROM unlocks JOIN room ON roomID = id WHERE keyNumber = %s', (keyNumber,))
+        deleteRooms = cursor.fetchall()
+        cursor.execute('SELECT id, address FROM room WHERE NOT EXISTS (SELECT * FROM unlocks JOIN room ON roomID = id WHERE keyNumber = %s))', (keyNumber,))
+        rooms = cursor.fetchall()
+        cursor.execute('SELECT MAX(copyNumber) as maxCopy FROM clef WHERE keyNumber = %s', (keyNumber,))
+        maxCopy = cursor.fetchone()[0]
+        return render_template('infoUpdateKey.html', key=key, copies=copies, deleteRooms=deleteRooms, rooms=rooms, maxCopy=maxCopy)
+
+
+
+@app.route('/resultUpdateKey', methods = ['POST'])
+#searh profile for one client
+def resultUpdateKey():
+    if not session.get('logged_in'):
+        abort(401)
+
+    if request.method == 'POST':
+        keyNumber = request.form['keyNumber']
+        copyNumberStart = int(request.form['maxCopy']) + 1
+        copyNumberEnd = int(request.form['copyNumberEnd']) + 1
+        depositValue = request.form['depositValue']
+        opens = request.form['opens']
+        status = request.form['status']
+        rooms = request.form.getlist('rooms')
+        deleteRooms = request.form.getlist('deleteRooms')
+
+
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        try:
+            cursor.execute('UPDATE clef SET depositValue = %s, opens = %s, status = %s WHERE keyNumber = %s', (depositValue, opens, status, keyNumber))
+
+            for copyNumber in range(copyNumberStart, copyNumberEnd):
+                copyNumber = unicode(copyNumber)
+                cursor.execute("insert into clef values('"+keyNumber+"', '"+copyNumber+"','"+depositValue+"', '"+opens+"', '"+status+"')")
+
+            for room in rooms:
+                cursor.execute("insert into unlocks values('"+keyNumber+"', "+int(room[0])+")")
+
+            for room in deleteRooms:
+                cursor.execute("DELETE FROM unlocks WHERE roomID = %s", (int(room[0]),))
+
+            cursor.execute("select * from clef where keyNumber='"+keyNumber+"' and copyNumber>='"+str(copyNumberStart)+"' and copyNumber<='"+str(copyNumberEnd)+"'")
+            keys = cursor.fetchall()
+            conn.commit()
+            return render_template('resultUpdateKey.html', keys = keys)
+        except:
+            error = "There was a problem updating this key. Please try again."
+            flash(error)
+            conn.rollback()
+            return redirect(url_for("updateKey"))
 
 
 @app.route('/reportClient', methods = ['POST', 'GET'])
@@ -1061,6 +1104,10 @@ def changePassword():
             error = "New passwords do not match. Please try again."
             flash(error)
             return redirect(url_for('changePassword'))
+        elif (str(newPassword) == "") or (str(newPasswordConfirm) == ""):
+            error = "Passwords cannot be empty. Please try again."
+            flash(error)
+            return redirect(url_for('changePassword'))
         else:
             newPasswordHash = generate_password_hash(newPassword)
             try:
@@ -1074,6 +1121,57 @@ def changePassword():
                 flash(error)
                 conn.rollback()
                 return redirect(url_for('changePassword'))
+
+
+@app.route('/updateAdmin', methods = ['GET', 'POST'])
+def updateAdmin():
+    if not session.get('logged_in'):
+        abort(401)
+    elif getCurrentUser()[5] != "super":
+        return render_template('invalidPriority.html')
+    else:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        if request.method == 'GET':
+            cursor.execute('SELECT firstName, lastName, email FROM admin')
+            admins = cursor.fetchall()
+            return render_template('updateAdmin.html', admins=admins)
+
+        elif request.method == 'POST':
+            email = request.form['admin']
+            cursor.execute('SELECT * FROM admin WHERE email=%s', (email,))
+            admin = cursor.fetchone()
+            return render_template('infoUpdateAdmin.html', admin=admin)
+
+@app.route('/infoUpdateAdmin', methods=['POST'])
+def infoUpdateAdmin():
+    if not session.get('logged_in'):
+        abort(401)
+    elif getCurrentUser()[5] != "super":
+        return render_template('invalidPriority.html')
+    else:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        if request.method == 'POST':
+            oldEmail = request.form['oldEmail']
+            email = request.form['email']
+            firstName = request.form['firstName']
+            lastName = request.form['lastName']
+
+            try:
+                cursor.execute('UPDATE admin SET email=%s, firstName = %s, lastName = %s WHERE email = %s', (email, firstName, lastName, oldEmail))
+                conn.commit()
+                message = "Admin updated."
+                flash(message)
+                return redirect(url_for('updateAdmin'))
+
+            except:
+                conn.rollback()
+                error = "There was a problem updating this admin. Please try again."
+                flash(error)
+                return redirect(url_for('updateAdmin'))
 
 
 

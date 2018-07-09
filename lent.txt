@@ -1,0 +1,20 @@
+CREATE TABLE temp_lent (
+    keyNumber varchar(32) NOT NULL,
+    copyNumber int(11) NOT NULL,
+    email varchar(32) NOT NULL,
+    lendDate date NOT NULL,
+    paymentMethod varchar(32) NOT NULL,
+    expectedReturnDate date NOT NULL,
+    admin varchar(32) NOT NULL,
+    PRIMARY KEY (keyNumber, copyNumber),
+    FOREIGN KEY (email) REFERENCES client(email) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (keyNumber, copyNumber) REFERENCES clef(keyNumber, copyNumber) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (admin) REFERENCES admin(email) ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO temp_lent
+SELECT * FROM lent;
+
+DROP TABLE lent;
+
+RENAME TABLE temp_lent TO lent;

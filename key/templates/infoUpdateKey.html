@@ -1,0 +1,104 @@
+{% extends 'layout.html' %}
+<!--This html is a replacing extention of the 'main' block of layout.html.-->
+<!--It allows users to inputes required information to create a new key.-->
+<!--Including keyNumber, copyNumberStart, copyNumberEnd, depositValue, initalStatus, opens, room-->
+{% block main %}
+  <div class="container">
+    <br/>
+    <h1 class="text-center" style="color: #f0ad4e">Update Key {{ key.0 }}</h1>
+    <br/>
+    <div class="row">
+      <div class="col-sm-3"></div>
+      <div class="col-sm-6">
+        <form class="" method="post" action="{{ url_for('resultUpdateKey') }}"
+              onsubmit="return validateFormUpdateKeyInfo(this)">
+          <fieldset>
+
+            <input value="{{ key.0 }}" type="hidden" name="keyNumber"/>
+            <input type="hidden" name="maxCopy" value="{{ maxCopy }}"/>
+
+            <h4>The current number of copies is {{ maxCopy }}</h4>
+            <br>
+            <div class="form-group">
+              <label for='copyNumberEnd' class="sr-only">Extend number of copies to : </label>
+              <div class="cols-sm-10">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-hourglass-end" aria-hidden="true"></i></span>
+                  <input type="number" class="form-control" name="copyNumberEnd" value=""
+                         placeholder="Extend number of copies to : "/>
+                </div><!-- end input-group-->
+              </div><!--end cols-sm-10-->
+            </div><!--end form-group-->
+            <div class="form-group">
+              <label for="depositValue" class="sr-only">Value:</label>
+              <div class="cols-sm-10">
+                <select class="form-control selectpicker" name="depositValue">
+                  <option selected disabled value="" class="text-hide">Change key deposit value
+                  </option>
+                  <option value="20" {% if key.2 == 20 %} selected {% endif %}>Deposit fee 20, loss penalty 100</option>
+                  <option value="80" {% if key.2 == 80 %} selected {% endif %}>Deposit fee 80, loss penalty 500</option>
+                </select>
+              </div><!--end cols-sm-10-->
+            </div><!--end form-group-->
+            <div class="form-group">
+              <label for="status" class="sr-only">status:</label>
+              <div class="cols-sm-10">
+                <select class="form-control selectpicker" name="status">
+                  <option selected disabled value="" class="text-hide">Choose inital status of new copies
+                  </option>
+                  <option>Available</option>
+                  <option>Lending</option>
+                  <option>Missing</option>
+                  <option>Lost</option>
+                </select>
+              </div><!--end cols-sm-10-->
+            </div><!--end form-group-->
+            <div class="form-group">
+              <label for="opens" class="sr-only">opens:</label>
+              <div class="cols-sm-10">
+                <select class="form-control selectpicker" name="opens">
+                  <option selected disabled value="" class="text-hide">Choose what new copies open</option>
+                  <option>Door</option>
+                  <option>Mailbox</option>
+                </select>
+              </div><!--end cols-sm-10-->
+            </div><!--end form-group-->
+            <div class="form-group">
+              <label for='rooms' class="sr-only">of room: </label>
+              <div class="cols-sm-10">
+                <select class="form-control selectpicker" data-dropup-auto="false" name="rooms" data-live-seach="true" multiple>
+                  <option selected disabled value="" class="text-hide">Rooms to add</option>
+                  {% for room in rooms %}
+                    <option value="{{ room.0 }}">{{ room.1 }}</option>
+                  {% endfor %}
+                </select>
+              </div><!--end cols-sm-10-->
+            </div><!--end form-group-->
+            <div class="form-group">
+                <label for='deleteRooms' class="sr-only">of room: </label>
+                <div class="cols-sm-10">
+                  <select class="form-control selectpicker" data-dropup-auto="false" name="deleteRooms" data-live-seach="true" multiple>
+                    <option selected disabled value="" class="text-hide">Rooms to delete</option>
+                    {% for room in deleteRooms %}
+                      <option value="{{ room.0 }}">{{ room.1 }}</option>
+                    {% endfor %}
+                  </select>
+                </div><!--end cols-sm-10-->
+              </div><!--end form-group-->
+            <br/>
+            <div class="form-group"><!--for button submit-->
+              <div class="cols-sm-10">
+                <div class="text-center">
+                  <button class=" btn btn-lg btn-warning" name="apply" type="submit"
+                          onclick="return transactionConfirm()">Next
+                  </button>
+                </div><!--end text-center-->
+              </div><!--end cols-sm-10-->
+            </div><!--end form-group-->
+          </fieldset>
+        </form>
+      </div><!--end cols-sm-6-->
+      <div class="col-sm-3"></div>
+    </div><!--end row-->
+  </div><!--end container-->
+{% endblock %}

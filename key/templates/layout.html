@@ -420,8 +420,18 @@
 			
 			function validateFormUpdateRoom(thisForm){
 			with(thisForm){
-				var room = thisForm.room.value;
-				if (room == null){
+				var room_id = thisForm.room.value;
+				if (room_id == null){
+					alert("Room is not selected.");
+					return false;
+					}
+				}
+			}
+
+			function validateFormUpdateKey(thisForm){
+			with(thisForm){
+				var key = thisForm.keys.value;
+				if (key == null){
 					alert("Room is not selected.");
 					return false;
 					}
