@@ -1,7 +1,7 @@
 function validateFormPasswordReset(thisForm) {
     with (thisForm) {
-        var password = thisForm.password.value.toString();
-        var password2 = thisForm.password2.value.toString();
+        var password = thisForm.password.value;
+        var password2 = thisForm.password2.value;
         if (password.valueOf() == "" || password2.valueOf() == "") {
             alert(("Passwords cannot be empty."));
             return false;
