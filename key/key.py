@@ -168,7 +168,7 @@ def resultLend():
     expectedReturnDate = regulateDatePickerString(expectedReturnDate)
     depositValue = request.form['depositValue']
     #get current user info in string
-    currentUser = session['user']
+    currentUser = session['user'][0]
     #pull client info
 
     conn = mysql.connect()
@@ -216,7 +216,7 @@ def resultReturn():
     #get today's date in string, it is gonna be used as returnDate(today)
     returnDate = getTodayString()
     #get current admin user
-    currentUser = getCurrentUser()
+    currentUser = getCurrentUser()[0]
     #get keyNumber, keyCopy from html from
     keyNumber_copyNumber = str(request.form['keyNumber_copyNumber'])
     numberList = keyNumber_copyNumber.split()
@@ -309,7 +309,7 @@ def resultLoss():
     #get today's date in string
     lossDate = getTodayString()
     #get current admin user in string
-    currentUser = getCurrentUser()
+    currentUser = getCurrentUser()[0]
     #get keyNumber, copyNumber, penaltyValue, paymentMethod from html form
     keyNumber = request.form['keyNumber']
     copyNumber = request.form['copyNumber']
