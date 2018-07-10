@@ -1,542 +1,621 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="key management system of csj">
-    <meta name="author" content="Xingqi Guo">
-    <link rel="icon" href="{{url_for('static', filename='favicon-key.ico')}}">
-    <title>Clé</title>
-    <!-- Bootstrap3 core CSS -->
-     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!-- sticky-footer-navbar CSS -->
-    <link href="{{url_for('static', filename='sticky-footer-navbar.css')}}" rel="stylesheet">
-    <!--navbar color custom-->
-    <link href="{{url_for('static', filename='navbar-key.css')}}" rel="stylesheet">
-    <!--datepicker CSS-->
-    <link href="{{url_for('static', filename='bootstrap-datetimepicker.min.css')}}" rel="stylesheet" media="screen">
-		<!--bootstrap select CSS-->
-		<link href="{{url_for('static', filename='bootstrap-select.min.css')}}" rel="stylesheet">
-    <!--font aweseome library-->
-		<script src="https://use.fontawesome.com/123194aad7.js"></script>
-		<!--style for capitalized letters	-->
-		<style>
-			p.uppercase{
-				text-transform: uppercase;
-			}
-			
-			p.capitalize{
-				text-transform: capitalize;
-			}
-		</style>
-		
-  </head>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="key management system of csj">
+  <meta name="author" content="Xingqi Guo">
+  <link rel="icon" href="{{ url_for('static', filename='favicon-key.ico') }}">
+  <title>Clé</title>
+  <!-- Bootstrap3 core CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <!-- sticky-footer-navbar CSS -->
+  <link href="{{ url_for('static', filename='sticky-footer-navbar.css') }}" rel="stylesheet">
+  <!--navbar color custom-->
+  <link href="{{ url_for('static', filename='navbar-key.css') }}" rel="stylesheet">
+  <!--datepicker CSS-->
+  <link href="{{ url_for('static', filename='bootstrap-datetimepicker.min.css') }}" rel="stylesheet" media="screen">
+  <!--bootstrap select CSS-->
+  <link href="{{ url_for('static', filename='bootstrap-select.min.css') }}" rel="stylesheet">
+  <!--font aweseome library-->
+  <script src="https://use.fontawesome.com/123194aad7.js"></script>
+  <!--style for capitalized letters	-->
+  <style>
+    p.uppercase {
+      text-transform: uppercase;
+    }
 
-  <body>
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand"><i class="fa fa-key fa-lg" style="color:#1173b2"></i></a>
-        </div>
-        
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="dropdown"><!--begin dropdown key-->
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Clef<span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="{{url_for('lend')}}">Prêt une Clef</a></li>
-                <li><a href="{{url_for('retrieve')}}">Revenir une Clef</a></li>
-                <li><a href="{{url_for('loss')}}">Perte une Clef</a></li>
-                <li><a href="{{url_for('addKey')}}">Ajouter une Clef</a></li>
-              </ul>
-            </li><!--end dropdown-->
-            <li class="dropdown"><!--begin dropdown client-->
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Client<span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="{{url_for('addClient')}}">Ajouter une Client</a></li>
-								<li><a href="{{url_for('changeClient')}}">Update Client Information</a></li>
-              </ul>
-            </li><!--end dropdown-->
-						
-						
-            <li class="dropdown"><!--begin dropdown office-->
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Bureau<span class="caret"></span></a>
-              <ul class="dropdown-menu">
-								<li><a href="{{url_for('addRoom')}}">Add Room</a></li>
-								<li><a href="{{url_for('deleteRoom')}}">Delete Room</a></li>
-								<li><a href="{{url_for('updateRoom')}}">Update Room</a></li>
-              </ul>
-            </li><!--end dropdown-->
-						
-				    <li class="dropdown"><!--begin dropdown office-->
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Report<span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="{{url_for('reportKey')}}">Report by key number</a></li>
-								<li><a href="{{url_for('reportKeysbyRoom')}}">Reprot by room</a></li>
-								<li><a href="{{url_for('reportClient')}}">Reprot by client</a></li>
-								<li><a href="{{url_for('reportPassedDueKeys')}}">Report passed due Keys</a></li>
-              </ul>
-            </li><!--end dropdown-->							
-						
-            <li class="dropdown"><!--begin dropdown report-->
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin<span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="{{url_for('resultAllAdmins')}}">Admins Info</a></li>
-								<li><a href="{{url_for('addAdmin')}}">Add an Admin</a></li>
-								<li><a href="{{url_for('activateAdmin')}}">Activate an Admin</a></li>
-								<li><a href="{{url_for('deactivateAdmin')}}">Deactivate an Admin</a></li>
-              </ul>
-            </li><!--end dropdown-->
+    p.capitalize {
+      text-transform: capitalize;
+    }
+  </style>
 
-            <li class="dropdown"><!--begin dropdown report-->
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Profile<span class="caret"></span></a>
-              <ul class="dropdown-menu">
-								<li><a href="{{url_for('changePassword')}}">Change Password</a></li>
-              </ul>
-            </li><!--end dropdown-->
-						
-          </ul><!--end navbar-nav-->
-          <a class="navbar-text navbar-right" href="{{url_for('signout')}}">Déconnexion</a>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+</head>
 
-    <div class="container">
-        {% include 'messages.html' %}
+<body>
+<!-- Fixed navbar -->
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+              aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand"><i class="fa fa-key fa-lg" style="color:#1173b2"></i></a>
     </div>
 
-    <!-- Begin page content -->
-    {% block main%}
-        <div class="container">
-          <div class="page-header">
-            <h1>Sticky footer with fixed navbar</h1>
-          </div>
-          <p class="lead">Pin a fixed-height footer to the bottom of the viewport in desktop browsers with this custom HTML and CSS. A fixed navbar has been added with <code>padding-top: 60px;</code> on the <code>body &gt; .container</code>.</p>
-          <p>Back to <a href="../sticky-footer">the default sticky footer</a> minus the navbar.</p>
-        </div>
-        {% include messages.html %}
-    {% endblock %}
+    <div id="navbar" class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown"><!--begin dropdown key-->
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+             aria-expanded="false">Clef<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="{{ url_for('lend') }}">Prêt une Clef</a></li>
+            <li><a href="{{ url_for('retrieve') }}">Revenir une Clef</a></li>
+            <li><a href="{{ url_for('loss') }}">Perte une Clef</a></li>
+            <li><a href="{{ url_for('addKey') }}">Ajouter une Clef</a></li>
+            <li><a href="{{ url_for('updateKey') }}">Update a Key</a></li>
+          </ul>
+        </li><!--end dropdown-->
+        <li class="dropdown"><!--begin dropdown client-->
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+             aria-expanded="false">Client<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="{{ url_for('addClient') }}">Ajouter une Client</a></li>
+            <li><a href="{{ url_for('changeClient') }}">Update Client Information</a></li>
+          </ul>
+        </li><!--end dropdown-->
 
-    <!--Begin footer, color override-->
-    <footer class="footer" style="background-color: #f0ad4e">
-      <div class="container">
-        <a class="pull-right text-muted" style="color: #f8f8f8; text-decoration: none;" href="https://www.ualberta.ca/campus-saint-jean/services/services-technologiques/support-a-distance" >Contactez Nous</a>
-      </div>
-    </footer>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== 
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="{{url_for('static', filename='ie10-viewport-bug-workaround.js')}}"></script> 
-		<!--bootstrap select css-->
-		<script src="{{url_for('static', filename='bootstrap-select.min.js')}}"></script>
-    <!--config datepicker-->
-    <script src="{{url_for('static', filename='bootstrap-datetimepicker.js')}}"></script>
-		<!--    <script src="{{url_for('static', filename='bootstrap-datetimepicker.fr.js')}}"></script>-->
-		<!--datepicker config-->
-    <script type="text/javascript">
-			//datepicker
-		$('.form_date').datetimepicker({
-					language:  'fr',
-					weekStart: 1,
-					todayBtn:  1,
-			autoclose: 1,
-			todayHighlight: 1,
-			startView: 2,
-			minView: 2,
-			forceParse: 0
-			});
-			
-		//form validation		
-			function validateFormLend(thisForm){
-				//get the value of the input field with id='keyNumber'
-				with(thisForm){
-					var keyNumberValue = thisForm.keyNumber.value;
-					if (keyNumberValue == "" ){
-						alert("Key number was not selected.");
-						return false;
-						}
-					else{
-						return true;
-					}
-				}
-			};
-			
-			function validateFormInfoLend(thisForm){
-				//get the values of the input field with id='copyNumber', 'email', 'paymentValue', 'expectedReturnDate'
-				with(thisForm){
-					var copyNumberValue = thisForm.copyNumber.value;
-					var emailValue = thisForm.email.value;
-					var paymentMethodValue = thisForm.paymentMethod.value;
-					var lendDateValue = thisForm.lendDate.value;
-					var expectedReturnDateValue = thisForm.expectedReturnDate.value;
-					if (copyNumberValue == "" ){
-						alert("Copy number was not selected.");
-						return false;
-					}
-					if (emailValue == "" ){
-						alert("client email shoud not be empty.");
-						return false;
-					}
-					if (paymentMethodValue == "" ){
-						alert("payment method shoud not be empty.");
-						return false;
-					}
-					if (lendDateValue == "" ){
-						alert("lendDate should not be empty");
-						return false;
-					}
-					if (expectedReturnDateValue == "" ){
-						alert("return deadline should not be empty");
-						return false;
-					}
-				}
-			};
-			
-			function validateFormReturn(thisForm){
-			//get the values of the input field with id='keyNumber_copyNumber'
-			with(thisForm){
-				var keyNumber_copyNumberValue = thisForm.keyNumber_copyNumber.value;
-				if (keyNumber_copyNumberValue == "" ){
-					alert("A lending key was not selected.");
-					return false;
-					}
-				}
-			};
-			
-			function validateFormLoss(thisForm){
-			//get the values of the input field with id='keyNumber_copyNumber'
-			with(thisForm){
-				var keyNumber_copyNumberValue = thisForm.keyNumber_copyNumber.value;
-				if (keyNumber_copyNumberValue == "" ){
-					alert("A lending key was not selected.");
-					return false;
-					}
-				}
-			};
-						
-			function validateFormInfoLoss(thisForm){
-			//get the values of the input field with id='keyNumber_copyNumber'
-			with(thisForm){
-				var methodPayValue = thisForm.methodPay.value;
-				if (methodPayValue == "" ){
-					alert("Pay menthod was not selected.");
-					return false;
-					}
-				}
-			};
-			
-			function validateFormAddKey(thisForm){
-			//get the values of the input field with id='keyNumber_copyNumber'
-			with(thisForm){
-				var keyNumberValue = thisForm.keyNumber.value;
-				var copyNumberStartValue = thisForm.copyNumberStart.value;
-				var copyNumberEndValue = thisForm.copyNumberEnd.value;
-				var depositValueValue = thisForm.depositValue.value;
-				var statusValue = thisForm.status.value;
-				var opensValue = thisForm.opens.value;
-				var roomValues = thisForm.room.values;
-				if (keyNumberValue == "" ){
-					alert("Key number should not be empty.");
-					return false;
-					}
-				if (copyNumberStartValue == "" ){
-					alert("Starting copy number should not be empty.");
-					return false;
-					}
-				if (copyNumberEndValue == "" ){
-					alert("Ending copy number should not be empty.");
-					return false;
-					}
-				if (depositValueValue == "" ){
-					alert("Deposit value should not be empty.");
-					return false;
-					}
-				if (statusValue == "" ){
-					alert("Status should not be empty.");
-					return false;
-					}
-				if (opensValue == "" ){
-					alert("Opens should not be empty.");
-					return false;
-					}
-				if (roomValues.length == 0 ){
-					alert("Room should not be empty.");
-					return false;
-					}
-				}
-			};
-			
-			function validateFormAddClient(thisForm){
-			//get the values of the input field with id='keyNumber_copyNumber'
-			with(thisForm){
-				var emailValue = thisForm.email.value;
-				var firstNameValue = thisForm.firstName.value;
-				var lastNameValue = thisForm.lastName.value;
-				var addressValue = thisForm.address.value;
-				var cityValue = thisForm.city.value;
-				var provinceValue = thisForm.province.value;
-				var postcodeValue = thisForm.postcode.value;
-				var phoneNumberValue = thisForm.phoneNumber.value;
-				if (emailValue == "" ){
-					alert("Client email should not be empty.");
-					return false;
-					}
-				if (firstNameValue == "" ){
-					alert("First name should not be empty.");
-					return false;
-					}
-				if (lastNameValue == "" ){
-					alert("Last name should not be empty.");
-					return false;
-					}
-				if (addressValue == "" ){
-					alert("Address should not be empty.");
-					return false;
-					}
-				if (cityValue == "" ){
-					alert("City should not be empty.");
-					return false;
-					}
-				if (provinceValue == "" ){
-					alert("Province should not be empty.");
-					return false;
-					}
-				if (postcodeValue == "" ){
-					alert("Postcode should not be empty.");
-					return false;
-					}
-				if (phoneNumberValue == "" ){
-					alert("Phone number should not be empty.");
-					return false;
-					}
-				}
-			};
-	
-			function validateFormChangeClient(thisForm){
-			//get the values of the input field with id='keyNumber_copyNumber'
-			with(thisForm){
-				var emailValue = thisForm.email.value;
-				if (emailValue == "" ){
-					alert("Client was not selected.");
-					return false;
-					}
-				}
-			};
-			
-			function validateFormInfoChangeClient(thisForm){
-			//get the values of the input field with id='keyNumber_copyNumber'
-			with(thisForm){
-				var newEmailValue = thisForm.newEmail.value;
-				var firstNameValue = thisForm.firstName.value;
-				var lastNameValue = thisForm.lastName.value;
-				var addressValue = thisForm.address.value;
-				var cityValue = thisForm.city.value;
-				var provinceValue = thisForm.province.value;
-				var postcodeValue = thisForm.postcode.value;
-				var phoneNumberValue = thisForm.phoneNumber.value;
-				if (newEmailValue == "" ){
-					alert("New client email should not be empty.");
-					return false;
-					}
-				if (firstNameValue == "" ){
-					alert("New first name should not be empty.");
-					return false;
-					}
-				if (lastNameValue == "" ){
-					alert("New last name should not be empty.");
-					return false;
-					}
-				if (addressValue == "" ){
-					alert("New address should not be empty.");
-					return false;
-					}
-				if (cityValue == "" ){
-					alert("New city should not be empty.");
-					return false;
-					}
-				if (provinceValue == "" ){
-					alert("New province should not be empty.");
-					return false;
-					}
-				if (postcodeValue == "" ){
-					alert("New postcode should not be empty.");
-					return false;
-					}
-				if (phoneNumberValue == "" ){
-					alert("New Phone number should not be empty.");
-					return false;
-					}
-				}
-			};
-			
-			function validateFormAddRoom(thisForm){
-			with(thisForm){
-				var roomValue = thisForm.room.value;
-				if (roomValue == null ){
-					alert("New room should not be empty.");
-					return false;
-					}
-				}
-			};
-			
-			
-			function validateFormDeleteRoom(thisForm){
-			//get the values of the input field with id='keyNumber_copyNumber'
-			with(thisForm){
-				var roomID = thisForm.room.value;
-				if (roomID == null){
-					alert("Room is not selected.");
-					return false;
-					}
-				}
-			};
-			
-				
-			function validateFormInfoDeleteRoom(thisForm){
-			//get the values of the input field with id='keyNumber_copyNumber'
-			with(thisForm){
-				var roomValue = thisForm.room.value;
-				if (roomValue == "" ){
-					alert("room is not selected.");
-					return false;
-					}
-				}
-			};
-			
-			function validateFormUpdateRoom(thisForm){
-			with(thisForm){
-				var room_id = thisForm.room.value;
-				if (room_id == null){
-					alert("Room is not selected.");
-					return false;
-					}
-				}
-			}
+        <li class="dropdown"><!--begin dropdown office-->
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+             aria-expanded="false">Bureau<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="{{ url_for('addRoom') }}">Add Room</a></li>
+            <li><a href="{{ url_for('deleteRoom') }}">Delete Room</a></li>
+            <li><a href="{{ url_for('updateRoom') }}">Update Room</a></li>
+          </ul>
+        </li><!--end dropdown-->
 
-			function validateFormUpdateKey(thisForm){
-			with(thisForm){
-				var key = thisForm.keys.value;
-				if (key == null){
-					alert("Room is not selected.");
-					return false;
-					}
-				}
-			};
-			
-			function validateFormInfoUpdateRoom(thisForm){
-			with(thisForm){
-				var keyNumberValues = thisForm.keys.values;
-				var deleteKeyValues = thisForm.delete_keys.values;
-				if ((keyNumberValues.length == 0) && (deleteKeyValues.length == 0)){
-					alert("No keys are selected");
-					return false;
-					}
-				}
-			};
-			
-			function validateFormReportKey(thisForm){
-			//get the values of the input field with id='keyNumber_copyNumber'
-			with(thisForm){
-				var keyNumberValue = thisForm.keyNumber.value;
-				if (keyNumberValue == "" ){
-					alert("Key number is not selected.");
-					return false;
-					}
-				}
-			};
-			
-			function validateFormReportByRoom(thisForm){
-			//get the values of the input field with id='keyNumber_copyNumber'
-			with(thisForm){
-				var roomValue = thisForm.room.value;
-				if (roomValue == null ){
-					alert("Room is not selected.");
-					return false;
-					}
-				}
-			};
-			
-			function validateFormReportByClient(thisForm){
-			//get the values of the input field with id='keyNumber_copyNumber'
-			with(thisForm){
-				var emailValue = thisForm.email.value;
-				if (emailValue == "" ){
-					alert("Client is not selected.");
-					return false;
-					}
-				}
-			};
-			
-		
-			function validateFormAddAdmin(thisForm){
-			//get the values of the input field with id='keyNumber_copyNumber'
-			with(thisForm){
-				var emailValue = thisForm.email.value;
-				var passwordValue = thisForm.password.value;
-				var firstNameValue = thisForm.firstName.value;
-				var lastNameValue = thisForm.lastName.value;
-				if (emailValue == "" ){
-					alert("Account email should not be empty.");
-					return false;
-					}
-				if (passwordValue == "" ){
-					alert("Password should not be empty.");
-					return false;
-					}
-				if (firstNameValue == "" ){
-					alert("First name should not be empty.");
-					return false;
-					}
-				if (lastNameValue == "" ){
-					alert("Last name should not be empty.");
-					return false;
-					}
-				}
-			};
-			
-					
-			function validateFormDeleteAdmin(thisForm){
-			//get the values of the input field with id='keyNumber_copyNumber'
-			with(thisForm){
-				var emailValue = thisForm.email.value;
-				if (emailValue == "" ){
-					alert("Account email should not be empty.");
-					return false;
-					}
-				}
-			};
-			
-			function transactionConfirm(){
-			//confirm window before all final step of transactions
-				return confirm("Are you sure you want to complete this transaction?")
-			}
-			
-			function printInfo(ele){
-				var openWindow = window.open("", "title", "attributes");
-				openWindow.document.write(ele.previousSibling.innerHTML);
-				openWindow.document.close();
-				openWindow.focus();
-				openWindow.print();
-				openWindow.close();
-			}
+        <li class="dropdown"><!--begin dropdown office-->
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+             aria-expanded="false">Report<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="{{ url_for('reportKey') }}">Report by key number</a></li>
+            <li><a href="{{ url_for('reportKeysbyRoom') }}">Report by room</a></li>
+            <li><a href="{{ url_for('reportClient') }}">Report by client</a></li>
+            <li><a href="{{ url_for('reportPassedDueKeys') }}">Report passed due Keys</a></li>
+          </ul>
+        </li><!--end dropdown-->
 
-		</script>
-  </body>
-	
-	
+        <li class="dropdown"><!--begin dropdown report-->
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+             aria-expanded="false">Admin<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="{{ url_for('resultAllAdmins') }}">Admins Info</a></li>
+            <li><a href="{{ url_for('addAdmin') }}">Add an Admin</a></li>
+            <li><a href="{{ url_for('updateAdmin') }}">Update an Admin</a></li>
+            <li><a href="{{ url_for('activateAdmin') }}">Activate an Admin</a></li>
+            <li><a href="{{ url_for('deactivateAdmin') }}">Deactivate an Admin</a></li>
+          </ul>
+        </li><!--end dropdown-->
+
+        <li class="dropdown"><!--begin dropdown report-->
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+             aria-expanded="false">Profile<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="{{ url_for('changePassword') }}">Change Password</a></li>
+          </ul>
+        </li><!--end dropdown-->
+
+      </ul><!--end navbar-nav-->
+      <a class="navbar-text navbar-right" href="{{ url_for('signout') }}">Déconnexion</a>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+
+<div class="container">
+  {% include 'messages.html' %}
+</div>
+
+<!-- Begin page content -->
+{% block main %}
+  <div class="container">
+    <div class="page-header">
+      <h1>Sticky footer with fixed navbar</h1>
+    </div>
+    <p class="lead">Pin a fixed-height footer to the bottom of the viewport in desktop browsers with this custom HTML
+      and CSS. A fixed navbar has been added with <code>padding-top: 60px;</code> on the <code>body &gt;
+        .container</code>.</p>
+    <p>Back to <a href="../sticky-footer">the default sticky footer</a> minus the navbar.</p>
+  </div>
+  {% include messages.html %}
+{% endblock %}
+
+<!--Begin footer, color override-->
+<footer class="footer" style="background-color: #f0ad4e">
+  <div class="container">
+    <a class="pull-right text-muted" style="color: #f8f8f8; text-decoration: none;"
+       href="https://www.ualberta.ca/campus-saint-jean/services/services-technologiques/support-a-distance">Contactez
+      Nous</a>
+  </div>
+</footer>
+
+<!-- Bootstrap core JavaScript
+==================================================
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="{{ url_for('static', filename='ie10-viewport-bug-workaround.js') }}"></script>
+<!--bootstrap select css-->
+<script src="{{ url_for('static', filename='bootstrap-select.min.js') }}"></script>
+<!--config datepicker-->
+<script src="{{ url_for('static', filename='bootstrap-datetimepicker.js') }}"></script>
+<!--    <script src="{{url_for('static', filename='bootstrap-datetimepicker.fr.js')}}"></script>-->
+<!--datepicker config-->
+<script type="text/javascript">
+    //datepicker
+    $('.form_date').datetimepicker({
+        language: 'fr',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0
+    });
+
+    //form validation
+    function validateFormLend(thisForm) {
+        //get the value of the input field with id='keyNumber'
+        with (thisForm) {
+            var keyNumberValue = thisForm.keyNumber.value;
+            if (keyNumberValue == "") {
+                alert("Key number was not selected.");
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+    };
+
+    function validateFormInfoLend(thisForm) {
+        //get the values of the input field with id='copyNumber', 'email', 'paymentValue', 'expectedReturnDate'
+        with (thisForm) {
+            var copyNumberValue = thisForm.copyNumber.value;
+            var emailValue = thisForm.email.value;
+            var paymentMethodValue = thisForm.paymentMethod.value;
+            var lendDateValue = thisForm.lendDate.value;
+            var expectedReturnDateValue = thisForm.expectedReturnDate.value;
+            if (copyNumberValue == "") {
+                alert("Copy number was not selected.");
+                return false;
+            }
+            if (emailValue == "") {
+                alert("client email shoud not be empty.");
+                return false;
+            }
+            if (paymentMethodValue == "") {
+                alert("payment method shoud not be empty.");
+                return false;
+            }
+            if (lendDateValue == "") {
+                alert("lendDate should not be empty");
+                return false;
+            }
+            if (expectedReturnDateValue == "") {
+                alert("return deadline should not be empty");
+                return false;
+            }
+        }
+    };
+
+    function validateFormReturn(thisForm) {
+        //get the values of the input field with id='keyNumber_copyNumber'
+        with (thisForm) {
+            var keyNumber_copyNumberValue = thisForm.keyNumber_copyNumber.value;
+            if (keyNumber_copyNumberValue == "") {
+                alert("A lending key was not selected.");
+                return false;
+            }
+        }
+    };
+
+    function validateFormLoss(thisForm) {
+        //get the values of the input field with id='keyNumber_copyNumber'
+        with (thisForm) {
+            var keyNumber_copyNumberValue = thisForm.keyNumber_copyNumber.value;
+            if (keyNumber_copyNumberValue == "") {
+                alert("A lending key was not selected.");
+                return false;
+            }
+        }
+    };
+
+    function validateFormInfoLoss(thisForm) {
+        //get the values of the input field with id='keyNumber_copyNumber'
+        with (thisForm) {
+            var methodPayValue = thisForm.methodPay.value;
+            if (methodPayValue == "") {
+                alert("Pay menthod was not selected.");
+                return false;
+            }
+        }
+    };
+
+    function validateFormAddKey(thisForm) {
+        //get the values of the input field with id='keyNumber_copyNumber'
+        with (thisForm) {
+            var keyNumberValue = thisForm.keyNumber.value;
+            var copyNumberStartValue = thisForm.copyNumberStart.value;
+            var copyNumberEndValue = thisForm.copyNumberEnd.value;
+            var depositValueValue = thisForm.depositValue.value;
+            var statusValue = thisForm.status.value;
+            var opensValue = thisForm.opens.value;
+            var roomValues = thisForm.room.values;
+            if (keyNumberValue == "") {
+                alert("Key number should not be empty.");
+                return false;
+            }
+            if (copyNumberStartValue == "") {
+                alert("Starting copy number should not be empty.");
+                return false;
+            }
+            if (copyNumberEndValue == "") {
+                alert("Ending copy number should not be empty.");
+                return false;
+            }
+            if (depositValueValue == "") {
+                alert("Deposit value should not be empty.");
+                return false;
+            }
+            if (statusValue == "") {
+                alert("Status should not be empty.");
+                return false;
+            }
+            if (opensValue == "") {
+                alert("Opens should not be empty.");
+                return false;
+            }
+            if (roomValues.length == 0) {
+                alert("Room should not be empty.");
+                return false;
+            }
+        }
+    };
+
+    function validateFormAddClient(thisForm) {
+        //get the values of the input field with id='keyNumber_copyNumber'
+        with (thisForm) {
+            var emailValue = thisForm.email.value;
+            var firstNameValue = thisForm.firstName.value;
+            var lastNameValue = thisForm.lastName.value;
+            var addressValue = thisForm.address.value;
+            var cityValue = thisForm.city.value;
+            var provinceValue = thisForm.province.value;
+            var postcodeValue = thisForm.postcode.value;
+            var phoneNumberValue = thisForm.phoneNumber.value;
+            if (emailValue == "") {
+                alert("Client email should not be empty.");
+                return false;
+            }
+            if (firstNameValue == "") {
+                alert("First name should not be empty.");
+                return false;
+            }
+            if (lastNameValue == "") {
+                alert("Last name should not be empty.");
+                return false;
+            }
+            if (addressValue == "") {
+                alert("Address should not be empty.");
+                return false;
+            }
+            if (cityValue == "") {
+                alert("City should not be empty.");
+                return false;
+            }
+            if (provinceValue == "") {
+                alert("Province should not be empty.");
+                return false;
+            }
+            if (postcodeValue == "") {
+                alert("Postcode should not be empty.");
+                return false;
+            }
+            if (phoneNumberValue == "") {
+                alert("Phone number should not be empty.");
+                return false;
+            }
+        }
+    };
+
+    function validateFormChangeClient(thisForm) {
+        //get the values of the input field with id='keyNumber_copyNumber'
+        with (thisForm) {
+            var emailValue = thisForm.email.value;
+            if (emailValue == "") {
+                alert("Client was not selected.");
+                return false;
+            }
+        }
+    };
+
+    function validateFormInfoChangeClient(thisForm) {
+        //get the values of the input field with id='keyNumber_copyNumber'
+        with (thisForm) {
+            var newEmailValue = thisForm.newEmail.value;
+            var firstNameValue = thisForm.firstName.value;
+            var lastNameValue = thisForm.lastName.value;
+            var addressValue = thisForm.address.value;
+            var cityValue = thisForm.city.value;
+            var provinceValue = thisForm.province.value;
+            var postcodeValue = thisForm.postcode.value;
+            var phoneNumberValue = thisForm.phoneNumber.value;
+            if (newEmailValue == "") {
+                alert("New client email should not be empty.");
+                return false;
+            }
+            if (firstNameValue == "") {
+                alert("New first name should not be empty.");
+                return false;
+            }
+            if (lastNameValue == "") {
+                alert("New last name should not be empty.");
+                return false;
+            }
+            if (addressValue == "") {
+                alert("New address should not be empty.");
+                return false;
+            }
+            if (cityValue == "") {
+                alert("New city should not be empty.");
+                return false;
+            }
+            if (provinceValue == "") {
+                alert("New province should not be empty.");
+                return false;
+            }
+            if (postcodeValue == "") {
+                alert("New postcode should not be empty.");
+                return false;
+            }
+            if (phoneNumberValue == "") {
+                alert("New Phone number should not be empty.");
+                return false;
+            }
+        }
+    };
+
+    function validateFormAddRoom(thisForm) {
+        with (thisForm) {
+            var roomValue = thisForm.room.value;
+            if (roomValue == null) {
+                alert("New room should not be empty.");
+                return false;
+            }
+        }
+    };
+
+
+    function validateFormDeleteRoom(thisForm) {
+        //get the values of the input field with id='keyNumber_copyNumber'
+        with (thisForm) {
+            var roomID = thisForm.room.value;
+            if (roomID == null) {
+                alert("Room is not selected.");
+                return false;
+            }
+        }
+    };
+
+
+    function validateFormInfoDeleteRoom(thisForm) {
+        //get the values of the input field with id='keyNumber_copyNumber'
+        with (thisForm) {
+            var roomValue = thisForm.room.value;
+            if (roomValue == "") {
+                alert("room is not selected.");
+                return false;
+            }
+        }
+    };
+
+    function validateFormUpdateRoom(thisForm) {
+        with (thisForm) {
+            var room_id = thisForm.room.value;
+            if (room_id == null) {
+                alert("Room is not selected.");
+                return false;
+            }
+        }
+    }
+
+    function validateFormUpdateKey(thisForm) {
+        with (thisForm) {
+            var key = thisForm.keys.value;
+            if (key == null) {
+                alert("Key is not selected.");
+                return false;
+            }
+        }
+    }
+
+    function validateFormInfoUpdateKey(thisForm) {
+        with (thisForm) {
+            var copyNumberEndValue = thisForm.copyNumberEnd.value;
+            var depositValueValue = thisForm.depositValue.value;
+            var statusValue = thisForm.status.value;
+            var opensValue = thisForm.opens.value;
+            var roomValues = thisForm.room.values;
+
+            if (copyNumberEndValue == "") {
+                alert("Ending copy number should not be empty.");
+                return false;
+            }
+            if (depositValueValue == "") {
+                alert("Deposit value should not be empty.");
+                return false;
+            }
+            if (statusValue == "") {
+                alert("Status should not be empty.");
+                return false;
+            }
+            if (opensValue == "") {
+                alert("Opens should not be empty.");
+                return false;
+            }
+            if (roomValues.length == 0) {
+                alert("Room should not be empty.");
+                return false;
+            }
+        }
+    }
+
+    function validateFormInfoUpdateRoom(thisForm) {
+        with (thisForm) {
+            var keyNumberValues = thisForm.keys.values;
+            var deleteKeyValues = thisForm.delete_keys.values;
+            if ((keyNumberValues.length == 0) && (deleteKeyValues.length == 0)) {
+                alert("No keys are selected");
+                return false;
+            }
+        }
+    };
+
+    function validateFormReportKey(thisForm) {
+        //get the values of the input field with id='keyNumber_copyNumber'
+        with (thisForm) {
+            var keyNumberValue = thisForm.keyNumber.value;
+            if (keyNumberValue == "") {
+                alert("Key number is not selected.");
+                return false;
+            }
+        }
+    };
+
+    function validateFormReportByRoom(thisForm) {
+        //get the values of the input field with id='keyNumber_copyNumber'
+        with (thisForm) {
+            var roomValue = thisForm.room.value;
+            if (roomValue == null) {
+                alert("Room is not selected.");
+                return false;
+            }
+        }
+    };
+
+    function validateFormReportByClient(thisForm) {
+        //get the values of the input field with id='keyNumber_copyNumber'
+        with (thisForm) {
+            var emailValue = thisForm.email.value;
+            if (emailValue == "") {
+                alert("Client is not selected.");
+                return false;
+            }
+        }
+    };
+
+
+    function validateFormAddAdmin(thisForm) {
+        //get the values of the input field with id='keyNumber_copyNumber'
+        with (thisForm) {
+            var emailValue = thisForm.email.value;
+            var passwordValue = thisForm.password.value;
+            var firstNameValue = thisForm.firstName.value;
+            var lastNameValue = thisForm.lastName.value;
+            if (emailValue == "") {
+                alert("Account email should not be empty.");
+                return false;
+            }
+            if (passwordValue == "") {
+                alert("Password should not be empty.");
+                return false;
+            }
+            if (firstNameValue == "") {
+                alert("First name should not be empty.");
+                return false;
+            }
+            if (lastNameValue == "") {
+                alert("Last name should not be empty.");
+                return false;
+            }
+        }
+    };
+
+
+    function validateFormDeleteAdmin(thisForm) {
+        //get the values of the input field with id='keyNumber_copyNumber'
+        with (thisForm) {
+            var emailValue = thisForm.email.value;
+            if (emailValue == "") {
+                alert("Account email should not be empty.");
+                return false;
+            }
+        }
+    }
+
+    function validateFormUpdateAdmin(thisForm) {
+        //get the values of the input field with id='keyNumber_copyNumber'
+        with (thisForm) {
+            var adminValue = thisForm.admin.value;
+            if (adminValue == "") {
+                alert("Admin must be selected.");
+                return false;
+            }
+        }
+    }
+
+    function validateFormInfoUpdateAdmin(thisForm) {
+        //get the values of the input field with id='keyNumber_copyNumber'
+        with (thisForm) {
+            var emailValue = thisForm.email.value;
+            var firstNameValue = thisForm.firstName.value;
+            var lastNameValue = thisForm.lastName.value;
+            if (emailValue == "") {
+                alert("Account email should not be empty.");
+                return false;
+            }
+            if (firstNameValue == "") {
+                alert("First name should not be empty.");
+                return false;
+            }
+            if (lastNameValue == "") {
+                alert("Last name should not be empty.");
+                return false;
+            }
+        }
+    }
+
+    function transactionConfirm() {
+        //confirm window before all final step of transactions
+        return confirm("Are you sure you want to complete this transaction?")
+    }
+
+    function printInfo(ele) {
+        var openWindow = window.open("", "title", "attributes");
+        openWindow.document.write(ele.previousSibling.innerHTML);
+        openWindow.document.close();
+        openWindow.focus();
+        openWindow.print();
+        openWindow.close();
+    }
+
+</script>
+</body>
+
+
 </html>

@@ -404,7 +404,7 @@ def infoUpdateKey():
     cursor = conn.cursor()
     if request.method == 'POST':
         keyNumber = request.form['keyNumber']
-        cursor.execute('SELECT * FROM clef WHERE keyNumber = %s')
+        cursor.execute('SELECT * FROM clef WHERE keyNumber = %s' (keyNumber,))
         key = cursor.fetchone()
         cursor.execute('SELECT copyNumber FROM clef WHERE keyNumber = %s ORDER BY copyNumber ASC', (keyNumber,))
         copies = cursor.fetchall()
@@ -441,7 +441,7 @@ def resultUpdateKey():
         try:
             cursor.execute('UPDATE clef SET depositValue = %s, opens = %s, status = %s WHERE keyNumber = %s', (depositValue, opens, status, keyNumber))
 
-            for copyNumber in range(copyNumberStart, copyNumberEnd):
+            for copyNumber in range(copyNumberStart, copyNumberEnd, 1):
                 copyNumber = unicode(copyNumber)
                 cursor.execute("insert into clef values('"+keyNumber+"', '"+copyNumber+"','"+depositValue+"', '"+opens+"', '"+status+"')")
 
