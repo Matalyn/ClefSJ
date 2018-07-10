@@ -223,9 +223,11 @@ def resultReturn():
     keyNumber = numberList[0]
     copyNumber = numberList[1]
     #pull client email, lendDate, paymenthod of lending from table lent
+
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
     try:
-        conn = mysql.connect()
-        cursor = conn.cursor()
         #get client email, lendDate and paymentMethod
         cursor.execute("select email, lendDate, paymentMethod from lent where keyNumber='"+keyNumber+"' and copyNumber="+copyNumber+"")
         lend = cursor.fetchone()
@@ -441,8 +443,7 @@ def resultUpdateKey():
             cursor.execute('UPDATE clef SET depositValue = %s, opens = %s, status = %s WHERE keyNumber = %s', (depositValue, opens, status, keyNumber))
 
             for copyNumber in range(copyNumberStart, copyNumberEnd, 1):
-                copyNumber = unicode(copyNumber)
-                cursor.execute("insert into clef values('"+keyNumber+"', '"+copyNumber+"','"+depositValue+"', '"+opens+"', '"+status+"')")
+                cursor.execute("insert into clef values('"+keyNumber+"', '"+str(copyNumber)+"','"+depositValue+"', '"+opens+"', '"+status+"')")
 
             for room in rooms:
                 cursor.execute("insert into unlocks values('"+keyNumber+"', "+int(room[0])+")")
