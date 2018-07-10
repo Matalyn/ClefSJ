@@ -18,3 +18,4 @@ SELECT * FROM lent;
 DROP TABLE lent;
 
 RENAME TABLE temp_lent TO lent;
+

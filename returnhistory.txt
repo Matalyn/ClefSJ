@@ -1,0 +1,2 @@
+ALTER TABLE returnhistory
+MODIFY COLUMN lendPaymentMethod varchar(32) NOT NULL;
