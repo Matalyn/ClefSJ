@@ -373,8 +373,7 @@ def resultAddKey():
     cursor = conn.cursor()
     try:
         for copyNumber in range(copyNumberStart, copyNumberEnd):
-            copyNumber = str(copyNumber)
-            cursor.execute("insert into clef values('"+keyNumber+"', '"+copyNumber+"','"+depositValue+"', '"+opens+"', '"+status+"')")
+            cursor.execute("insert into clef values('"+keyNumber+"', '"+str(copyNumber)+"','"+depositValue+"', '"+opens+"', '"+status+"')")
             for room in rooms:
                 cursor.execute("insert into unlocks values('"+keyNumber+"', "+str(room[0])+")")
         cursor.execute("select * from clef where keyNumber='"+keyNumber+"' and copyNumber>='"+str(copyNumberStart)+"' and copyNumber<='"+str(copyNumberEnd)+"'")
