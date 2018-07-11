@@ -1054,7 +1054,7 @@ def changePassword():
 def updateAdmin():
     if not session.get('logged_in'):
         abort(401)
-    elif getCurrentUser()[5] != "super":
+    elif getCurrentUser()[4] != "super":
         return render_template('invalidPriority.html')
     else:
         conn = mysql.connect()
