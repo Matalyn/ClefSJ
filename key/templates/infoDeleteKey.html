@@ -1,0 +1,100 @@
+{% extends 'layout.html' %}
+
+{% block main %}
+  <div class="container">
+    <br/>
+    <h1 class="text-center" style="color: #f0ad4e">Delete key {{ key }}?</h1>
+
+    <P class="text-center">{{ key }}'s association with these rooms will be deleted:</P>
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Room</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for room in rooms %}
+        <tr>
+          <!--room-->
+          <td>{{ room[0] }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+
+    </table>
+    <br/>
+    <P class="text-center">These copies of key {{ key }} will be deleted:</P>
+    <br/>
+
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Copy Number</th>
+        <th>Opens</th>
+        <th>Status</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for deleteKey in deleteKeys %}
+        <tr>
+          <!--copyNumber-->
+          <td>{{ deleteKey[0] }}</td>
+          <!--opens-->
+          <td>{{ deleteKey[1] }}</td>
+          <!--status-->
+          <td>{{ deleteKey[2] }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+
+    <br/>
+    <P class="text-center">These copies of key {{ key }} will be deactivated</P>
+    <br/>
+
+    <table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Copy number</th>
+					<th>Opens</th>
+					<th>Client email</th>
+					<th>Lend date</th>
+					<th>Return Deadline</th>
+					<th>Admin</th>
+				</tr>
+			</thead>
+			<tbody>
+				{%for deactivateKey in deactivateKeys %}
+				<tr>
+					<!--copyNumber-->
+					<td>{{deactivateKey[0]}}</td>
+					<!--opens-->
+					<td>{{deactivateKey[1]}}</td>
+					<!--email-->
+					<td>{{deactivateKey[2]}}</td>
+					<!--lent date-->
+					<td>{{deactivateKey[3]}}</td>
+					<!--dealine date-->
+					<td>{{deactivateKey[4]}}</td>
+					<!--admin-->
+					<td>{{deactivateKey[5]}}</td>
+				</tr>
+				{%endfor%}
+			</tbody>
+		</table>
+
+    <form class="" method="post" action="{{url_for('resultDeleteKey')}}">
+
+      <input type="hidden" value="{{ key }}" name="key">
+
+      <div class="form-group"><!--button submit-->
+        <div class="cols-sm-10">
+          <div class="text-center">
+            <button class=" btn btn-lg btn-warning" name="delete" type="submit" onclick="return transactionConfirm()">Delete</button>
+          </div><!--end text-center-->
+        </div><!--end cols-sm-10-->
+      </div><!--end form-group-->
+    </form>
+  </div>
+{% endblock %}

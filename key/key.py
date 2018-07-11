@@ -124,7 +124,7 @@ def lend():
     #pull all available keys info
     conn = mysql.connect()
     cursor = conn.cursor()
-    cursor.execute("select distinct keyNumber from clef where status='available' order by keyNumber asc;")
+    cursor.execute("select distinct keyNumber from clef where status='available' and active = 'yes' order by keyNumber asc;")
     keys = cursor.fetchall()
     #render html with available keys
     return render_template('lend.html', keys = keys)
@@ -143,10 +143,10 @@ def infoLend():
     cursor.execute("select * from client;")
     clients = cursor.fetchall()
     #pull available copies info
-    cursor.execute("select * from clef where keyNumber='"+keyNumber+"' and status='available'")
+    cursor.execute("select * from clef where keyNumber='"+keyNumber+"' and status='available' and active = 'yes'")
     copies = cursor.fetchall()
     #pull depositValue info
-    cursor.execute("select distinct depositValue from clef where keyNumber='"+keyNumber+"' and status='available'")
+    cursor.execute("select distinct depositValue from clef where keyNumber='"+keyNumber+"' and status='available' and active = 'yes'")
     depositValue = cursor.fetchone()
     #render html with available copies, client address, depositValue, and keyNumber
     return render_template('infoLend.html', copies = copies, clients = clients, depositValue = depositValue, keyNumber = keyNumber)
@@ -375,7 +375,7 @@ def resultAddKey():
     cursor = conn.cursor()
     try:
         for copyNumber in range(copyNumberStart, copyNumberEnd):
-            cursor.execute("insert into clef values('"+keyNumber+"', '"+str(copyNumber)+"','"+depositValue+"', '"+opens+"', '"+status+"')")
+            cursor.execute("insert into clef values('"+keyNumber+"', '"+str(copyNumber)+"','"+depositValue+"', '"+opens+"', '"+status+"', '"+'yes'+"')")
         for room in rooms:
             cursor.execute("insert into unlocks values('"+keyNumber+"', "+str(room[0])+")")
         cursor.execute("select * from clef where keyNumber='"+keyNumber+"' and copyNumber>='"+str(copyNumberStart)+"' and copyNumber<='"+str(copyNumberEnd)+"'")
@@ -400,15 +400,17 @@ def deleteKey():
         keys = cursor.fetchall()
         return render_template('deleteKey.html', keys=keys)
 
-    elif request.method == 'GET':
+    elif request.method == 'POST':
         key = request.form['key']
-        cursor.execute('SELECT * FROM clef WHERE keyNumber=%s AND status=%s', (key, 'available'))
-        availableKeys = cursor.fetchall()
-        cursor.execute('SELECT * FROM clef WHERE keyNumber=%s AND (status=%s OR status=%s)', (key, 'lent', 'lost'))
-        unavailableKeys = cursor.fetchall()
+        cursor.execute('SELECT copyNumber, opens, status FROM clef WHERE keyNumber=%s AND status!=%s', (key, 'lent'))
+        deleteKeys = cursor.fetchall()
+
+        cursor.execute("select copyNumber, opens, email, lendDate, expectedReturnDate from lent l, clef c where l.keyNumber='" + key + "' and l.keyNumber=c.keyNumber and l.copyNumber=c.copyNumber;")
+        deactivateKeys = cursor.fetchall()
+
         cursor.execute('SELECT address FROM room JOIN unlocks ON id=roomID WHERE keyNumber=%s', (key,))
         rooms = cursor.fetchall()
-        return render_template('infoDeleteKey.html', key=key, availableKeys=availableKeys, unavailableKeys=unavailableKeys, rooms=rooms)
+        return render_template('infoDeleteKey.html', key=key, deleteKeys=deleteKeys, deactivateKeys=deactivateKeys, rooms=rooms)
 
 @app.route('/resultDeleteKey', methods = ['POST'])
 def resultDeleteKey():
@@ -421,8 +423,8 @@ def resultDeleteKey():
         key = request.form['key']
 
         try:
-            cursor.execute('DELETE FROM clef WHERE keyNumber=%s AND status=%s', (key, 'available'))
-            cursor.execute('UPDATE clef SET active=%s WHERE keyNumber=%s AND (status=%s OR status=%s)', ('no', key, 'lost', 'lent'))
+            cursor.execute('DELETE FROM clef WHERE keyNumber=%s AND status=!=%s', (key, 'lent'))
+            cursor.execute('UPDATE clef SET active=%s WHERE keyNumber=%s AND status=%s', ('no', key, 'lent'))
             conn.commit()
             message = 'Key successfully deleted.'
             flash(message)
@@ -629,7 +631,7 @@ def resultAddRoom():
     cursor = conn.cursor()
     try:
         cursor.execute("insert into room (address) values(%s)", (room,))
-        cursor.execute("SELECT DISTINCT keyNumber FROM clef")
+        cursor.execute("SELECT DISTINCT keyNumber FROM clef WHERE active='yes'")
         keys = cursor.fetchall()
         cursor.execute("SELECT * FROM room WHERE address=%s", (room,))
         room = cursor.fetchone()
@@ -707,7 +709,7 @@ def infoUpdateRoom():
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM room WHERE id=%s", (roomID,))
     room = cursor.fetchone()
-    cursor.execute("SELECT DISTINCT keyNumber FROM clef WHERE keyNumber NOT IN (SELECT keyNumber FROM unlocks WHERE roomID = %s)", (int(roomID),))
+    cursor.execute("SELECT DISTINCT keyNumber FROM clef WHERE keyNumber NOT IN (SELECT keyNumber FROM unlocks WHERE roomID = %s) AND active='yes'", (int(roomID),))
     keys = cursor.fetchall()
     cursor.execute("SELECT DISTINCT keyNumber FROM unlocks WHERE roomID=%s", (int(roomID),))
     delete_keys = cursor.fetchall()
