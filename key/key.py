@@ -423,7 +423,7 @@ def resultDeleteKey():
         key = request.form['key']
 
         try:
-            cursor.execute('DELETE FROM clef WHERE keyNumber=%s AND status=!=%s', (key, 'lent'))
+            cursor.execute('DELETE FROM clef WHERE keyNumber=%s AND status!=%s', (key, 'lent'))
             cursor.execute('UPDATE clef SET active=%s WHERE keyNumber=%s AND status=%s', ('no', key, 'lent'))
             conn.commit()
             message = 'Key successfully deleted.'
