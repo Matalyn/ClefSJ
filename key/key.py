@@ -386,6 +386,53 @@ def resultAddKey():
         conn.rollback()
         return redirect(url_for("addKey"))
 
+
+@app.route('/deleteKey', methods = ['POST', 'GET'])
+def deleteKey():
+    if not session.get('logged_in'):
+        abort(401)
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    if request.method == "GET":
+        cursor.execute('SELECT DISTINCT keyNumber FROM clef WHERE active=%s', ('yes',))
+        keys = cursor.fetchall()
+        return render_template('deleteKey.html', keys=keys)
+
+    elif request.method == 'GET':
+        key = request.form['key']
+        cursor.execute('SELECT * FROM clef WHERE keyNumber=%s AND status=%s', (key, 'available'))
+        availableKeys = cursor.fetchall()
+        cursor.execute('SELECT * FROM clef WHERE keyNumber=%s AND (status=%s OR status=%s)', (key, 'lent', 'lost'))
+        unavailableKeys = cursor.fetchall()
+        cursor.execute('SELECT address FROM room JOIN unlocks ON id=roomID WHERE keyNumber=%s', (key,))
+        rooms = cursor.fetchall()
+        return render_template('infoDeleteKey.html', key=key, availableKeys=availableKeys, unavailableKeys=unavailableKeys, rooms=rooms)
+
+@app.route('/resultDeleteKey', methods = ['POST'])
+def resultDeleteKey():
+    if not session.get('logged_in'):
+        abort(401)
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        key = request.form['key']
+
+        try:
+            cursor.execute('DELETE FROM clef WHERE keyNumber=%s AND status=%s', (key, 'available'))
+            cursor.execute('UPDATE clef SET active=%s WHERE keyNumber=%s AND (status=%s OR status=%s)', ('no', key, 'lost', 'lent'))
+            conn.commit()
+            message = 'Key successfully deleted.'
+            flash(message)
+            return redirect(url_for('deleteKey'))
+
+        except:
+            conn.rollback()
+            error = 'There was a problem deleting this key. Please try again.'
+            flash(error)
+            return redirect(url_for('deleteKey'))
+
 @app.route('/changeKey', methods = ['POST', 'GET'])
 #searh profile for one clinet
 def changeKey():

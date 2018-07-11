@@ -1,0 +1,5 @@
+ALTER TABLE admin
+MODIFY COLUMN password varchar(100) NOT NULL;
+
+ALTER TABLE admin
+DROP current;
