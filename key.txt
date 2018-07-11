@@ -1,0 +1,4 @@
+ALTER TABLE clef
+ADD active varchar(32) NOT NULL;
+
+UPDATE clef SET active='yes';

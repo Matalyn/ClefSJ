@@ -124,7 +124,7 @@ def lend():
     #pull all available keys info
     conn = mysql.connect()
     cursor = conn.cursor()
-    cursor.execute("select distinct keyNumber from clef where status='available' order by keyNumber asc;")
+    cursor.execute("select distinct keyNumber from clef where status='available' and active = 'yes' order by keyNumber asc;")
     keys = cursor.fetchall()
     #render html with available keys
     return render_template('lend.html', keys = keys)
@@ -143,10 +143,10 @@ def infoLend():
     cursor.execute("select * from client;")
     clients = cursor.fetchall()
     #pull available copies info
-    cursor.execute("select * from clef where keyNumber='"+keyNumber+"' and status='available'")
+    cursor.execute("select * from clef where keyNumber='"+keyNumber+"' and status='available' and active = 'yes'")
     copies = cursor.fetchall()
     #pull depositValue info
-    cursor.execute("select distinct depositValue from clef where keyNumber='"+keyNumber+"' and status='available'")
+    cursor.execute("select distinct depositValue from clef where keyNumber='"+keyNumber+"' and status='available' and active = 'yes'")
     depositValue = cursor.fetchone()
     #render html with available copies, client address, depositValue, and keyNumber
     return render_template('infoLend.html', copies = copies, clients = clients, depositValue = depositValue, keyNumber = keyNumber)
@@ -207,7 +207,7 @@ def retrieve():
     #render html with lending key and its corresponding client address information
     return render_template('return.html', keys = keys)
 
-@app.route('/resultReturn', methods=['POST', 'Get'])
+@app.route('/resultReturn', methods=['POST', 'GET'])
 #The 2/2 step of return, final confirmation and receipt
 def resultReturn():
     #check if login session
@@ -244,8 +244,17 @@ def resultReturn():
         cursor.execute("insert into returnhistory (keyNumber, copyNumber, email, lendDate, returnDate, lendPaymentMethod, admin) values('"+keyNumber+"', '"+copyNumber+"', '"+email+"', '"+lendDate+"', '"+returnDate+"', '"+lendpaymentMethod+"', '"+currentUser+"')")
         #delete the lending records from lend table
         cursor.execute("delete from lent where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"'")
-        #Update clef table to set status of the key copy just returned back to 'available'
-        cursor.execute("update clef set status='available' where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"'")
+
+        cursor.execute("SELECT active FROM clef WHERE keyNumber=%s AND copyNumber=%s", (keyNumber, copyNumber))
+        active = cursor.fetchone()[0]
+
+        if active.lower() == 'yes':
+            # Update clef table to set status of the key copy just returned back to 'available'
+            cursor.execute("update clef set status='available' where keyNumber='" + keyNumber + "' and copyNumber='" + copyNumber + "'")
+
+        elif active.lower() == 'no':
+            cursor.execute("DELETE FROM clef WHERE keyNumber=%s AND copyNumber=%s", (keyNumber, copyNumber))
+
         #render html receipt with client address, depositValue, returnDate(today), lendDate, keyNumber and admin
         conn.commit()
 
@@ -370,12 +379,13 @@ def resultAddKey():
     depositValue = request.form['depositValue']
     opens = request.form['opens']
     status = request.form['status']
+    active = 'yes'
     rooms = request.form.getlist('room')
     conn = mysql.connect()
     cursor = conn.cursor()
     try:
         for copyNumber in range(copyNumberStart, copyNumberEnd):
-            cursor.execute("insert into clef values('"+keyNumber+"', '"+str(copyNumber)+"','"+depositValue+"', '"+opens+"', '"+status+"')")
+            cursor.execute("insert into clef values('"+keyNumber+"', '"+str(copyNumber)+"','"+depositValue+"', '"+opens+"', '"+status+"', '"+active+"')")
         for room in rooms:
             cursor.execute("insert into unlocks values('"+keyNumber+"', "+str(room[0])+")")
         cursor.execute("select * from clef where keyNumber='"+keyNumber+"' and copyNumber>='"+str(copyNumberStart)+"' and copyNumber<='"+str(copyNumberEnd)+"'")
@@ -387,6 +397,85 @@ def resultAddKey():
         flash(error)
         conn.rollback()
         return redirect(url_for("addKey"))
+
+@app.route('/deleteKey', methods = ['POST', 'GET'])
+def deleteKey():
+    if not session.get('logged_in'):
+        abort(401)
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    if request.method == "GET":
+        cursor.execute('SELECT DISTINCT keyNumber FROM clef WHERE active=%s', ('yes',))
+        keys = cursor.fetchall()
+        return render_template('deleteKey.html', keys=keys)
+
+    elif request.method == 'POST':
+        key = request.form['key']
+        cursor.execute('SELECT copyNumber, opens, status FROM clef WHERE keyNumber=%s AND status!=%s', (key, 'lent'))
+        deleteKeys = cursor.fetchall()
+
+        cursor.execute("select c.copyNumber, c.opens, l.email, l.lendDate, l.expectedReturnDate, l.admin from lent l, clef c where l.keyNumber='" + key + "' and l.keyNumber=c.keyNumber and l.copyNumber=c.copyNumber;")
+        deactivateKeys = cursor.fetchall()
+
+        cursor.execute('SELECT address FROM room JOIN unlocks ON id=roomID WHERE keyNumber=%s', (key,))
+        rooms = cursor.fetchall()
+        return render_template('infoDeleteKey.html', key=key, deleteKeys=deleteKeys, deactivateKeys=deactivateKeys, rooms=rooms)
+
+@app.route('/resultDeleteKey', methods = ['POST'])
+def resultDeleteKey():
+    if not session.get('logged_in'):
+        abort(401)
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        key = request.form['key']
+
+        try:
+            cursor.execute('DELETE FROM clef WHERE keyNumber=%s AND status!=%s', (key, 'lent'))
+            cursor.execute('UPDATE clef SET active=%s WHERE keyNumber=%s AND status=%s', ('no', key, 'lent'))
+            conn.commit()
+            message = 'Key successfully deleted.'
+            flash(message)
+            return redirect(url_for('deleteKey'))
+
+        except:
+            conn.rollback()
+            error = 'There was a problem deleting this key. Please try again.'
+            flash(error)
+            return redirect(url_for('deleteKey'))
+
+@app.route('/changeKey', methods = ['POST', 'GET'])
+#searh profile for one clinet
+def changeKey():
+    if not session.get('logged_in'):
+        abort(401)
+    cursor = mysql.connect().cursor()
+    cursor.execute("select distinct keyNumber, room from room ")
+    keys = cursor.fetchall()
+    return render_template('changeKey.html', keys = keys)
+
+@app.route('/resultChangeKey', methods = ['POST', 'GET'])
+#searh profile for one clinet
+def resultChangeKey():
+    if not session.get('logged_in'):
+        abort(401)
+    keyNumber = request.form['keyNumber']
+    room = request.form['room']
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("update room set room='"+room+"' where keyNumber='"+keyNumber+"'")
+        cursor.execute("select * from clef where keyNumber='"+keyNumber+"'")
+        keys = cursor.fetchall()
+        conn.commit()
+        return render_template('resultChangeKey.html', keys = keys, room = room)
+    except:
+        error = "This key could not be changed. Please try again."
+        flash(error)
+        conn.rollback()
+        return redirect(url_for("changeKey"))
 
 
 @app.route('/reportClient', methods = ['POST', 'GET'])
@@ -552,7 +641,7 @@ def resultAddRoom():
     cursor = conn.cursor()
     try:
         cursor.execute("insert into room (address) values(%s)", (room,))
-        cursor.execute("SELECT DISTINCT keyNumber FROM clef")
+        cursor.execute("SELECT DISTINCT keyNumber FROM clef WHERE active='yes'")
         keys = cursor.fetchall()
         cursor.execute("SELECT * FROM room WHERE address=%s", (room,))
         room = cursor.fetchone()
@@ -630,7 +719,7 @@ def infoUpdateRoom():
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM room WHERE id=%s", (roomID,))
     room = cursor.fetchone()
-    cursor.execute("SELECT DISTINCT keyNumber FROM clef WHERE keyNumber NOT IN (SELECT keyNumber FROM unlocks WHERE roomID = %s)", (int(roomID),))
+    cursor.execute("SELECT DISTINCT keyNumber FROM clef WHERE keyNumber NOT IN (SELECT keyNumber FROM unlocks WHERE roomID = %s) AND active='yes'", (int(roomID),))
     keys = cursor.fetchall()
     cursor.execute("SELECT DISTINCT keyNumber FROM unlocks WHERE roomID=%s", (int(roomID),))
     delete_keys = cursor.fetchall()
