@@ -405,7 +405,7 @@ def deleteKey():
         cursor.execute('SELECT copyNumber, opens, status FROM clef WHERE keyNumber=%s AND status!=%s', (key, 'lent'))
         deleteKeys = cursor.fetchall()
 
-        cursor.execute("select copyNumber, opens, email, lendDate, expectedReturnDate from lent l, clef c where l.keyNumber='" + key + "' and l.keyNumber=c.keyNumber and l.copyNumber=c.copyNumber;")
+        cursor.execute("select c.copyNumber, c.opens, l.email, l.lendDate, l.expectedReturnDate from lent l, clef c where l.keyNumber='" + key + "' and l.keyNumber=c.keyNumber and l.copyNumber=c.copyNumber;")
         deactivateKeys = cursor.fetchall()
 
         cursor.execute('SELECT address FROM room JOIN unlocks ON id=roomID WHERE keyNumber=%s', (key,))
