@@ -3,7 +3,7 @@
 {% block main %}
 	<div class="container">
 		<br/>
-		<h1 class="text-center" style="color: #f0ad4e">Keys Passed Due</h1>
+		<h1 class="text-center" style="color: #f0ad4e" id="top">Keys Passed Due</h1>
 		<br/>
 			<table class="table table-hover">
 			<thead>
@@ -41,6 +41,10 @@
 				{%endfor%}
 			</tbody>
 			</table>
-			<br/>
+    <br>
+    <div class="text-center">
+      <a href="#top" class="btn btn-primary btn-md btn-warning">Top</a>
+    </div>
+    <br>
 	</div>
 {% endblock %}
