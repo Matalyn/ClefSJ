@@ -3,7 +3,7 @@
 {% block main %}
 <div class="container">
   <br/>
-  <h1 class="text-center" style="color: #f0ad4e">Update Client Information</h1>
+  <h1 class="text-center" style="color: #f0ad4e">Mises à jour d’information</h1>
 	<br/>
   <div class="row">
     <div class="col-sm-3"></div>
@@ -13,10 +13,10 @@
 				
 					
 				<div class="form-group">
-					<label for="email" class="sr-only">select a Client to change</label>
+					<label for="email" class="sr-only">Choisir un client</label>
 					<div class="cols-sm-10">
 					<select class="form-control selectpicker" data-live-search="true" name="email">
-						<option selected disabled value="" class="text-hide">select a Client to change</option>
+						<option selected disabled value="" class="text-hide">Choisir un client</option>
 						{%for client in clients%}
 						<option value="{{client[0]}}">{{client[1]}} {{client[2]}}, {{client[3]}}, {{client[4]}} {{client[5]}}, {{client[6]}}</option>
 						{%endfor%}

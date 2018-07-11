@@ -3,7 +3,7 @@
 {% block main %}
 <div class="container">
   <br/>
-  <h1 class="text-center" style="color: #f0ad4e">Ajouter une admin</h1>
+  <h1 class="text-center" style="color: #f0ad4e">Ajouter un compte</h1>
 	<br/>
   <div class="row">
     <div class="col-sm-3"></div>
@@ -11,41 +11,41 @@
       <form class="" method="post" action="{{url_for('resultAddAdmin')}}" onsubmit="return validateFormAddAdmin(this)">
 				<fieldset>
         <div class="form-group">
-          <label for='email' class="sr-only">Account email: </label>
+          <label for='email' class="sr-only">Courriel : </label>
           <div class="cols-sm-10">
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-envelope-o" aria-hidden="true"></i></span>
-              <input type="text" class="form-control" name="email" value="" placeholder="Account Email"/>
+              <input type="text" class="form-control" name="email" value="" placeholder="Courriel"/>
             </div><!-- end input-group-->
           </div><!--end cols        <div class="form-group-sm-10-->
         </div><!--end form-group-->
         
         <div class="form-group">
-          <label for='password' class="sr-only">password: </label>
+          <label for='password' class="sr-only">Mot de passe : </label>
           <div class="cols-sm-10">
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-lock" aria-hidden="true"></i></span>
-              <input type="text" class="form-control" name="password" value=""  placeholder="Password"/>
+              <input type="text" class="form-control" name="password" value=""  placeholder="Mot de passe"/>
             </div><!-- end input-group-->
           </div><!--end cols-sm-10-->
         </div><!--end form-group-->
           
         <div class="form-group">
-          <label for='firstNamw' class="sr-only">First Name: </label>
+          <label for='firstNamw' class="sr-only">Prénom : </label>
           <div class="cols-sm-10">
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-id-card-o" aria-hidden="true"></i></span>
-              <input type="text" class="form-control" name="firstName" value=""  placeholder="First Name"/>
+              <input type="text" class="form-control" name="firstName" value=""  placeholder="Prénom"/>
             </div><!-- end input-group-->
           </div><!--end cols-sm-10-->
         </div><!--end form-group-->
         
         <div class="form-group">
-          <label for='lastName' class="sr-only">Last Name: </label>
+          <label for='lastName' class="sr-only">Nom : </label>
           <div class="cols-sm-10">
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-id-card" aria-hidden="true"></i></span>
-              <input type="text" class="form-control" name="lastName" value=""  placeholder="Last Name"/>
+              <input type="text" class="form-control" name="lastName" value=""  placeholder="Nom"/>
             </div><!-- end input-group-->
           </div><!--end cols-sm-10-->
         </div><!--end form-group-->
@@ -55,7 +55,7 @@
         <div class="form-group"><!--button submit-->
           <div class="cols-sm-10">
               <div class="text-center">
-              <button class=" btn btn-lg btn-warning" name="apply" type="submit" onclick="return transactionConfirm()">appliquer</button>
+              <button class=" btn btn-lg btn-warning" name="apply" type="submit" onclick="return transactionConfirm()">Ajouter</button>
               </div><!--end text-center-->
           </div><!--end cols-sm-10-->
         </div><!--end form-group-->
