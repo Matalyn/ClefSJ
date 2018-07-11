@@ -207,7 +207,7 @@ def retrieve():
     #render html with lending key and its corresponding client address information
     return render_template('return.html', keys = keys)
 
-@app.route('/resultReturn', methods=['POST', 'Get'])
+@app.route('/resultReturn', methods=['POST', 'GET'])
 #The 2/2 step of return, final confirmation and receipt
 def resultReturn():
     #check if login session
@@ -244,8 +244,17 @@ def resultReturn():
         cursor.execute("insert into returnhistory (keyNumber, copyNumber, email, lendDate, returnDate, lendPaymentMethod, admin) values('"+keyNumber+"', '"+copyNumber+"', '"+email+"', '"+lendDate+"', '"+returnDate+"', '"+lendpaymentMethod+"', '"+currentUser+"')")
         #delete the lending records from lend table
         cursor.execute("delete from lent where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"'")
-        #Update clef table to set status of the key copy just returned back to 'available'
-        cursor.execute("update clef set status='available' where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"'")
+
+        cursor.execute("SELECT active FROM clef WHERE keyNumber=%s AND copyNumber=%s", (keyNumber, copyNumber))
+        active = cursor.fetchone()[0]
+
+        if active.lower() == 'yes':
+            # Update clef table to set status of the key copy just returned back to 'available'
+            cursor.execute("update clef set status='available' where keyNumber='" + keyNumber + "' and copyNumber='" + copyNumber + "'")
+
+        elif active.lower() == 'no':
+            cursor.execute("DELETE FROM clef WHERE keyNumber=%s AND copyNumber=%s", (keyNumber, copyNumber))
+
         #render html receipt with client address, depositValue, returnDate(today), lendDate, keyNumber and admin
         conn.commit()
 
@@ -406,7 +415,7 @@ def deleteKey():
         cursor.execute('SELECT copyNumber, opens, status FROM clef WHERE keyNumber=%s AND status!=%s', (key, 'lent'))
         deleteKeys = cursor.fetchall()
 
-        cursor.execute("select c.copyNumber, c.opens, l.email, l.lendDate, l.expectedReturnDate from lent l, clef c where l.keyNumber='" + key + "' and l.keyNumber=c.keyNumber and l.copyNumber=c.copyNumber;")
+        cursor.execute("select c.copyNumber, c.opens, l.email, l.lendDate, l.expectedReturnDate, l.admin from lent l, clef c where l.keyNumber='" + key + "' and l.keyNumber=c.keyNumber and l.copyNumber=c.copyNumber;")
         deactivateKeys = cursor.fetchall()
 
         cursor.execute('SELECT address FROM room JOIN unlocks ON id=roomID WHERE keyNumber=%s', (key,))
