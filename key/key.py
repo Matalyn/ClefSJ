@@ -223,9 +223,11 @@ def resultReturn():
     keyNumber = numberList[0]
     copyNumber = numberList[1]
     #pull client email, lendDate, paymenthod of lending from table lent
+
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
     try:
-        conn = mysql.connect()
-        cursor = conn.cursor()
         #get client email, lendDate and paymentMethod
         cursor.execute("select email, lendDate, paymentMethod from lent where keyNumber='"+keyNumber+"' and copyNumber="+copyNumber+"")
         lend = cursor.fetchone()
@@ -385,37 +387,6 @@ def resultAddKey():
         flash(error)
         conn.rollback()
         return redirect(url_for("addKey"))
-
-@app.route('/changeKey', methods = ['POST', 'GET'])
-#searh profile for one clinet
-def changeKey():
-    if not session.get('logged_in'):
-        abort(401)
-    cursor = mysql.connect().cursor()
-    cursor.execute("select distinct keyNumber, room from room ")
-    keys = cursor.fetchall()
-    return render_template('changeKey.html', keys = keys)
-
-@app.route('/resultChangeKey', methods = ['POST', 'GET'])
-#searh profile for one clinet
-def resultChangeKey():
-    if not session.get('logged_in'):
-        abort(401)
-    keyNumber = request.form['keyNumber']
-    room = request.form['room']
-    conn = mysql.connect()
-    cursor = conn.cursor()
-    try:
-        cursor.execute("update room set room='"+room+"' where keyNumber='"+keyNumber+"'")
-        cursor.execute("select * from clef where keyNumber='"+keyNumber+"'")
-        keys = cursor.fetchall()
-        conn.commit()
-        return render_template('resultChangeKey.html', keys = keys, room = room)
-    except:
-        error = "This key could not be changed. Please try again."
-        flash(error)
-        conn.rollback()
-        return redirect(url_for("changeKey"))
 
 
 @app.route('/reportClient', methods = ['POST', 'GET'])
@@ -1060,6 +1031,10 @@ def changePassword():
             error = "New passwords do not match. Please try again."
             flash(error)
             return redirect(url_for('changePassword'))
+        elif (str(newPassword) == "") or (str(newPasswordConfirm) == ""):
+            error = "Passwords cannot be empty. Please try again."
+            flash(error)
+            return redirect(url_for('changePassword'))
         else:
             newPasswordHash = generate_password_hash(newPassword)
             try:
@@ -1073,6 +1048,57 @@ def changePassword():
                 flash(error)
                 conn.rollback()
                 return redirect(url_for('changePassword'))
+
+
+@app.route('/updateAdmin', methods = ['GET', 'POST'])
+def updateAdmin():
+    if not session.get('logged_in'):
+        abort(401)
+    elif getCurrentUser()[4] != "super":
+        return render_template('invalidPriority.html')
+    else:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        if request.method == 'GET':
+            cursor.execute('SELECT firstName, lastName, email FROM admin')
+            admins = cursor.fetchall()
+            return render_template('updateAdmin.html', admins=admins)
+
+        elif request.method == 'POST':
+            email = request.form['admin']
+            cursor.execute('SELECT * FROM admin WHERE email=%s', (email,))
+            admin = cursor.fetchone()
+            return render_template('infoUpdateAdmin.html', admin=admin)
+
+@app.route('/infoUpdateAdmin', methods=['POST'])
+def infoUpdateAdmin():
+    if not session.get('logged_in'):
+        abort(401)
+    elif getCurrentUser()[4] != "super":
+        return render_template('invalidPriority.html')
+    else:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        if request.method == 'POST':
+            oldEmail = request.form['oldEmail']
+            email = request.form['email']
+            firstName = request.form['firstName']
+            lastName = request.form['lastName']
+
+            try:
+                cursor.execute('UPDATE admin SET email=%s, firstName = %s, lastName = %s WHERE email = %s', (email, firstName, lastName, oldEmail))
+                conn.commit()
+                message = "Admin updated."
+                flash(message)
+                return redirect(url_for('updateAdmin'))
+
+            except:
+                conn.rollback()
+                error = "There was a problem updating this admin. Please try again."
+                flash(error)
+                return redirect(url_for('updateAdmin'))
 
 
 
