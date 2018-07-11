@@ -370,12 +370,13 @@ def resultAddKey():
     depositValue = request.form['depositValue']
     opens = request.form['opens']
     status = request.form['status']
+    active = 'yes'
     rooms = request.form.getlist('room')
     conn = mysql.connect()
     cursor = conn.cursor()
     try:
         for copyNumber in range(copyNumberStart, copyNumberEnd):
-            cursor.execute("insert into clef values('"+keyNumber+"', '"+str(copyNumber)+"','"+depositValue+"', '"+opens+"', '"+status+"', '"+'yes'+"')")
+            cursor.execute("insert into clef values('"+keyNumber+"', '"+str(copyNumber)+"','"+depositValue+"', '"+opens+"', '"+status+"', '"+active+"')")
         for room in rooms:
             cursor.execute("insert into unlocks values('"+keyNumber+"', "+str(room[0])+")")
         cursor.execute("select * from clef where keyNumber='"+keyNumber+"' and copyNumber>='"+str(copyNumberStart)+"' and copyNumber<='"+str(copyNumberEnd)+"'")
