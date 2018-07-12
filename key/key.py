@@ -733,28 +733,36 @@ def resultUpdateRoom():
     keyNumbers = request.form.getlist('keys')
     deleteKeyNumbers = request.form.getlist('delete_keys')
     roomID = request.form['roomID']
+    address = request.form['address']
     conn = mysql.connect()
     cursor = conn.cursor()
-    for keyNumber in keyNumbers:
-        try:
+    try:
+        cursor.execute("UPDATE room SET address=%s WHERE id=%s", (address, roomID))
+    except:
+        error = "There was a problem updating this room's name. Please try again."
+        flash(error)
+        conn.rollback()
+        return redirect(url_for('updateRoom'))
+    try:
+        for keyNumber in keyNumbers:
             cursor.execute("INSERT INTO unlocks VALUES (%s, %s)", (str(keyNumber), int(roomID)))
-        except:
-            error = "There was a problem adding keys to this room. Please try again."
-            flash(error)
-            conn.rollback()
-            return redirect(url_for('updateRoom'))
-    for deleteKeyNumber in deleteKeyNumbers:
-        try:
+    except:
+        error = "There was a problem adding keys to this room. Please try again."
+        flash(error)
+        conn.rollback()
+        return redirect(url_for('updateRoom'))
+    try:
+        for deleteKeyNumber in deleteKeyNumbers:
             cursor.execute("DELETE FROM unlocks WHERE keyNumber=%s AND roomID=%s", (str(deleteKeyNumber), int(roomID)))
-        except:
-            error = "There was a problem deleting keys from this room. Please try again."
-            flash(error)
-            conn.rollback()
-            return redirect(url_for('updateRoom'))
+    except:
+        error = "There was a problem deleting keys from this room. Please try again."
+        flash(error)
+        conn.rollback()
+        return redirect(url_for('updateRoom'))
 
     cursor.execute("SELECT * FROM room WHERE id=%s", (roomID,))
     room = cursor.fetchone()
-    cursor.execute("SELECT * FROM clef WHERE keyNumber IN (SELECT keyNumber FROM unlocks WHERE roomID=%s)", (int(roomID),))
+    cursor.execute("SELECT keyNumber, copyNumber, opens FROM clef WHERE keyNumber IN (SELECT keyNumber FROM unlocks WHERE roomID=%s)", (int(roomID),))
     keys = cursor.fetchall()
     conn.commit()
     return render_template('resultReportKeysbyRoom.html', room = room, keys = keys)
@@ -788,6 +796,10 @@ def resultReportKey():
     #find out how many copies of those keys in total in the database
     cursor.execute("select count(*) from clef where keyNumber='"+keyNumber+"'")
     copyCount = cursor.fetchone()[0]
+
+    cursor.execute("SELECT active FROM clef WHERE keyNumber=%s", (keyNumber,))
+    active = cursor.fetchone()[0]
+
     #findo out what rooms it opens
     cursor.execute("select r1.address from room r1 join unlocks u1 on r1.id=u1.roomID where u1.keyNumber='"+keyNumber+"'")
     rooms = cursor.fetchall()
@@ -804,7 +816,7 @@ def resultReportKey():
     cursor.execute("select copyNumber, opens from clef where keyNumber='"+keyNumber+"' and status='missing'")
     missing = cursor.fetchall()
     #render html with key copy in status of lend, available, lost, and missing
-    return render_template('resultReportKey.html', lend = lend, keyNumber = keyNumber, available = available, lost = lost, missing = missing, copyCount = copyCount, rooms=rooms)
+    return render_template('resultReportKey.html', active=active, lend = lend, keyNumber = keyNumber, available = available, lost = lost, missing = missing, copyCount = copyCount, rooms=rooms)
 
 @app.route('/reportKeysbyRoom', methods=['POST', 'GET'])
 #The 1/2 step of report by room, display all rooms and request a selection upon them.

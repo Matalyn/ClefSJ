@@ -1,0 +1,2 @@
+ALTER TABLE losshistory ADD CONSTRAINT losshistory_ibfk_2 FOREIGN KEY (keyNumber, copyNumber) REFERENCES clef (keyNumber, copyNumber) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE returnhistory ADD CONSTRAINT returnhistory_ibfk_2 FOREIGN KEY (keyNumber, copyNumber) REFERENCES clef (keyNumber, copyNumber) ON DELETE CASCADE ON UPDATE CASCADE;
