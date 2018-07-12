@@ -1202,6 +1202,38 @@ def infoUpdateAdmin():
                 return redirect(url_for('updateAdmin'))
 
 
+@app.route('/activateClient', methods=['GET', 'POST'])
+def activateClient():
+    if not session.get('logged_in'):
+        abort(401)
+    else:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        if request.method == 'GET':
+            cursor.execute("SELECT * FROM client WHERE active='no'")
+            clients = cursor.fetchall()
+            return render_template('activateClient.html', clients=clients)
+        elif request.method == 'POST':
+            client = request.form['client']
+            try:
+                cursor.execute("UPDATE client SET active='yes' WHERE email=%s", (client,))
+                conn.commit()
+                message = 'Client successfully activated.'
+                flash(message)
+                return redirect(url_for('activateClient'))
+
+            except:
+                conn.rollback()
+                error = 'There was a problem activating this client. Please try again.'
+                flash(error)
+                return redirect(url_for('activateClient'))
+
+@app.route('/deactivateClient', methods = ['GET', 'POST'])
+def deactivateClient():
+
+
+
 
 #app running function
 if __name__ == "__main__":
