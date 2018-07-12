@@ -487,14 +487,13 @@
 
     function validateFormInfoUpdateRoom(thisForm) {
         with (thisForm) {
-            var keyNumberValues = thisForm.keys.values;
-            var deleteKeyValues = thisForm.delete_keys.values;
-            if ((keyNumberValues.length == 0) && (deleteKeyValues.length == 0)) {
-                alert("No keys are selected");
+            var roomName = thisForm.address.value;
+            if (roomName.valueOf() == "") {
+                alert("Room name cannot be empty");
                 return false;
             }
         }
-    };
+    }
 
     function validateFormReportKey(thisForm) {
         //get the values of the input field with id='keyNumber_copyNumber'
