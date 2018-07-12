@@ -762,7 +762,7 @@ def resultUpdateRoom():
 
     cursor.execute("SELECT * FROM room WHERE id=%s", (roomID,))
     room = cursor.fetchone()
-    cursor.execute("SELECT * FROM clef WHERE keyNumber IN (SELECT keyNumber FROM unlocks WHERE roomID=%s)", (int(roomID),))
+    cursor.execute("SELECT keyNumber, copyNumber, opens FROM clef WHERE keyNumber IN (SELECT keyNumber FROM unlocks WHERE roomID=%s)", (int(roomID),))
     keys = cursor.fetchall()
     conn.commit()
     return render_template('resultReportKeysbyRoom.html', room = room, keys = keys)
