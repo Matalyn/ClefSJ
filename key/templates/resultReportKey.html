@@ -1,148 +1,149 @@
-{% extends 'layout.html'%}
+{% extends 'layout.html' %}
 
 {% block main %}
-	<div class="container">
-		<br/>
-		 <h1 class="text-center" style="color: #f0ad4e">Report by key</h1>
-					<P class="text-center">This key has {{copyCount}} copies in total.</P>
-			<table class="table table-hover">
-			<thead>
-				<tr>
-					<th>Room it opens</th>
-				</tr>
-			</thead>
-			<tbody>
-				{%for room in rooms%}
-				<tr>
-					<!--room-->
-					<td>{{room[0]}}</td>
-				</tr>
-				{%endfor%}
-			</tbody>
-				
-		</table>
-		<br/>
-				<P class="text-center">Key {{keyNumber}} was lentout on copies:</P>
-		<br/>
-		
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th>copy number</th>
-					<th>Opens</th>
-					<th>Client email</th>
-					<th>Lent date</th>
-					<th>Return Deadline</th>
-					<th>Admin</th>
-				</tr>
-			</thead>
-			<tbody>
-				{%for key in lend%}
-				<tr>
-					<!--copyNumber-->
-					<td>{{key[1]}}</td>
-					<!--opens-->
-					<td>{{key[10]}}</td>
-					<!--email-->
-					<td>{{key[2]}}</td>
-					<!--lent date-->
-					<td>{{key[3]}}</td>
-					<!--dealine date-->
-					<td>{{key[5]}}</td>
-					<!--admin-->
-					<td>{{key[6]}}</td>
-				</tr>
-				{%endfor%}
-			</tbody>
-		</table>
-		
-		
-		
-			<br/>
-				<P class="text-center">key {{keyNumber}} is available on copies :</P>
-		<br/>
-		
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th>copy number</th>
-					<th>opens</th>
-				</tr>
-			</thead>
-			<tbody>
-				{%for key in available%}
-				<tr>
-					<!--copyNumber-->
-					<td>{{key[0]}}</td>
-					<!--opens-->
-					<td>{{key[1]}}</td>
-				</tr>
-				{%endfor%}
-			</tbody>
-		</table>
-		
-		
-		
-				<br/>
-				<P class="text-center">key {{keyNumber}} is lost on copies :</P>
-		<br/>
-		
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th>copy number</th>
-					<th>opens</th>
-					<th>Client email</th>
-					<th>Lent date</th>
-					<th>Lost Date</th>
-					<th>Admin</th>
-				</tr>
-			</thead>
-			<tbody>
-				{%for key in lost%}
-				<tr>
-					<!--copyNumber-->
-					<td>{{key[1]}}</td>
-					<!--opens-->
-					<td>{{key[10]}}</td>
-					<!--email-->
-					<td>{{key[2]}}</td>
-					<!--lent date-->
-					<td>{{key[3]}}</td>
-					<!--lost date-->
-					<td>{{key[4]}}</td>
-					<!--admin-->
-					<td>{{key[6]}}</td>
-				</tr>
-				{%endfor%}
-			</tbody>
-		</table>
-						<br/>
-				<P class="text-center">key {{keyNumber}} is missing on copies :</P>
-		<br/>
-		
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th>Copy number</th>
-					<th>Opens</th>
-				</tr>
-			</thead>
-			<tbody>
-				{%for key in missing%}
-				<tr>
-					<!--copyNumber-->
-					<td>{{key[0]}}</td>
-					<!--opens-->
-					<td>{{key[1]}}</td>
-				</tr>
-				{%endfor%}
-			</tbody>
-		</table>
+  <div class="container">
+    <br/>
+    <h1 class="text-center" style="color: #f0ad4e">Report by key</h1>
+    <P class="text-center">This key has {{ copyCount }} copies in total.</P>
+    {% if active=='no' %}
+      <P class="text-center">This key has been deactivated.</P>
+    {% endif %}
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Room it opens</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for room in rooms %}
+        <tr>
+          <!--room-->
+          <td>{{ room[0] }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+
+    </table>
+    <br/>
+    <P class="text-center">Key {{ keyNumber }} was lentout on copies:</P>
+    <br/>
+
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Copy number</th>
+        <th>Opens</th>
+        <th>Client email</th>
+        <th>Lent date</th>
+        <th>Return Deadline</th>
+        <th>Admin</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for key in lend %}
+        <tr>
+          <!--copyNumber-->
+          <td>{{ key[1] }}</td>
+          <!--opens-->
+          <td>{{ key[10] }}</td>
+          <!--email-->
+          <td>{{ key[2] }}</td>
+          <!--lent date-->
+          <td>{{ key[3] }}</td>
+          <!--dealine date-->
+          <td>{{ key[5] }}</td>
+          <!--admin-->
+          <td>{{ key[6] }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+
+    <br/>
+    <P class="text-center">key {{ keyNumber }} is available on copies :</P>
+    <br/>
+
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>copy number</th>
+        <th>opens</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for key in available %}
+        <tr>
+          <!--copyNumber-->
+          <td>{{ key[0] }}</td>
+          <!--opens-->
+          <td>{{ key[1] }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+
+    <br/>
+    <P class="text-center">key {{ keyNumber }} is lost on copies :</P>
+    <br/>
+
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>copy number</th>
+        <th>opens</th>
+        <th>Client email</th>
+        <th>Lent date</th>
+        <th>Lost Date</th>
+        <th>Admin</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for key in lost %}
+        <tr>
+          <!--copyNumber-->
+          <td>{{ key[1] }}</td>
+          <!--opens-->
+          <td>{{ key[10] }}</td>
+          <!--email-->
+          <td>{{ key[2] }}</td>
+          <!--lent date-->
+          <td>{{ key[3] }}</td>
+          <!--lost date-->
+          <td>{{ key[4] }}</td>
+          <!--admin-->
+          <td>{{ key[6] }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <br/>
+    <P class="text-center">key {{ keyNumber }} is missing on copies :</P>
+    <br/>
+
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Copy number</th>
+        <th>Opens</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for key in missing %}
+        <tr>
+          <!--copyNumber-->
+          <td>{{ key[0] }}</td>
+          <!--opens-->
+          <td>{{ key[1] }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
     <br>
     <div class="text-center">
       <a href="{{ url_for('reportKey') }}" class="btn btn-primary btn-md btn-warning">Back</a>
     </div>
     <br>
-	</div>
+  </div>
 {% endblock %}
