@@ -1231,9 +1231,41 @@ def activateClient():
 
 @app.route('/deactivateClient', methods = ['GET', 'POST'])
 def deactivateClient():
+    if not session.get('logged_in'):
+        abort(401)
+    else:
+        conn = mysql.connect()
+        cursor = conn.cursor()
 
+        if request.method == 'GET':
+            cursor.execute("SELECT * FROM client WHERE active='yes'")
+            clients = cursor.fetchall()
+            return render_template('deactivateClient.html', clients=clients)
 
+        elif request.method == 'POST':
+            client = request.form['client']
 
+            cursor.execute("SELECT c1.keyNumber, c1.copyNumber, r1.address FROM lent l1 JOIN unlocks u1 JOIN room r1 ON l1.keyNumber = u1.keyNumber AND u1.roomID = r1.id WHERE l1.email=%s", (client,))
+            lentKeys = cursor.fetchall()
+
+            if lentKeys is not None:
+                cursor.execute("SELECT firstName, lastName, email FROM client WHERE email=%s", (client,))
+                client = cursor.fetchone()
+                return render_template('invalidDeactivate.html', client=client, lentKeys = lentKeys)
+
+            else:
+                try:
+                    cursor.execute("UPDATE client SET active='no' WHERE email=%s", (client,))
+                    conn.commit()
+                    message = "Client deactivated."
+                    flash(message)
+                    return redirect(url_for('deactivateClient'))
+
+                except:
+                    conn.rollback()
+                    error = "This client could not be deactivated. Please try again."
+                    flash(error)
+                    return redirect(url_for('deactivateClient'))
 
 #app running function
 if __name__ == "__main__":
