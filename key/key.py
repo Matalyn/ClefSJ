@@ -140,7 +140,7 @@ def infoLend():
     conn = mysql.connect()
     cursor = conn.cursor()
     #pull client info
-    cursor.execute("select * from client;")
+    cursor.execute("select * from client WHERE active='yes';")
     clients = cursor.fetchall()
     #pull available copies info
     cursor.execute("select * from clef where keyNumber='"+keyNumber+"' and status='available' and active = 'yes'")
@@ -222,7 +222,7 @@ def resultReturn():
     numberList = keyNumber_copyNumber.split()
     keyNumber = numberList[0]
     copyNumber = numberList[1]
-    #pull client email, lendDate, paymenthod of lending from table lent
+    #pull client email, lendDate, payment method of lending from table lent
 
     conn = mysql.connect()
     cursor = conn.cursor()
@@ -1202,6 +1202,70 @@ def infoUpdateAdmin():
                 return redirect(url_for('updateAdmin'))
 
 
+@app.route('/activateClient', methods=['GET', 'POST'])
+def activateClient():
+    if not session.get('logged_in'):
+        abort(401)
+    else:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        if request.method == 'GET':
+            cursor.execute("SELECT firstName, lastName, email FROM client WHERE active='no'")
+            clients = cursor.fetchall()
+            return render_template('activateClient.html', clients=clients)
+        elif request.method == 'POST':
+            client = request.form['client']
+            try:
+                cursor.execute("UPDATE client SET active='yes' WHERE email=%s", (client,))
+                conn.commit()
+                message = 'Client successfully activated.'
+                flash(message)
+                return redirect(url_for('activateClient'))
+
+            except:
+                conn.rollback()
+                error = 'There was a problem activating this client. Please try again.'
+                flash(error)
+                return redirect(url_for('activateClient'))
+
+@app.route('/deactivateClient', methods = ['GET', 'POST'])
+def deactivateClient():
+    if not session.get('logged_in'):
+        abort(401)
+    else:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        if request.method == 'GET':
+            cursor.execute("SELECT firstName, lastName, email FROM client WHERE active='yes'")
+            clients = cursor.fetchall()
+            return render_template('deactivateClient.html', clients=clients)
+
+        elif request.method == 'POST':
+            client = request.form['client']
+
+            cursor.execute("SELECT c1.keyNumber, c1.copyNumber, r1.address, c1.opens, l1.lendDate, l1.expectedReturnDate FROM clef c1 JOIN lent l1 JOIN unlocks u1 JOIN room r1 ON (c1.keyNumber = l1.keyNumber AND c1.copyNumber = l1.copyNumber AND l1.keyNumber = u1.keyNumber AND u1.roomID = r1.id) WHERE l1.email=%s", (client,))
+            lentKeys = cursor.fetchall()
+
+            if lentKeys:
+                cursor.execute("SELECT firstName, lastName, email FROM client WHERE email=%s", (client,))
+                client = cursor.fetchone()
+                return render_template('invalidDeactivate.html', client=client, lentKeys = lentKeys)
+
+            else:
+                try:
+                    cursor.execute("UPDATE client SET active='no' WHERE email=%s", (client,))
+                    conn.commit()
+                    message = "Client deactivated."
+                    flash(message)
+                    return redirect(url_for('deactivateClient'))
+
+                except:
+                    conn.rollback()
+                    error = "This client could not be deactivated. Please try again."
+                    flash(error)
+                    return redirect(url_for('deactivateClient'))
 
 #app running function
 if __name__ == "__main__":
