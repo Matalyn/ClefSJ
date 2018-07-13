@@ -3,18 +3,17 @@
 {% block main %}
   <div class="container">
     <br/>
-    <h1 class="text-center" style="color: #f0ad4e">Deactivate une Admin</h1>
+    <h1 class="text-center" style="color: #f0ad4e">Deactivate a Client</h1>
     <br/>
     <div class="row">
       <div class="col-sm-3"></div>
       <div class="col-sm-6">
-        <form class="" method="post" action="{{ url_for('deactivateClient') }}"
-              onsubmit="return validateFormDeactivateClient(this)">
+        <form class="" method="post" action="{{ url_for('deactivateClient') }}">
           <fieldset>
             <div class="form-group">
               <label for="client" class="sr-only">Select a client to deactivate</label>
               <div class="cols-sm-10">
-                <select class="form-control selectpicker" data-live-search="true" name="client">
+                <select class="form-control selectpicker" data-live-search="true" name="client" required>
                   <option selected disabled class="text-hide" value="">Select a client to deactivate</option>
                   {% for client in clients %}
                     <option value="{{ client[2] }}">{{ client[0] }} {{ client.1 }} | {{ client.2 }}</option>

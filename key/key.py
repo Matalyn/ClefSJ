@@ -140,7 +140,7 @@ def infoLend():
     conn = mysql.connect()
     cursor = conn.cursor()
     #pull client info
-    cursor.execute("select * from client;")
+    cursor.execute("select * from client WHERE active='yes';")
     clients = cursor.fetchall()
     #pull available copies info
     cursor.execute("select * from clef where keyNumber='"+keyNumber+"' and status='available' and active = 'yes'")
@@ -222,7 +222,7 @@ def resultReturn():
     numberList = keyNumber_copyNumber.split()
     keyNumber = numberList[0]
     copyNumber = numberList[1]
-    #pull client email, lendDate, paymenthod of lending from table lent
+    #pull client email, lendDate, payment method of lending from table lent
 
     conn = mysql.connect()
     cursor = conn.cursor()
