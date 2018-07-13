@@ -1248,7 +1248,7 @@ def deactivateClient():
             cursor.execute("SELECT c1.keyNumber, c1.copyNumber, r1.address, c1.opens, l1.lendDate, l1.expectedReturnDate FROM clef c1 JOIN lent l1 JOIN unlocks u1 JOIN room r1 ON (c1.keyNumber = l1.keyNumber AND c1.copyNumber = l1.copyNumber AND l1.keyNumber = u1.keyNumber AND u1.roomID = r1.id) WHERE l1.email=%s", (client,))
             lentKeys = cursor.fetchall()
 
-            if lentKeys is not None:
+            if lentKeys:
                 cursor.execute("SELECT firstName, lastName, email FROM client WHERE email=%s", (client,))
                 client = cursor.fetchone()
                 return render_template('invalidDeactivate.html', client=client, lentKeys = lentKeys)
