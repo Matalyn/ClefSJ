@@ -1,42 +1,42 @@
-{% extends 'layout.html'%}
+{% extends 'layout.html' %}
 
 {% block main %}
-	<div class="container">
-		<br/>
-		 <h1 class="text-center" style="color: #f0ad4e">Invalid Deactivate</h1>
-		<br/>
-		<P class='text-center'>{{ client.0 }} {{ client.1 }} cannot be deactivated as they are currently holding keys:</P>
+  <div class="container">
+    <br/>
+    <h1 class="text-center" style="color: #f0ad4e">Invalid Deactivate</h1>
+    <br/>
+    <P class='text-center'>{{ client.0 }} {{ client.1 }} cannot be deactivated as they are currently holding keys:</P>
 
-				<table class="table table-hover">
-			<thead>
-				<tr>
-					<th>Key Number</th>
-					<th>Copy Number</th>
-					<th>Room</th>
-					<th>Opens</th>
-					<th>Lend date</th>
-					<th>Expected return date</th>
-				</tr>
-			</thead>
-			<tbody>
-				{%for key in lentKeys %}
-				<tr>
-					<!--keyNumber-->
-					<td>{{key[0]}}</td>
-					<!--copyNumber-->
-					<td>{{key[1]}}</td>
-					<!--room-->
-					<td>{{key[2]}}</td>
-					<!--opens-->
-					<td>{{key[3]}}</td>
-					<!--lendDate-->
-					<td>{{key[4]}}</td>
-					<!--expectedRetuenDate-->
-					<td>{{key[5]}}</td>
-				</tr>
-				{%endfor%}
-			</tbody>
-		</table>
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Key Number</th>
+        <th>Copy Number</th>
+        <th>Room</th>
+        <th>Opens</th>
+        <th>Lend date</th>
+        <th>Expected return date</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for key in lentKeys %}
+        <tr>
+          <!--keyNumber-->
+          <td>{{ key[0] }}</td>
+          <!--copyNumber-->
+          <td>{{ key[1] }}</td>
+          <!--room-->
+          <td>{{ key[2] }}</td>
+          <!--opens-->
+          <td>{{ key[3] }}</td>
+          <!--lendDate-->
+          <td>{{ key[4] }}</td>
+          <!--expectedRetuenDate-->
+          <td>{{ key[5] }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
 
 
     <div class="text-center">
@@ -44,5 +44,5 @@
     </div>
     <br>
 
-	</div>
+  </div>
 {% endblock %}
