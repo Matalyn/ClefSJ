@@ -17,7 +17,7 @@
                 <select class="form-control selectpicker" data-live-search="true" name="client">
                   <option selected disabled class="text-hide" value="">Select a client to deactivate</option>
                   {% for client in clients %}
-                    <option value="{{ admin[2] }}">{{ client[0] }} {{ client.1 }} | {{ client.2 }}</option>
+                    <option value="{{ client[2] }}">{{ client[0] }} {{ client.1 }} | {{ client.2 }}</option>
                   {% endfor %}
                 </select>
               </div><!--end cols-sm-10-->
