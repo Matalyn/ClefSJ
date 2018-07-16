@@ -605,7 +605,7 @@
         var select = document.getElementById('opens');
         var textbox = document.getElementById('description');
 
-        var select_str = select.value;
+        var select_str = select[select.selectedIndex].text;
 
         if (select_str === "Other") {
             textbox.required = true;
