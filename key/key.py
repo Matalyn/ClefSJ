@@ -387,20 +387,29 @@ def resultAddKey():
     rooms = request.form.getlist('room')
     conn = mysql.connect()
     cursor = conn.cursor()
-    try:
-        for copyNumber in range(copyNumberStart, copyNumberEnd):
-            cursor.execute("insert into clef values('"+keyNumber+"', '"+str(copyNumber)+"','"+depositValue+"', '"+opens+"', '"+status+"', '"+active+"')")
-        for room in rooms:
-            cursor.execute("insert into unlocks values('"+keyNumber+"', "+str(room[0])+")")
-        cursor.execute("select * from clef where keyNumber='"+keyNumber+"' and copyNumber>='"+str(copyNumberStart)+"' and copyNumber<='"+str(copyNumberEnd)+"'")
-        keys = cursor.fetchall()
-        conn.commit()
-        return render_template('resultAddKey.html', keys = keys)
-    except:
-        error = "There was a problem adding this key. Please try again."
-        flash(error)
-        conn.rollback()
-        return redirect(url_for("addKey"))
+
+    cursor.execute("SELECT * FROM clef WHERE keyNumber=%s", (keyNumber,))
+    if keyNumber:
+        message = "This key number already exists. Please try again."
+        flash(message)
+        return redirect(url_for(addKey))
+
+    else:
+        try:
+            cursor.execute("INSERT INTO opens VALUES (%s, %s)", (keyNumber, opens))
+            for copyNumber in range(copyNumberStart, copyNumberEnd):
+                cursor.execute("insert into clef values('"+keyNumber+"', '"+str(copyNumber)+"','"+depositValue+"', '"+status+"', '"+active+"')")
+            for room in rooms:
+                cursor.execute("insert into unlocks values('"+keyNumber+"', "+str(room[0])+")")
+            cursor.execute("select c1.keyNumber, c1.copyNumber, c1.depositValue, o1.description, c1.status from clef c1 JOIN opens o1 ON keyNumber where c1.keyNumber='"+keyNumber+"' and c1.copyNumber>='"+str(copyNumberStart)+"' and c1.copyNumber<='"+str(copyNumberEnd)+"'")
+            keys = cursor.fetchall()
+            conn.commit()
+            return render_template('resultAddKey.html', keys = keys)
+        except:
+            error = "There was a problem adding this key. Please try again."
+            flash(error)
+            conn.rollback()
+            return redirect(url_for("addKey"))
 
 @app.route('/deleteKey', methods = ['POST', 'GET'])
 def deleteKey():
@@ -416,10 +425,10 @@ def deleteKey():
 
     elif request.method == 'POST':
         key = request.form['key']
-        cursor.execute('SELECT copyNumber, opens, status FROM clef WHERE keyNumber=%s AND status!=%s', (key, 'lent'))
+        cursor.execute('SELECT c1.copyNumber, o1.description, c1.status FROM clef c1 JOIN opens o1 ON keyNumber WHERE c1.keyNumber=%s AND c1.status!=%s', (key, 'lent'))
         deleteKeys = cursor.fetchall()
 
-        cursor.execute("select c.copyNumber, c.opens, l.email, l.lendDate, l.expectedReturnDate, l.admin from lent l, clef c where l.keyNumber='" + key + "' and l.keyNumber=c.keyNumber and l.copyNumber=c.copyNumber;")
+        cursor.execute("select c.copyNumber, o.opens, l.email, l.lendDate, l.expectedReturnDate, l.admin from lent l, clef c, opens o where l.keyNumber='" + key + "' and l.keyNumber=c.keyNumber and l.copyNumber=c.copyNumber and o.keyNumber = c.keyNumber;")
         deactivateKeys = cursor.fetchall()
 
         cursor.execute('SELECT address FROM room JOIN unlocks ON id=roomID WHERE keyNumber=%s', (key,))
@@ -504,13 +513,13 @@ def resultReportClient():
     cursor.execute("select * from client where email='"+email+"';")
     client = cursor.fetchone()
     #lending
-    cursor.execute("select l.keyNumber, l.copyNumber, r.address, cl.opens, l.lendDate, l.expectedReturnDate from room r, unlocks u, lent l, client c, clef cl where c.email='"+email+"' and l.email=c.email and l.keyNumber=cl.keyNumber and cl.keynumber=u.keyNumber and u.roomID = r.id and l.copyNumber=cl.copyNumber")
+    cursor.execute("select l.keyNumber, l.copyNumber, r.address, o.description, l.lendDate, l.expectedReturnDate from room r, unlocks u, lent l, client c, opens o where c.email='"+email+"' and l.email=c.email and l.keyNumber=o.keyNumber and o.keynumber=u.keyNumber and u.roomID = r.id")
     lend = cursor.fetchall()
     #lost
-    cursor.execute("select lo.keyNumber, lo.copyNumber, r.address, cl.opens, lo.lendDate, lo.lossDate from room r, unlocks u, losshistory lo, client c, clef cl where c.email='"+email+"' and lo.email=c.email and lo.keyNumber=cl.keyNumber and cl.keynumber=u.keyNumber and u.roomID = r.id and lo.copyNumber=cl.copyNumber")
+    cursor.execute("select lo.keyNumber, lo.copyNumber, r.address, o.description, lo.lendDate, lo.lossDate from room r, unlocks u, losshistory lo, client c, opens o where c.email='"+email+"' and lo.email=c.email and lo.keyNumber=o.keyNumber and o.keynumber=u.keyNumber and u.roomID = r.id")
     lost = cursor.fetchall()
     #return history
-    cursor.execute("select re.keyNumber, re.copyNumber, r.address, cl.opens, re.lendDate, re.returnDate from room r, unlocks u, returnhistory re, client c, clef cl where c.email='"+email+"' and re.email=c.email and re.keyNumber=cl.keyNumber and cl.keynumber=u.keyNumber and u.roomID = r.id and re.copyNumber=cl.copyNumber")
+    cursor.execute("select re.keyNumber, re.copyNumber, r.address, o.description, re.lendDate, re.returnDate from room r, unlocks u, returnhistory re, client c, opens o where c.email='"+email+"' and re.email=c.email and re.keyNumber=o.keyNumber and o.keynumber=u.keyNumber and u.roomID = r.id")
     returnhistory = cursor.fetchall()
     return render_template('resultReportClient.html', client = client, lend = lend, lost = lost, returnhistory=returnhistory)
 
@@ -766,7 +775,7 @@ def resultUpdateRoom():
 
     cursor.execute("SELECT * FROM room WHERE id=%s", (roomID,))
     room = cursor.fetchone()
-    cursor.execute("SELECT keyNumber, copyNumber, opens FROM clef WHERE keyNumber IN (SELECT keyNumber FROM unlocks WHERE roomID=%s)", (int(roomID),))
+    cursor.execute("SELECT c1.keyNumber, c1.copyNumber, o1.description FROM clef c1 JOIN opens o1 ON keyNumber WHERE keyNumber IN (SELECT keyNumber FROM unlocks WHERE roomID=%s)", (int(roomID),))
     keys = cursor.fetchall()
     conn.commit()
     return render_template('resultReportKeysbyRoom.html', room = room, keys = keys)
@@ -808,16 +817,16 @@ def resultReportKey():
     cursor.execute("select r1.address from room r1 join unlocks u1 on r1.id=u1.roomID where u1.keyNumber='"+keyNumber+"'")
     rooms = cursor.fetchall()
         #1.copyies status = available
-    cursor.execute("select copyNumber, opens from clef where keyNumber='"+keyNumber+"' and status='available'")
+    cursor.execute("select c1.copyNumber, o1.opens from clef c1 JOIN opens o1 ON keyNumber where c1.keyNumber='"+keyNumber+"' and c1.status='available'")
     available = cursor.fetchall()
         #2.copies status = lend
-    cursor.execute("select * from lent l, clef c where l.keyNumber='"+keyNumber+"' and l.keyNumber=c.keyNumber and l.copyNumber=c.copyNumber;")
+    cursor.execute("select l.copyNumber, o.description, l.email, l.lendDate, l.expectedReturnDate, l.admin from lent l, opens o where l.keyNumber='"+keyNumber+"' and l.keyNumber=o.keyNumber")
     lend = cursor.fetchall()
         #3.copies status = lost
-    cursor.execute("select * from losshistory lo, clef c where lo.keyNumber='"+keyNumber+"' and lo.keyNumber=c.keyNumber and c.copyNumber=lo.copyNumber ")
+    cursor.execute("select l.copyNumber, o.description, l.email, l.lendDate, l.lossDate, l.admin from losshistory l, opens o where l.keyNumber='"+keyNumber+"' and l.keyNumber=p.keyNumber")
     lost = cursor.fetchall()
         #4.missing
-    cursor.execute("select copyNumber, opens from clef where keyNumber='"+keyNumber+"' and status='missing'")
+    cursor.execute("select c.copyNumber, o.description from clef c JOIN opens o ON keyNumber where c.keyNumber='"+keyNumber+"' and c.status='missing'")
     missing = cursor.fetchall()
     #render html with key copy in status of lend, available, lost, and missing
     return render_template('resultReportKey.html', active=active, lend = lend, keyNumber = keyNumber, available = available, lost = lost, missing = missing, copyCount = copyCount, rooms=rooms)
@@ -846,7 +855,7 @@ def resultReportKeysbyRoom():
     room = request.form['room']
     #pull all copies that opens that room, with its keyNumber and what door it opens(room door or mailbox)
     cursor = mysql.connect().cursor()
-    cursor.execute("select c.keyNumber, c.copyNumber, c.opens from unlocks u JOIN clef c ON u.keyNumber=c.keyNumber WHERE u.roomID=%s", (int(room),))
+    cursor.execute("select c.keyNumber, c.copyNumber, o.opens from unlocks u JOIN clef c JOIN opens o ON keyNumber WHERE u.roomID=%s", (int(room),))
     keys = cursor.fetchall()
     cursor.execute("select * from room where id = %s", (int(room),))
     room = cursor.fetchone()
@@ -1249,7 +1258,7 @@ def deactivateClient():
         elif request.method == 'POST':
             client = request.form['client']
 
-            cursor.execute("SELECT c1.keyNumber, c1.copyNumber, r1.address, c1.opens, l1.lendDate, l1.expectedReturnDate FROM clef c1 JOIN lent l1 JOIN unlocks u1 JOIN room r1 ON (c1.keyNumber = l1.keyNumber AND c1.copyNumber = l1.copyNumber AND l1.keyNumber = u1.keyNumber AND u1.roomID = r1.id) WHERE l1.email=%s", (client,))
+            cursor.execute("SELECT c1.keyNumber, c1.copyNumber, r1.address, o1.opens, l1.lendDate, l1.expectedReturnDate FROM clef c1 JOIN lent l1 JOIN unlocks u1 JOIN room r1 JOIN opens o1 ON (c1.keyNumber = l1.keyNumber AND o1.keyNumber = c1.keyNumber AND c1.copyNumber = l1.copyNumber AND l1.keyNumber = u1.keyNumber AND u1.roomID = r1.id) WHERE l1.email=%s", (client,))
             lentKeys = cursor.fetchall()
 
             if lentKeys:
