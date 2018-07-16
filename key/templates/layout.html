@@ -602,7 +602,7 @@
     }
 
     function displayAddKeyText() {
-        var select = document.getElementById('opens');
+        {#var select = document.getElementById('opens');
         var textbox = document.getElementById('description');
 
         var select_str = select[select.selectedIndex].text;
@@ -615,7 +615,9 @@
              textbox.value = "";
              textbox.required = false;
              textbox.style.display = "none";
-        }
+        }#}
+
+        alert("Triggered");
     }
 
     function transactionConfirm() {
