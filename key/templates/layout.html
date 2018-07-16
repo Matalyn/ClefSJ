@@ -201,7 +201,6 @@
             var emailValue = thisForm.email.value;
             var paymentMethodValue = thisForm.paymentMethod.value;
             var lendDateValue = thisForm.lendDate.value;
-            var expectedReturnDateValue = thisForm.expectedReturnDate.value;
             if (copyNumberValue == "") {
                 alert("Copy number was not selected.");
                 return false;
@@ -218,12 +217,9 @@
                 alert("lendDate should not be empty");
                 return false;
             }
-            if (expectedReturnDateValue == "") {
-                alert("return deadline should not be empty");
-                return false;
-            }
+
         }
-    };
+    }
 
     function validateFormReturn(thisForm) {
         //get the values of the input field with id='keyNumber_copyNumber'

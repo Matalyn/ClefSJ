@@ -1,0 +1,1 @@
+mysql> ALTER TABLE lent MODIFY COLUMN expectedReturnDate date;
