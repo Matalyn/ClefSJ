@@ -601,6 +601,23 @@
         }
     }
 
+    function displayAddKeyText() {
+        var select = document.getElementById('opens');
+        var textbox = document.getElementById('description');
+
+        var select_str = select.value;
+
+        if (select_str === "Other") {
+            textbox.required = true;
+            textbox.style.display = "inline-block";
+        }
+        else {
+             textbox.value = "";
+             textbox.required = false;
+             textbox.style.display = "none";
+        }
+    }
+
     function transactionConfirm() {
         //confirm window before all final step of transactions
         return confirm("Are you sure you want to complete this transaction?")

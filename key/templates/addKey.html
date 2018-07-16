@@ -64,16 +64,27 @@
                 </select>
               </div><!--end cols-sm-10-->
             </div><!--end form-group-->
+
             <div class="form-group">
               <label for="opens" class="sr-only">opens:</label>
               <div class="cols-sm-10">
-                <select class="form-control selectpicker" name="opens">
-                  <option selected disabled value="" class="text-hide">Key opens</option>
-                  <option>door</option>
-                  <option>mailBox</option>
+                <select class="form-control selectpicker" name="opens" id="opens">
+                  <option selected disabled value="" class="text-hide" onchange="displayAddKeyText();">Key opens</option>
+                  <option>Door</option>
+                  <option>Mailbox</option>
+                  <option>Filing cabinet</option>
+                  <option>Other</option>
                 </select>
               </div><!--end cols-sm-10-->
             </div><!--end form-group-->
+
+            <div class="form-group">
+              <label for="description" class="sr-only">Description</label>
+              <div class="cols-sm-10">
+                <input type="text" class="form-control" name="description" id="description" placeholder="Enter description" style="display:none;">
+              </div><!--end cols-sm-10-->
+            </div><!--end form-group-->
+
             <div class="form-group">
               <label for='room' class="sr-only">of room: </label>
               <div class="cols-sm-10">
