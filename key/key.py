@@ -378,6 +378,10 @@ def resultAddKey():
     copyNumberEnd = int(request.form['copyNumberEnd'])+1
     depositValue = request.form['depositValue']
     opens = request.form['opens']
+
+    if opens.lower() == "other":
+        description = request.form['description']
+        opens = description[:32]
     status = request.form['status']
     active = 'yes'
     rooms = request.form.getlist('room')
