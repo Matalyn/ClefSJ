@@ -4,7 +4,7 @@ CREATE TABLE opens (
   FOREIGN KEY (keyNumber) REFERENCES clef(keyNumber) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO opens(keyNumber)
+INSERT INTO opens(keyNumber, description)
 SELECT DISTINCT keyNumber, opens FROM clef;
 
 UPDATE opens SET description = 'Door' WHERE description = 'door';
