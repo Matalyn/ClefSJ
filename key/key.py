@@ -61,6 +61,8 @@ def getTodayString():
 
 def regulateDatePickerString(dateString):
     #change and return the  "year month day" dateString in French into "yyyy-mm-dd" format
+    if dateString == "":
+        return ""
     dataList = dateString.split()
     month = dataList[1]
     if dataList[1] == 'January':
@@ -381,7 +383,7 @@ def resultAddKey():
 
     if opens.lower() == "other":
         description = request.form['description']
-        opens = description[:32]
+        opens = description[:100]
     status = request.form['status']
     active = 'yes'
     rooms = request.form.getlist('room')
@@ -389,10 +391,11 @@ def resultAddKey():
     cursor = conn.cursor()
 
     cursor.execute("SELECT * FROM clef WHERE keyNumber=%s", (keyNumber,))
-    if keyNumber:
+    key = cursor.fetchone()
+    if key:
         message = "This key number already exists. Please try again."
         flash(message)
-        return redirect(url_for(addKey))
+        return redirect(url_for("addKey"))
 
     else:
         try:
@@ -401,7 +404,7 @@ def resultAddKey():
                 cursor.execute("insert into clef values('"+keyNumber+"', '"+str(copyNumber)+"','"+depositValue+"', '"+status+"', '"+active+"')")
             for room in rooms:
                 cursor.execute("insert into unlocks values('"+keyNumber+"', "+str(room[0])+")")
-            cursor.execute("select c1.keyNumber, c1.copyNumber, c1.depositValue, o1.description, c1.status from clef c1 JOIN opens o1 ON keyNumber where c1.keyNumber='"+keyNumber+"' and c1.copyNumber>='"+str(copyNumberStart)+"' and c1.copyNumber<='"+str(copyNumberEnd)+"'")
+            cursor.execute("select c1.keyNumber, c1.copyNumber, c1.depositValue, o1.description, c1.status from clef c1 JOIN opens o1 USING keyNumber where c1.keyNumber='"+keyNumber+"' and c1.copyNumber>='"+str(copyNumberStart)+"' and c1.copyNumber<='"+str(copyNumberEnd)+"'")
             keys = cursor.fetchall()
             conn.commit()
             return render_template('resultAddKey.html', keys = keys)
@@ -425,10 +428,10 @@ def deleteKey():
 
     elif request.method == 'POST':
         key = request.form['key']
-        cursor.execute('SELECT c1.copyNumber, o1.description, c1.status FROM clef c1 JOIN opens o1 ON keyNumber WHERE c1.keyNumber=%s AND c1.status!=%s', (key, 'lent'))
+        cursor.execute('SELECT c1.copyNumber, o1.description, c1.status FROM clef c1 JOIN opens o1 USING keyNumber WHERE c1.keyNumber=%s AND c1.status!=%s', (key, 'lent'))
         deleteKeys = cursor.fetchall()
 
-        cursor.execute("select c.copyNumber, o.opens, l.email, l.lendDate, l.expectedReturnDate, l.admin from lent l, clef c, opens o where l.keyNumber='" + key + "' and l.keyNumber=c.keyNumber and l.copyNumber=c.copyNumber and o.keyNumber = c.keyNumber;")
+        cursor.execute("select c.copyNumber, o.description, l.email, l.lendDate, l.expectedReturnDate, l.admin from lent l, clef c, opens o where l.keyNumber='" + key + "' and l.keyNumber=c.keyNumber and l.copyNumber=c.copyNumber and o.keyNumber = c.keyNumber;")
         deactivateKeys = cursor.fetchall()
 
         cursor.execute('SELECT address FROM room JOIN unlocks ON id=roomID WHERE keyNumber=%s', (key,))
@@ -633,7 +636,7 @@ def resultReportOffices():
     keyNumber = request.form['keyNumber']
     conn = mysql.connect()
     cursor = conn.cursor()
-    cursor.execute("select distinct r.room, c.opens from room r, clef c where c.keyNumber='"+keyNumber+"' and c.keyNumber=r.keyNumber;")
+    cursor.execute("select distinct r.room, c.description from room r, clef c where c.keyNumber='"+keyNumber+"' and c.keyNumber=r.keyNumber;")
     offices = cursor.fetchall()
     return render_template('resultReportOffices.html', offices = offices, keyNumber = keyNumber)
 
@@ -775,7 +778,7 @@ def resultUpdateRoom():
 
     cursor.execute("SELECT * FROM room WHERE id=%s", (roomID,))
     room = cursor.fetchone()
-    cursor.execute("SELECT c1.keyNumber, c1.copyNumber, o1.description FROM clef c1 JOIN opens o1 ON keyNumber WHERE keyNumber IN (SELECT keyNumber FROM unlocks WHERE roomID=%s)", (int(roomID),))
+    cursor.execute("SELECT c1.keyNumber, c1.copyNumber, o1.description FROM clef c1 JOIN opens o1 USING keyNumber WHERE keyNumber IN (SELECT keyNumber FROM unlocks WHERE roomID=%s)", (int(roomID),))
     keys = cursor.fetchall()
     conn.commit()
     return render_template('resultReportKeysbyRoom.html', room = room, keys = keys)
@@ -817,7 +820,7 @@ def resultReportKey():
     cursor.execute("select r1.address from room r1 join unlocks u1 on r1.id=u1.roomID where u1.keyNumber='"+keyNumber+"'")
     rooms = cursor.fetchall()
         #1.copyies status = available
-    cursor.execute("select c1.copyNumber, o1.opens from clef c1 JOIN opens o1 ON keyNumber where c1.keyNumber='"+keyNumber+"' and c1.status='available'")
+    cursor.execute("select c1.copyNumber, o1.description from clef c1 JOIN opens o1 USING keyNumber where c1.keyNumber='"+keyNumber+"' and c1.status='available'")
     available = cursor.fetchall()
         #2.copies status = lend
     cursor.execute("select l.copyNumber, o.description, l.email, l.lendDate, l.expectedReturnDate, l.admin from lent l, opens o where l.keyNumber='"+keyNumber+"' and l.keyNumber=o.keyNumber")
@@ -826,7 +829,7 @@ def resultReportKey():
     cursor.execute("select l.copyNumber, o.description, l.email, l.lendDate, l.lossDate, l.admin from losshistory l, opens o where l.keyNumber='"+keyNumber+"' and l.keyNumber=p.keyNumber")
     lost = cursor.fetchall()
         #4.missing
-    cursor.execute("select c.copyNumber, o.description from clef c JOIN opens o ON keyNumber where c.keyNumber='"+keyNumber+"' and c.status='missing'")
+    cursor.execute("select c.copyNumber, o.description from clef c JOIN opens o USING keyNumber where c.keyNumber='"+keyNumber+"' and c.status='missing'")
     missing = cursor.fetchall()
     #render html with key copy in status of lend, available, lost, and missing
     return render_template('resultReportKey.html', active=active, lend = lend, keyNumber = keyNumber, available = available, lost = lost, missing = missing, copyCount = copyCount, rooms=rooms)
@@ -855,7 +858,7 @@ def resultReportKeysbyRoom():
     room = request.form['room']
     #pull all copies that opens that room, with its keyNumber and what door it opens(room door or mailbox)
     cursor = mysql.connect().cursor()
-    cursor.execute("select c.keyNumber, c.copyNumber, o.opens from unlocks u JOIN clef c JOIN opens o ON keyNumber WHERE u.roomID=%s", (int(room),))
+    cursor.execute("select c.keyNumber, c.copyNumber, o.description from unlocks u JOIN clef c JOIN opens o USING keyNumber WHERE u.roomID=%s", (int(room),))
     keys = cursor.fetchall()
     cursor.execute("select * from room where id = %s", (int(room),))
     room = cursor.fetchone()
@@ -1258,7 +1261,7 @@ def deactivateClient():
         elif request.method == 'POST':
             client = request.form['client']
 
-            cursor.execute("SELECT c1.keyNumber, c1.copyNumber, r1.address, o1.opens, l1.lendDate, l1.expectedReturnDate FROM clef c1 JOIN lent l1 JOIN unlocks u1 JOIN room r1 JOIN opens o1 ON (c1.keyNumber = l1.keyNumber AND o1.keyNumber = c1.keyNumber AND c1.copyNumber = l1.copyNumber AND l1.keyNumber = u1.keyNumber AND u1.roomID = r1.id) WHERE l1.email=%s", (client,))
+            cursor.execute("SELECT c1.keyNumber, c1.copyNumber, r1.address, o1.description, l1.lendDate, l1.expectedReturnDate FROM clef c1 JOIN lent l1 JOIN unlocks u1 JOIN room r1 JOIN opens o1 ON (c1.keyNumber = l1.keyNumber AND o1.keyNumber = c1.keyNumber AND c1.copyNumber = l1.copyNumber AND l1.keyNumber = u1.keyNumber AND u1.roomID = r1.id) WHERE l1.email=%s", (client,))
             lentKeys = cursor.fetchall()
 
             if lentKeys:
