@@ -62,7 +62,7 @@ def getTodayString():
 def regulateDatePickerString(dateString):
     #change and return the  "year month day" dateString in French into "yyyy-mm-dd" format
     if dateString == "":
-        return "NULL"
+        return None
     dataList = dateString.split()
     month = dataList[1]
     if dataList[1] == 'January':
