@@ -62,7 +62,7 @@ def getTodayString():
 def regulateDatePickerString(dateString):
     #change and return the  "year month day" dateString in French into "yyyy-mm-dd" format
     if dateString == "":
-        return ""
+        return "NULL"
     dataList = dateString.split()
     month = dataList[1]
     if dataList[1] == 'January':
@@ -399,11 +399,11 @@ def resultAddKey():
 
     else:
         try:
-            cursor.execute("INSERT INTO opens VALUES (%s, %s)", (keyNumber, opens))
             for copyNumber in range(copyNumberStart, copyNumberEnd):
                 cursor.execute("insert into clef values('"+keyNumber+"', '"+str(copyNumber)+"','"+depositValue+"', '"+status+"', '"+active+"')")
             for room in rooms:
                 cursor.execute("insert into unlocks values('"+keyNumber+"', "+str(room[0])+")")
+            cursor.execute("INSERT INTO opens VALUES (%s, %s)", (keyNumber, opens))
             cursor.execute("select c1.keyNumber, c1.copyNumber, c1.depositValue, o1.description, c1.status from clef c1 JOIN opens o1 USING (keyNumber) where c1.keyNumber='"+keyNumber+"' and c1.copyNumber>='"+str(copyNumberStart)+"' and c1.copyNumber<='"+str(copyNumberEnd)+"'")
             keys = cursor.fetchall()
             conn.commit()
