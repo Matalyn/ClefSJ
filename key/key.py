@@ -180,7 +180,7 @@ def resultLend():
         cursor.execute("select * from client where email='"+email+"'")
         client = cursor.fetchone()
         #commit new lend record into table lent
-        cursor.execute("insert into lent values('"+keyNumber+"', '"+copyNumber+"', '"+email+"', '"+lendDate+"', '"+paymentMethod+"', '"+expectedReturnDate+"', '"+currentUser+"');")
+        cursor.execute("INSERT INTO lent VALUES (%s, %s, %s, %s, %s, %s, %s)", (keyNumber, copyNumber, email, lendDate, paymentMethod, expectedReturnDate, currentUser))
         #commit status of the key copy just lent out
         cursor.execute("update clef set status='lent' where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"';")
         #pull this copies info
@@ -826,7 +826,7 @@ def resultReportKey():
     cursor.execute("select l.copyNumber, o.description, l.email, l.lendDate, l.expectedReturnDate, l.admin from lent l, opens o where l.keyNumber='"+keyNumber+"' and l.keyNumber=o.keyNumber")
     lend = cursor.fetchall()
         #3.copies status = lost
-    cursor.execute("select l.copyNumber, o.description, l.email, l.lendDate, l.lossDate, l.admin from losshistory l, opens o where l.keyNumber='"+keyNumber+"' and l.keyNumber=p.keyNumber")
+    cursor.execute("select l.copyNumber, o.description, l.email, l.lendDate, l.lossDate, l.admin from losshistory l, opens o where l.keyNumber='"+keyNumber+"' and l.keyNumber=o.keyNumber")
     lost = cursor.fetchall()
         #4.missing
     cursor.execute("select c.copyNumber, o.description from clef c JOIN opens o USING (keyNumber) where c.keyNumber='"+keyNumber+"' and c.status='missing'")
