@@ -616,6 +616,28 @@
 
     }
 
+    function validateFormAddCopies(thisForm) {
+        //get the values of the input field with id='keyNumber_copyNumber'
+        with (thisForm) {
+            var keyValue = thisForm.key.value;
+            if (keyValue == "") {
+                alert("Key must be selected.");
+                return false;
+            }
+        }
+    }
+
+    function validateFormAddCopiesInfo(thisForm) {
+        //get the values of the input field with id='keyNumber_copyNumber'
+        with (thisForm) {
+            var newCopiesValue = thisForm.newCopies.value;
+            if (newCopiesValue < 0) {
+                alert("Number of copies cannot be negative");
+                return false;
+            }
+        }
+    }
+
     function transactionConfirm() {
         //confirm window before all final step of transactions
         return confirm("Are you sure you want to complete this transaction?")
