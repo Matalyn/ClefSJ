@@ -1283,6 +1283,63 @@ def deactivateClient():
                     flash(error)
                     return redirect(url_for('deactivateClient'))
 
+
+@app.route('/addCopies', methods = ['GET', 'POST'])
+def addCopies():
+    if not session.get('logged_in'):
+        abort(401)
+    else:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        if request.method == 'GET':
+            cursor.execute("SELECT DISTINCT keyNumber FROM clef WHERE active='yes'")
+            keys = cursor.fetchall()
+
+            return render_template("addCopies.html", keys=keys)
+
+        elif request.method == 'POST':
+            keyNumber = request.form['key']
+            cursor.execute("SELECT COUNT(*) FROM clef WHERE keyNumber = %s", (keyNumber,))
+            count = cursor.fetchone()[0]
+
+            cursor.execute("SELECT MAX(copyNumber) FROM clef WHERE keyNumber = %s", (keyNumber,))
+            maxCopy = cursor.fetchone()[0]
+
+            return render_template("addCopiesInfo.html", keyNumber = keyNumber, count=count, maxCopy=maxCopy)
+
+@app.route('/addCopiesResult', methods = ['POST'])
+def addCopiesResult():
+    if not session.get('logged_in'):
+        abort(401)
+
+    else:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT depositValue FROM clef WHERE keyNumber=%s", (keyNumber,))
+        depositValue = cursor.fetchone()[0]
+
+        keyNumber = request.form['keyNumber']
+        newCopies = request.form['newCopies']
+        maxCopy = request.form['maxCopy']
+
+        try:
+            for copyNumber in range(maxCopy+1, maxCopy+newCopies+1):
+                cursor.execute("INSERT INTO clef VALUES (%s, %s, %s, %s, %s)", (keyNumber, copyNumber, depositValue, 'Available', 'yes'))
+
+            conn.commit()
+            message = "New copies added successfully"
+            flash(message)
+            return redirect(url_for('addCopies'))
+
+        except:
+            conn.rollback()
+            error = "There was a problem adding copies of this key. Please try again."
+            flash(error)
+            return redirect(url_for('addCopies'))
+
+
 #app running function
 if __name__ == "__main__":
     app.run(host='0.0.0.0', threaded=True)

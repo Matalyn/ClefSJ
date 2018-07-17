@@ -1,0 +1,40 @@
+{% extends 'layout.html'%}
+{% block main %}
+<div class="container">
+  <br/>
+  <h1 class="text-center" style="color: #f0ad4e">Add Copies</h1>
+	<br/>
+  <div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+      <form method="post" action="{{url_for('addCopiesResult')}}" onsubmit="return validateFormAddCopiesResult(this)">
+				<fieldset>
+
+          <h3>{{ keyNumber }} has {{ count }} copies ending at copy #{{ maxCopy }}</h3>
+				<div class="form-group">
+					<label for="newCopies" class="sr-only">Number of new copies to add</label>
+					<div class="cols-sm-10">
+						<input class="form-control" name="newCopies" placeholder="Number of new copies to add" type="number">
+					</div><!--end cols-sm-10-->
+				</div><!--end form-group-->
+
+				<br/>
+
+        <div class="form-group"><!--button submit-->
+          <div class="cols-sm-10">
+          	<div class="text-center">
+            	<button class=" btn btn-lg btn-warning" type="submit">Add Copies</button>
+          	</div><!--end text-center-->
+          </div><!--end cols-sm-10-->
+        </div><!--end form-group-->
+
+          <input type="hidden" value="{{ keyNumber }}" name="keyNumber">
+          <input type="hidden" value="{{ maxCopy }}" name="maxCopy">
+				</fieldset>
+      </form>
+    </div><!--end col-sm-6 -->
+    <div class="col-sm-3"></div>
+  </div><!--end row-->
+</div><!--end container-->
+{% endblock %}
+
