@@ -1318,20 +1318,24 @@ def addCopiesResult():
         cursor = conn.cursor()
 
         keyNumber = request.form['keyNumber']
-        newCopies = request.form['newCopies']
-        maxCopy = request.form['maxCopy']
+        newCopies = int(request.form['newCopies'])
+        maxCopy = int(request.form['maxCopy'])
+
+        rangeStart = maxCopy+1
+        rangeEnd = maxCopy + newCopies + 1
 
         cursor.execute("SELECT depositValue FROM clef WHERE keyNumber=%s", (keyNumber,))
-        depositValue = cursor.fetchone()[0]
+        depositValue = int(cursor.fetchone()[0])
 
         try:
-            for copyNumber in range(maxCopy+1, maxCopy+newCopies+1):
+            for copyNumber in range(rangeStart, rangeEnd):
                 cursor.execute("INSERT INTO clef VALUES (%s, %s, %s, %s, %s)", (keyNumber, copyNumber, depositValue, 'Available', 'yes'))
 
             conn.commit()
-            message = "New copies added successfully"
-            flash(message)
-            return redirect(url_for('addCopies'))
+
+            cursor.execute("select c1.keyNumber, c1.copyNumber, c1.depositValue, o1.description, c1.status from clef c1 JOIN opens o1 USING (keyNumber) where c1.keyNumber=%s and c1.copyNumber>=%s and c1.copyNumber<=%s", (keyNumber, rangeStart, rangeEnd))
+            keys = cursor.fetchall()
+            return render_template('resultAddKey.html', keys=keys)
 
         except:
             conn.rollback()
