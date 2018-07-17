@@ -10,7 +10,7 @@
       <form method="post" action="{{url_for('addCopiesResult')}}" onsubmit="return validateFormAddCopiesResult(this)">
 				<fieldset>
 
-          <h3>{{ keyNumber }} has {{ count }} copies ending at copy #{{ maxCopy }}</h3>
+          <h5 class="text-center">{{ keyNumber }} has {{ count }} copies ending at copy #{{ maxCopy }}</h5>
 				<div class="form-group">
 					<label for="newCopies" class="sr-only">Number of new copies to add</label>
 					<div class="cols-sm-10">

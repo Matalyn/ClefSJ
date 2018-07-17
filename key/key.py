@@ -1317,12 +1317,12 @@ def addCopiesResult():
         conn = mysql.connect()
         cursor = conn.cursor()
 
-        cursor.execute("SELECT depositValue FROM clef WHERE keyNumber=%s", (keyNumber,))
-        depositValue = cursor.fetchone()[0]
-
         keyNumber = request.form['keyNumber']
         newCopies = request.form['newCopies']
         maxCopy = request.form['maxCopy']
+
+        cursor.execute("SELECT depositValue FROM clef WHERE keyNumber=%s", (keyNumber,))
+        depositValue = cursor.fetchone()[0]
 
         try:
             for copyNumber in range(maxCopy+1, maxCopy+newCopies+1):
