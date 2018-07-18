@@ -14,6 +14,8 @@
 					<th>Key Number</th>
 					<th>Copy Number</th>
 					<th>Opens</th>
+          <th>Status</th>
+          <th>Lent to</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -25,6 +27,10 @@
 					<td>{{key[1]}}</td>
 					<!--opens-->
 					<td>{{key[2]}}</td>
+
+          <td>{{ key[3] }}</td>
+
+          <td>{{ key[4] }}</td>
 				</tr>
 				{%endfor%}
 			</tbody>
