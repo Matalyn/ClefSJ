@@ -111,7 +111,7 @@ def signin():
         elif data[5] == 'deactivated':
             error = "Account needs to be activated."
         else:
-            flash("Logged in successfully")
+            flash("Logged in successfully", 'success')
             session['user'] = data
             session['logged_in'] = True
             return redirect(url_for('lend'))
@@ -191,7 +191,7 @@ def resultLend():
         return render_template('resultLend.html', client = client, lent = lent, depositValue = depositValue, currentUser = currentUser)
     except:
         error = "There was a problem lending out this key. Please try again."
-        flash(error)
+        flash(error, 'error')
         conn.rollback()
         return redirect(url_for('lend'))
 
@@ -264,7 +264,7 @@ def resultReturn():
 
     except:
         error = "There was a problem returning this key. Please try again."
-        flash(error)
+        flash(error, 'error')
         conn.rollback()
         return redirect(url_for('retrieve'))
 @app.route('/reportPassedDueKeys', methods = ['POST', 'GET'])
@@ -355,7 +355,7 @@ def resultLoss():
         return render_template('resultLoss.html', penaltyValue = penaltyValue, client = client, loss = loss, currentUser = currentUser)
     except:
         error = "There was a problem recording the loss of this key. Please try again."
-        flash(error)
+        flash(error, 'error')
         conn.rollback()
         return redirect(url_for('loss'))
 
@@ -394,7 +394,7 @@ def resultAddKey():
     key = cursor.fetchone()
     if key:
         message = "This key number already exists. Please try again."
-        flash(message)
+        flash(message, 'message')
         return redirect(url_for("addKey"))
 
     else:
@@ -410,7 +410,7 @@ def resultAddKey():
             return render_template('resultAddKey.html', keys = keys)
         except:
             error = "There was a problem adding this key. Please try again."
-            flash(error)
+            flash(error, 'error')
             conn.rollback()
             return redirect(url_for("addKey"))
 
@@ -453,13 +453,13 @@ def resultDeleteKey():
             cursor.execute('UPDATE clef SET active=%s WHERE keyNumber=%s AND status=%s', ('no', key, 'lent'))
             conn.commit()
             message = 'Key successfully deleted.'
-            flash(message)
+            flash(message, 'success')
             return redirect(url_for('deleteKey'))
 
         except:
             conn.rollback()
             error = 'There was a problem deleting this key. Please try again.'
-            flash(error)
+            flash(error, 'error')
             return redirect(url_for('deleteKey'))
 
 @app.route('/changeKey', methods = ['POST', 'GET'])
@@ -489,7 +489,7 @@ def resultChangeKey():
         return render_template('resultChangeKey.html', keys = keys, room = room)
     except:
         error = "This key could not be changed. Please try again."
-        flash(error)
+        flash(error, 'error')
         conn.rollback()
         return redirect(url_for("changeKey"))
 
@@ -552,7 +552,7 @@ def resultAddClient():
     user = cursor.fetchone()
     if user is not None:
         error = 'User with email {} is already registered.'.format(email)
-        flash(error)
+        flash(error, 'error')
         return redirect(url_for('addClient'))
 
     else:
@@ -564,7 +564,7 @@ def resultAddClient():
             return render_template('resultAddClient.html', client = client)
         except:
             error = "There was a problem adding this client. Please try again."
-            flash(error)
+            flash(error, 'error')
             conn.rollback()
             return redirect(url_for("addClient"))
 
@@ -613,7 +613,7 @@ def resultChangeClient():
         return render_template('resultChangeClient.html', client = client)
     except:
         error = "There was a problem updating this client. Please try again."
-        flash(error)
+        flash(error, 'error')
         conn.rollback()
         return redirect(url_for("changeClient"))
 
@@ -665,7 +665,7 @@ def resultAddRoom():
         return render_template('infoUpdateRoom.html', keys=keys, room=room)
     except:
         error = "There was a problem adding this room. Please try again."
-        flash(error)
+        flash(error, 'error')
         conn.rollback()
         return redirect(url_for("addRoom"))
 
@@ -706,11 +706,11 @@ def resultDeleteRoom():
         cursor.execute("delete from room where id = %s", (int(roomID),))
         conn.commit()
         message = "Room successfully deleted"
-        flash(message)
+        flash(message, 'success')
     except:
         error = "There was a problem deleting this room."
         conn.rollback()
-        flash(error)
+        flash(error, 'error')
 
     return redirect(url_for('deleteRoom'))
 
@@ -756,7 +756,7 @@ def resultUpdateRoom():
         cursor.execute("UPDATE room SET address=%s WHERE id=%s", (address, roomID))
     except:
         error = "There was a problem updating this room's name. Please try again."
-        flash(error)
+        flash(error, 'error')
         conn.rollback()
         return redirect(url_for('updateRoom'))
     try:
@@ -764,7 +764,7 @@ def resultUpdateRoom():
             cursor.execute("INSERT INTO unlocks VALUES (%s, %s)", (str(keyNumber), int(roomID)))
     except:
         error = "There was a problem adding keys to this room. Please try again."
-        flash(error)
+        flash(error, 'error')
         conn.rollback()
         return redirect(url_for('updateRoom'))
     try:
@@ -772,7 +772,7 @@ def resultUpdateRoom():
             cursor.execute("DELETE FROM unlocks WHERE keyNumber=%s AND roomID=%s", (str(deleteKeyNumber), int(roomID)))
     except:
         error = "There was a problem deleting keys from this room. Please try again."
-        flash(error)
+        flash(error, 'error')
         conn.rollback()
         return redirect(url_for('updateRoom'))
 
@@ -914,7 +914,7 @@ def resultAddAdmin():
     user = cursor.fetchone()
     if user is not None:
         error = 'Admin with email {} is already registered.'.format(email)
-        flash(error)
+        flash(error, 'error')
         return redirect(url_for("addAdmin"))
     else:
         try:
@@ -925,7 +925,7 @@ def resultAddAdmin():
             return render_template('resultAddAdmin.html', admin=admin)
         except:
             error = "There was a problem adding this admin. Please try again."
-            flash(error)
+            flash(error, 'error')
             conn.rollback()
             return redirect(url_for('addAdmin'))
 
@@ -966,7 +966,7 @@ def resultActivateAdmin():
         return render_template('resultAllAdmins.html', admins = admins)
     except:
         error = "There was a problem activating this admin. Please try again."
-        flash(error)
+        flash(error, 'error')
         conn.rollback()
         return redirect(url_for("activateAdmin"))
 
@@ -1006,7 +1006,7 @@ def resultDeactivateAdmin():
         return render_template('resultAllAdmins.html', admins = admins)
     except:
         error = "There was a problem deactivating this admin. Please try again."
-        flash(error)
+        flash(error, 'error')
         conn.rollback()
         return redirect(url_for("deactivateAdmin"))
 
@@ -1033,7 +1033,7 @@ def changePasswordHash():
         conn.commit()
     except:
         error = "There was a problem changing password hashes."
-        flash(error)
+        flash(error, 'error')
         conn.rollback()
     return redirect(url_for('signin'))
 
@@ -1051,7 +1051,7 @@ def getResetLink():
         admin = cursor.fetchone()
         if admin is None:
             error = "User with this email does not exist."
-            flash(error)
+            flash(error, 'error')
             return redirect(url_for('getResetLink'))
         else:
             userinfo = [admin[0], admin[1]]
@@ -1064,7 +1064,7 @@ def getResetLink():
             mail.send(msg)
 
             message = "Reset password sent"
-            flash(message)
+            flash(message, 'message')
             return redirect(url_for('signin'))
 
 @app.route('/resetPassword', methods = ['GET', 'POST'])
@@ -1076,11 +1076,11 @@ def resetPassword():
             userinfo = serializer.loads(token)
         except BadSignature:
             error = "Invalid reset link. Please try again."
-            flash(error)
+            flash(error, 'error')
             redirect(url_for('signin'))
         except:
             error = "There was a problem loading reset page. Please try again."
-            flash(error)
+            flash(error, 'error')
             redirect(url_for('signin'))
 
         conn = mysql.connect()
@@ -1090,15 +1090,15 @@ def resetPassword():
 
         if admin is None:
             error = "User does not exist"
-            flash(error)
+            flash(error, 'error')
             return redirect(url_for('signin'))
         elif userinfo[1] != admin[1]:
             error = "This password has already been changed."
-            flash(error)
+            flash(error, 'error')
             return redirect(url_for('signin'))
         elif admin[5] == 'deactivated':
             error = "Account needs to be activated."
-            flash(error)
+            flash(error, 'error')
             return redirect(url_for('signin'))
         else:
             return render_template('resetPassword.html', admin=admin)
@@ -1115,13 +1115,13 @@ def resetPassword():
         try:
             cursor.execute("UPDATE admin SET password = %s WHERE email = %s", (generate_password_hash(password), email))
             message = "Password successfully changed!"
-            flash(message)
+            flash(message, 'success')
             conn.commit()
             return redirect(url_for('signin'))
 
         except:
             error = "There was a problem changing your password. Please try again."
-            flash(error)
+            flash(error, 'error')
             return redirect(url_for('signin'))
 
 
@@ -1142,15 +1142,15 @@ def changePassword():
         oldPasswordHash = cursor.fetchone()
         if not check_password_hash(oldPasswordHash[0], oldPassword):
             error = "Current password is incorrect. Please try again."
-            flash(error)
+            flash(error, 'error')
             return redirect(url_for('changePassword'))
         elif str(newPassword) != str(newPasswordConfirm):
             error = "New passwords do not match. Please try again."
-            flash(error)
+            flash(error, 'error')
             return redirect(url_for('changePassword'))
         elif (str(newPassword) == "") or (str(newPasswordConfirm) == ""):
             error = "Passwords cannot be empty. Please try again."
-            flash(error)
+            flash(error, 'error')
             return redirect(url_for('changePassword'))
         else:
             newPasswordHash = generate_password_hash(newPassword)
@@ -1158,11 +1158,11 @@ def changePassword():
                 cursor.execute("UPDATE admin SET password=%s WHERE email=%s", (newPasswordHash, email))
                 conn.commit()
                 message = "Password successfully changed!"
-                flash(message)
+                flash(message, 'success')
                 return redirect(url_for('lend'))
             except:
                 error = "There was a problem updating your password. Please try again."
-                flash(error)
+                flash(error, 'error')
                 conn.rollback()
                 return redirect(url_for('changePassword'))
 
@@ -1208,13 +1208,13 @@ def infoUpdateAdmin():
                 cursor.execute('UPDATE admin SET email=%s, firstName = %s, lastName = %s WHERE email = %s', (email, firstName, lastName, oldEmail))
                 conn.commit()
                 message = "Admin updated."
-                flash(message)
+                flash(message, 'success')
                 return redirect(url_for('updateAdmin'))
 
             except:
                 conn.rollback()
                 error = "There was a problem updating this admin. Please try again."
-                flash(error)
+                flash(error, 'error')
                 return redirect(url_for('updateAdmin'))
 
 
@@ -1236,13 +1236,13 @@ def activateClient():
                 cursor.execute("UPDATE client SET active='yes' WHERE email=%s", (client,))
                 conn.commit()
                 message = 'Client successfully activated.'
-                flash(message)
+                flash(message, 'success')
                 return redirect(url_for('activateClient'))
 
             except:
                 conn.rollback()
                 error = 'There was a problem activating this client. Please try again.'
-                flash(error)
+                flash(error, 'error')
                 return redirect(url_for('activateClient'))
 
 @app.route('/deactivateClient', methods = ['GET', 'POST'])
@@ -1274,13 +1274,13 @@ def deactivateClient():
                     cursor.execute("UPDATE client SET active='no' WHERE email=%s", (client,))
                     conn.commit()
                     message = "Client deactivated."
-                    flash(message)
+                    flash(message, 'success')
                     return redirect(url_for('deactivateClient'))
 
                 except:
                     conn.rollback()
                     error = "This client could not be deactivated. Please try again."
-                    flash(error)
+                    flash(error, 'error')
                     return redirect(url_for('deactivateClient'))
 
 
@@ -1340,7 +1340,7 @@ def addCopiesResult():
         except:
             conn.rollback()
             error = "There was a problem adding copies of this key. Please try again."
-            flash(error)
+            flash(error, 'error')
             return redirect(url_for('addCopies'))
 
 
