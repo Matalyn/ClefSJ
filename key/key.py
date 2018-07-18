@@ -394,7 +394,7 @@ def resultAddKey():
     key = cursor.fetchone()
     if key:
         message = "This key number already exists. Please try again."
-        flash(message, 'message')
+        flash(message, 'error')
         return redirect(url_for("addKey"))
 
     else:
@@ -1064,7 +1064,7 @@ def getResetLink():
             mail.send(msg)
 
             message = "Reset password sent"
-            flash(message, 'message')
+            flash(message, 'success')
             return redirect(url_for('signin'))
 
 @app.route('/resetPassword', methods = ['GET', 'POST'])
