@@ -858,7 +858,7 @@ def resultReportKeysbyRoom():
     room = request.form['room']
     #pull all copies that opens that room, with its keyNumber and what door it opens(room door or mailbox)
     cursor = mysql.connect().cursor()
-    cursor.execute("select c.keyNumber, c.copyNumber, o.description from unlocks u JOIN clef c JOIN opens o USING (keyNumber) WHERE u.roomID=%s", (int(room),))
+    cursor.execute("select c.keyNumber, c.copyNumber, o.description, c.status, l.email from unlocks u JOIN clef c USING (keyNumber) JOIN opens o USING (keyNumber) LEFT OUTER JOIN lent l using (keyNumber, copyNumber) WHERE u.roomID=%s", (int(room),))
     keys = cursor.fetchall()
     cursor.execute("select * from room where id = %s", (int(room),))
     room = cursor.fetchone()
