@@ -30,7 +30,8 @@
 
           <td>{{ key[3] }}</td>
 
-          <td>{{ key[4] }}</td>
+          <td>{% if key[4] != None %}{{ key[4] }}{% endif %}</td>
+
 				</tr>
 				{%endfor%}
 			</tbody>
