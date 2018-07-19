@@ -3,7 +3,7 @@
 {% block main %}
   <div class="container">
     <br/>
-    <h1 class="text-center" style="color: #f0ad4e">Update a room</h1>
+    <h1 class="text-center" style="color: #f0ad4e">Mise a jour d'un bureau</h1>
     <br/>
     <div class="row">
       <div class="col-sm-3"></div>
@@ -16,20 +16,20 @@
             <br>
 
             <div class="form-group">
-              <label for="address" class="sr-only">Room Name</label>
+              <label for="address" class="sr-only">Nom du bureau</label>
               <div class="cols-sm-10">
                 <div class="input-group">
                   <span class="input-group-addon"><i class="fa fa-map-signs" aria-hidden="true"></i></span>
-                  <input class="form-control" name="address" value="{{ room.1 }}" placeholder="Room">
+                  <input class="form-control" name="address" value="{{ room.1 }}" placeholder="bureau">
                 </div>
               </div>
             </div>
 
             <div class="form-group">
-              <label for="keys" class="sr-only">Select keys to add to this room</label>
+              <label for="keys" class="sr-only">Choisissez une clef à ajouter à ce bureau</label>
               <div class="cols-sm-10">
                 <select class="form-control selectpicker" data-live-search="true" name="keys" multiple>
-                  <option selected disabled value="" class="text-hide">Choose keys to add</option>
+                  <option selected disabled value="" class="text-hide">Choisissez une clef à ajouter</option>
                   {% for key in keys %}
                     <option value="{{ key[0] }}">{{ key[0] }}</option>
                   {% endfor %}
@@ -38,10 +38,10 @@
             </div>
 
             <div class="form-group">
-                <label for="delete_keys" class="sr-only">Select keys to delete from this room</label>
+                <label for="delete_keys" class="sr-only">Choisissez une clef à supprimer à ce bureau</label>
                 <div class="cols-sm-10">
                   <select class="form-control selectpicker" data-live-search="true" name="delete_keys" multiple>
-                    <option selected disabled value="" class="text-hide">Choose keys to delete</option>
+                    <option selected disabled value="" class="text-hide">Choisissez une clef à supprimer</option>
                     {% for key in delete_keys %}
                       <option value="{{ key[0] }}">{{ key[0] }}</option>
                     {% endfor %}
@@ -54,7 +54,7 @@
               <div class="cols-sm-10">
                 <div class="text-center">
                   <button class=" btn btn-lg btn-warning" name="apply" type="submit"
-                          onclick="return transactionConfirm()">Next
+                          onclick="return transactionConfirm()">Suivant
                   </button>
                 </div><!--end text-center-->
               </div><!--end cols-sm-10-->

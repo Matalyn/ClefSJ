@@ -3,19 +3,19 @@
 {% block main %}
   <div class="container">
     <br/>
-    <h1 class="text-center" style="color: #f0ad4e">Invalid Deactivate</h1>
+    <h1 class="text-center" style="color: #f0ad4e">Désactivation invalide</h1>
     <br/>
     <P class='text-center'>{{ client.0 }} {{ client.1 }} cannot be deactivated as they are currently holding keys:</P>
 
     <table class="table table-hover">
       <thead>
       <tr>
-        <th>Key Number</th>
-        <th>Copy Number</th>
-        <th>Room</th>
-        <th>Opens</th>
-        <th>Lend date</th>
-        <th>Expected return date</th>
+        <th>Numéro de clef</th>
+        <th>Numéro de copie</th>
+        <th>Bureau</th>
+        <th>Ouvre</th>
+        <th>Date d'emprunt</th>
+        <th>Date de retour prévue</th>
       </tr>
       </thead>
       <tbody>
@@ -40,7 +40,7 @@
 
 
     <div class="text-center">
-      <a href="{{ url_for('deactivateClient') }}" class="btn btn-primary btn-md btn-warning">Back</a>
+      <a href="{{ url_for('deactivateClient') }}" class="btn btn-primary btn-md btn-warning">Retourner</a>
     </div>
     <br>
 

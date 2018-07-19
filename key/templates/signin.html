@@ -23,15 +23,15 @@
     <div class="container">
 			<!--flash message if any-->
       <form class="form-signin" action="{{ url_for('signin')}}" method="post">
-						<h2 class="form-signin-heading text-warning">Clé</h2>
-            <label for="inputEmail" class="sr-only">Email </label>
-            <input type="text" name="Useremail" class="form-control" placeholder="email" required autofocus>
+						<h2 class="form-signin-heading text-warning">Clef</h2>
+            <label for="inputEmail" class="sr-only">Courriel </label>
+            <input type="text" name="Useremail" class="form-control" placeholder="Courriel" required autofocus>
             <label for="inputPassword" class="sr-only">Password</label>
             <input type="password" name="Password" class="form-control" placeholder="mot de passe" required>
             <div class="checkbox">
             </div>
-            <button class="btn btn-primary btn-block btn-md btn-warning" type="submit">Se Connecter</button>
-            <a href="{{ url_for('getResetLink') }}" class="btn btn-primary btn-block btn-md btn-warning">Reset Password</a>
+            <button class="btn btn-primary btn-block btn-md btn-warning" type="submit">Connexion</button>
+            <a href="{{ url_for('getResetLink') }}" class="btn btn-primary btn-block btn-md btn-warning">Réinitialiser votre mot de passe</a>
         </form>
 				{% if error %}<p class='error' align='center'><strong>Error: </strong> {{error}}{% endif%}
     </div> <!-- /container -->

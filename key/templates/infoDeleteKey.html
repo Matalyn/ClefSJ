@@ -3,13 +3,13 @@
 {% block main %}
   <div class="container">
     <br/>
-    <h1 class="text-center" style="color: #f0ad4e">Delete key {{ key }}?</h1>
+    <h1 class="text-center" style="color: #f0ad4e">Supprimer {{ key }}?</h1>
 
-    <P class="text-center">{{ key }}'s association with these rooms will be deleted:</P>
+    <P class="text-center">L'association de {{ key }} avec ces bureaux serons supprimés : </P>
     <table class="table table-hover">
       <thead>
       <tr>
-        <th>Room</th>
+        <th>Bureau</th>
       </tr>
       </thead>
       <tbody>
@@ -23,15 +23,15 @@
 
     </table>
     <br/>
-    <P class="text-center">These copies of key {{ key }} will be deleted:</P>
+    <P class="text-center">Les copies de {{ key }} serons supprimés.</P>
     <br/>
 
     <table class="table table-hover">
       <thead>
       <tr>
-        <th>Copy Number</th>
-        <th>Opens</th>
-        <th>Status</th>
+        <th>Numéro de copie</th>
+        <th>Ouvre</th>
+        <th>État</th>
       </tr>
       </thead>
       <tbody>
@@ -50,17 +50,17 @@
 
 
     <br/>
-    <P class="text-center">These copies of key {{ key }} will be deactivated</P>
+    <P class="text-center">Les copies de la clef {{ key }} seront désactivées.</P>
     <br/>
 
     <table class="table table-hover">
 			<thead>
 				<tr>
-					<th>Copy number</th>
-					<th>Opens</th>
-					<th>Client email</th>
-					<th>Lend date</th>
-					<th>Return Deadline</th>
+					<th>Numéro de copie</th>
+					<th>Ouvre</th>
+					<th>Courriel du client</th>
+					<th>Date d'emprunt</th>
+					<th>Date de retour</th>
 					<th>Admin</th>
 				</tr>
 			</thead>
@@ -91,7 +91,7 @@
       <div class="form-group"><!--button submit-->
         <div class="cols-sm-10">
           <div class="text-center">
-            <button class=" btn btn-lg btn-warning" name="delete" type="submit" onclick="return transactionConfirm()">Delete</button>
+            <button class=" btn btn-lg btn-warning" name="delete" type="submit" onclick="return transactionConfirm()">Supprimer</button>
           </div><!--end text-center-->
         </div><!--end cols-sm-10-->
       </div><!--end form-group-->

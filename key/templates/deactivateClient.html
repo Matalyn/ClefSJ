@@ -3,7 +3,7 @@
 {% block main %}
   <div class="container">
     <br/>
-    <h1 class="text-center" style="color: #f0ad4e">Deactivate a Client</h1>
+    <h1 class="text-center" style="color: #f0ad4e">Désactiver un client</h1>
     <br/>
     <div class="row">
       <div class="col-sm-3"></div>
@@ -11,10 +11,10 @@
         <form class="" method="post" action="{{ url_for('deactivateClient') }}">
           <fieldset>
             <div class="form-group">
-              <label for="client" class="sr-only">Select a client to deactivate</label>
+              <label for="client" class="sr-only">Sélectionnez un client à désactiver</label>
               <div class="cols-sm-10">
                 <select class="form-control selectpicker" data-live-search="true" name="client" required>
-                  <option selected disabled class="text-hide" value="">Select a client to deactivate</option>
+                  <option selected disabled class="text-hide" value="">Sélectionnez un client à désactiver</option>
                   {% for client in clients %}
                     <option value="{{ client[2] }}">{{ client[0] }} {{ client.1 }} | {{ client.2 }}</option>
                   {% endfor %}
@@ -26,7 +26,7 @@
               <div class="cols-sm-10">
                 <div class="text-center">
                   <button class=" btn btn-lg btn-warning" name="apply" type="submit"
-                          onclick="return transactionConfirm()">Next
+                          onclick="return transactionConfirm()">Suivant
                   </button>
                 </div><!--end text-center-->
               </div><!--end cols-sm-10-->

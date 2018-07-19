@@ -3,7 +3,7 @@
 {% block main %}
   <div class="container">
     <br/>
-    <h1 class="text-center" style="color: #f0ad4e">Update a Room</h1>
+    <h1 class="text-center" style="color: #f0ad4e">Mettre à jour un bureau</h1>
     <br/>
     <div class="row">
       <div class="col-sm-3"></div>
@@ -13,10 +13,10 @@
           <fieldset>
 
             <div class="form-group">
-              <label for="room" class="sr-only">Select a room to update</label>
+              <label for="room" class="sr-only">Choisissez un bureau</label>
               <div class="cols-sm-10">
                 <select class="form-control selectpicker" data-live-search="true" name="room">
-                  <option selected disabled value="" class="text-hide">Select a room to update</option>
+                  <option selected disabled value="" class="text-hide">Choisissez un bureau</option>
                   {% for room in rooms %}
                     <option value="{{ room[0] }}">{{ room[1] }}</option>
                   {% endfor %}
@@ -28,7 +28,7 @@
             <div class="form-group"><!--button submit-->
               <div class="cols-sm-10">
                 <div class="text-center">
-                  <button class=" btn btn-lg btn-warning" name="apply" type="submit">Next</button>
+                  <button class=" btn btn-lg btn-warning" name="apply" type="submit">Suivant</button>
                 </div><!--end text-center-->
               </div><!--end cols-sm-10-->
             </div><!--end form-group-->

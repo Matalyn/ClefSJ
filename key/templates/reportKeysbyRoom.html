@@ -3,7 +3,7 @@
 {% block main %}
 <div class="container">
 	 <br/>
-  <h1 class="text-center" style="color: #f0ad4e">Report by Room</h1>
+  <h1 class="text-center" style="color: #f0ad4e">Rapport par bureau</h1>
 	<br/>
   <div class="row">
     <div class="col-sm-3"></div>
@@ -12,10 +12,10 @@
 				<fieldset>
 					
 				<div class="form-group">
-					<label for="room" class="sr-only">select a room to check its keys</label>
+					<label for="room" class="sr-only">Choisissez un bureau</label>
 					<div class="cols-sm-10">
 					<select class="form-control selectpicker" data-live-search="true" name="room">
-						<option selected disabled value="" class="text-hide">Select a room to check</option>
+						<option selected disabled value="" class="text-hide">Choisissez un bureau</option>
 						{%for office in offices%}
 						<option value="{{ office.0 }}">{{office.1}}</option>
 						{%endfor%}
@@ -28,7 +28,7 @@
         <div class="form-group"><!--button submit-->
           <div class="cols-sm-10">
               <div class="text-center">
-              <button class=" btn btn-lg btn-warning" name="apply" type="submit">review key report</button>
+              <button class=" btn btn-lg btn-warning" name="apply" type="submit">Appliquer</button>
               </div><!--end text-center-->
           </div><!--end cols-sm-10-->
         </div><!--end form-group-->

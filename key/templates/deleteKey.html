@@ -3,7 +3,7 @@
 {% block main %}
 <div class="container">
 	 <br/>
-  <h1 class="text-center" style="color: #f0ad4e">Delete a key</h1>
+  <h1 class="text-center" style="color: #f0ad4e">Supprimer une clef</h1>
 	<br/>
   <div class="row">
     <div class="col-sm-3"></div>
@@ -12,10 +12,10 @@
 				<fieldset>
 					
 				<div class="form-group">
-					<label for="key" class="sr-only">Select a key to delete</label>
+					<label for="key" class="sr-only">Sélectionner une clef à supprimer</label>
 					<div class="cols-sm-10">
 					<select class="form-control selectpicker" data-live-search="true" name="key">
-						<option selected disabled value="" class="text-hide">Select a key to delete</option>
+						<option selected disabled value="" class="text-hide">Sélectionner une clef à supprimer</option>
 						{%for key in keys%}
 						<option value="{{ key[0] }}">{{key[0]}}</option>
 						{%endfor%}
@@ -26,7 +26,7 @@
         <div class="form-group"><!--button submit-->
           <div class="cols-sm-10">
               <div class="text-center">
-              <button class=" btn btn-lg btn-warning" name="apply" type="submit">Next</button>
+              <button class=" btn btn-lg btn-warning" name="apply" type="submit">Suivant</button>
               </div><!--end text-center-->
           </div><!--end cols-sm-10-->
         </div><!--end form-group-->
