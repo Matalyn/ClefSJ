@@ -1,2 +1,1 @@
-ALTER TABLE returnhistory
-MODIFY COLUMN lendPaymentMethod varchar(32);
+mysql> ALTER TABLE lent MODIFY COLUMN expectedReturnDate date;

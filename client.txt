@@ -1,0 +1,4 @@
+ALTER TABLE client
+ADD active varchar(32) NOT NULL;
+
+UPDATE client SET active='yes';

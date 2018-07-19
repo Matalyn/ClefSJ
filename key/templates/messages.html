@@ -1,9 +1,11 @@
-{% with messages = get_flashed_messages() %}
+<link rel="stylesheet" href="{{ url_for('static', filename='messages.css') }}">
+
+{% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-        <ul class=flashes>
-            {% for message in messages %}
-                <li>{{ message }}</li>
+          <div class="container text-center">
+            {% for category, message in messages %}
+              <div class="{{ category }}">{{ message }}</div>
             {% endfor %}
-        </ul>
+          </div>
     {% endif %}
 {% endwith %}

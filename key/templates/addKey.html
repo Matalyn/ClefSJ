@@ -45,34 +45,49 @@
                 <select class="form-control selectpicker" name="depositValue">
                   <option selected disabled value="" class="text-hide">Sélectionnez un dépot et une pénalité pour perte de clé
                   </option>
-                  <option value="20">Deposit fee 20, loss penalty 100</option>
-                  <option value="80">Deposit fee 80, loss penalty 500</option>
+                  <option value="0">Not Applicable</option>
+                  <option value="20">Deposit fee 20, Loss penalty 100</option>
+                  <option value="80">Deposit fee 80, Loss penalty 500</option>
                 </select>
               </div><!--end cols-sm-10-->
             </div><!--end form-group-->
             <div class="form-group">
-              <label for="status" class="sr-only">status:</label>
+              <label for="status" class="sr-only">Status:</label>
               <div class="cols-sm-10">
                 <select class="form-control selectpicker" name="status">
-                  <option selected disabled value="" class="text-hide">État de la clé
+
+                  <option disabled value="" class="text-hide">Choose inital key status
+
                   </option>
-                  <option>Available</option>
+                  <option selected>Available</option>
                   <option>Lending</option>
                   <option>Missing</option>
                   <option>Lost</option>
                 </select>
               </div><!--end cols-sm-10-->
             </div><!--end form-group-->
+
             <div class="form-group">
               <label for="opens" class="sr-only">opens:</label>
               <div class="cols-sm-10">
-                <select class="form-control selectpicker" name="opens">
-                  <option selected disabled value="" class="text-hide">Fonction de la clé</option>
-                  <option>door</option>
-                  <option>mailBox</option>
+
+                <select class="form-control selectpicker" name="opens" id="opens" onchange="displayAddKeyText();">
+                  <option selected disabled value="" class="text-hide">Key opens</option>
+                  <option>Door</option>
+                  <option>Mailbox</option>
+                  <option>Filing cabinet</option>
+                  <option>Other</option>
                 </select>
               </div><!--end cols-sm-10-->
             </div><!--end form-group-->
+
+            <div class="form-group">
+              <label for="description" class="sr-only">Description</label>
+              <div class="cols-sm-10">
+                <input type="text" class="form-control" name="description" id="description" placeholder="Enter description" style="display:none;">
+              </div><!--end cols-sm-10-->
+            </div><!--end form-group-->
+
             <div class="form-group">
               <label for='room' class="sr-only">of room: </label>
               <div class="cols-sm-10">
