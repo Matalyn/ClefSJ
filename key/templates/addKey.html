@@ -69,12 +69,24 @@
             <div class="form-group">
               <label for="opens" class="sr-only">opens:</label>
               <div class="cols-sm-10">
-                <select class="form-control selectpicker" name="opens" id="opens" onchange="displayAddKeyText();">
-                  <option selected disabled value="" class="text-hide">Key opens</option>
-                  <option>Door</option>
-                  <option>Mailbox</option>
-                  <option>Filing cabinet</option>
-                  <option>Other</option>
+                <select class="form-control selectpicker" name="opens" id="opens" data-live-search="true" onchange="displayAddKeyText();">
+                  <option disabled value="" class="text-hide">Key opens</option>
+                  <option selected>Porte</option>
+                  <option>Classeur</option>
+                  <option>Vitrine</option>
+                  <option>Placard</option>
+                  <option>Tiroir</option>
+                  <option>Armoire</option>
+                  <option>Boîte aux lettres</option>
+                  <option>Overhead</option>
+                  <option>Casier</option>
+                  <option>Station</option>
+                  <option>Caisse</option>
+                  <option>Cadenas</option>
+                  <option>Coffre</option>
+                  <option>Cabinet</option>
+                  <option>Entrepôt</option>
+                  <option>Autre</option>
                 </select>
               </div><!--end cols-sm-10-->
             </div><!--end form-group-->
@@ -102,7 +114,7 @@
               <div class="cols-sm-10">
                 <div class="text-center">
                   <button class=" btn btn-lg btn-warning" name="apply" type="submit"
-                          onclick="return transactionConfirm()">add
+                          onclick="return transactionConfirm()">Add
                   </button>
                 </div><!--end text-center-->
               </div><!--end cols-sm-10-->
