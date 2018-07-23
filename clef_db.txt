@@ -1,0 +1,68 @@
+ALTER TABLE admin
+MODIFY COLUMN password varchar(100) NOT NULL;
+
+ALTER TABLE admin
+DROP current;
+
+ALTER TABLE client
+ADD active varchar(32) NOT NULL;
+
+UPDATE client SET active='yes';
+
+ALTER TABLE clef
+ADD active varchar(32) NOT NULL;
+
+UPDATE clef SET active='yes';
+
+UPDATE clef SET status='Disponible' WHERE status='Available';
+UPDATE clef SET status='Prêter' WHERE status='Lent';
+UPDATE clef SET status='Disparu' WHERE status='Missing';
+UPDATE clef SET status='Perdu' WHERE status='Lost';
+
+ALTER TABLE lent MODIFY COLUMN expectedReturnDate date;
+
+ALTER TABLE losshistory ADD CONSTRAINT losshistory_ibfk_2 FOREIGN KEY (keyNumber, copyNumber) REFERENCES clef (keyNumber, copyNumber) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE returnhistory ADD CONSTRAINT returnhistory_ibfk_2 FOREIGN KEY (keyNumber, copyNumber) REFERENCES clef (keyNumber, copyNumber) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE returnhistory
+MODIFY COLUMN lendPaymentMethod varchar(32) NOT NULL;
+
+CREATE TABLE temp_room (
+  id INT NOT NULL AUTO_INCREMENT,
+  address varchar(255) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO temp_room (address)
+SELECT DISTINCT r1.room from room r1;
+
+CREATE TABLE unlocks (
+  keyNumber varchar(32) NOT NULL,
+  roomID INT NOT NULL,
+  FOREIGN KEY (keyNumber) REFERENCES clef(keyNumber) ON UPDATE CASCADE,
+  FOREIGN KEY (roomID) REFERENCES temp_room(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  PRIMARY KEY (keyNumber, roomID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO unlocks (keyNumber, roomID)
+SELECT r1.keyNumber, t1.id from room r1 JOIN temp_room t1 ON r1.room = t1.address;
+
+DROP TABLE room;
+
+RENAME TABLE temp_room to room;
+
+INSERT INTO value VALUES (0, 0);
+
+CREATE TABLE opens (
+  keyNumber varchar(32) NOT NULL,
+  description varchar(100) NOT NULL,
+  FOREIGN KEY (keyNumber) REFERENCES clef(keyNumber) ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO opens(keyNumber, description)
+SELECT DISTINCT keyNumber, opens FROM clef;
+
+UPDATE opens SET description = 'Porte' WHERE description = 'door';
+UPDATE opens SET description = 'Boîte aux lettres' WHERE description = 'mailBox';
+
+ALTER TABLE clef DROP COLUMN opens;
