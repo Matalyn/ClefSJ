@@ -7,7 +7,7 @@ CREATE TABLE opens (
 INSERT INTO opens(keyNumber, description)
 SELECT DISTINCT keyNumber, opens FROM clef;
 
-UPDATE opens SET description = 'Door' WHERE description = 'door';
-UPDATE opens SET description = 'Mailbox' WHERE description = 'mailBox';
+UPDATE opens SET description = 'Porte' WHERE description = 'door';
+UPDATE opens SET description = 'Boîte aux lettres' WHERE description = 'mailBox';
 
 ALTER TABLE clef DROP COLUMN opens;
