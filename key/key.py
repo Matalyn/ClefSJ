@@ -126,7 +126,7 @@ def lend():
     #pull all available keys info
     conn = mysql.connect()
     cursor = conn.cursor()
-    cursor.execute("select distinct keyNumber from clef where status='available' and active = 'yes' order by keyNumber asc;")
+    cursor.execute("select distinct keyNumber from clef where status='Disponible' and active = 'yes' order by keyNumber asc;")
     keys = cursor.fetchall()
     #render html with available keys
     return render_template('lend.html', keys = keys)
@@ -145,10 +145,10 @@ def infoLend():
     cursor.execute("select * from client WHERE active='yes';")
     clients = cursor.fetchall()
     #pull available copies info
-    cursor.execute("select * from clef where keyNumber='"+keyNumber+"' and status='available' and active = 'yes'")
+    cursor.execute("select * from clef where keyNumber='"+keyNumber+"' and status='Disponible' and active = 'yes'")
     copies = cursor.fetchall()
     #pull depositValue info
-    cursor.execute("select distinct depositValue from clef where keyNumber='"+keyNumber+"' and status='available' and active = 'yes'")
+    cursor.execute("select distinct depositValue from clef where keyNumber='"+keyNumber+"' and status='Disponible' and active = 'yes'")
     depositValue = cursor.fetchone()
     #render html with available copies, client address, depositValue, and keyNumber
     return render_template('infoLend.html', copies = copies, clients = clients, depositValue = depositValue, keyNumber = keyNumber)
@@ -182,7 +182,7 @@ def resultLend():
         #commit new lend record into table lent
         cursor.execute("INSERT INTO lent VALUES (%s, %s, %s, %s, %s, %s, %s)", (keyNumber, copyNumber, email, lendDate, paymentMethod, expectedReturnDate, currentUser))
         #commit status of the key copy just lent out
-        cursor.execute("update clef set status='lent' where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"';")
+        cursor.execute("update clef set status='Prêter' where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"';")
         #pull this copies info
         cursor.execute("select * from lent where keyNumber='"+keyNumber+"'and copyNumber='"+copyNumber+"';")
         lent = cursor.fetchone()
@@ -252,7 +252,7 @@ def resultReturn():
 
         if active.lower() == 'yes':
             # Update clef table to set status of the key copy just returned back to 'available'
-            cursor.execute("update clef set status='available' where keyNumber='" + keyNumber + "' and copyNumber='" + copyNumber + "'")
+            cursor.execute("update clef set status='Disponible' where keyNumber='" + keyNumber + "' and copyNumber='" + copyNumber + "'")
 
         elif active.lower() == 'no':
             cursor.execute("DELETE FROM clef WHERE keyNumber=%s AND copyNumber=%s", (keyNumber, copyNumber))
@@ -344,7 +344,7 @@ def resultLoss():
         #delete lend record of the key copy just lost
         cursor.execute("delete from lent where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"'")
         #update the status of the key just lost into 'loss'
-        cursor.execute("update clef set status='lost' where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"'")
+        cursor.execute("update clef set status='Perdu' where keyNumber='"+keyNumber+"' and copyNumber='"+copyNumber+"'")
         #puill newly lost key inforamtion form table losshistory
         #the reason to not using the informaiton above but pull it back from database is to validate this transection
         #to see if the loss record is succesfully added
@@ -428,7 +428,7 @@ def deleteKey():
 
     elif request.method == 'POST':
         key = request.form['key']
-        cursor.execute('SELECT c1.copyNumber, o1.description, c1.status FROM clef c1 JOIN opens o1 USING (keyNumber) WHERE c1.keyNumber=%s AND c1.status!=%s', (key, 'lent'))
+        cursor.execute('SELECT c1.copyNumber, o1.description, c1.status FROM clef c1 JOIN opens o1 USING (keyNumber) WHERE c1.keyNumber=%s AND c1.status!=%s', (key, 'Prêter'))
         deleteKeys = cursor.fetchall()
 
         cursor.execute("select c.copyNumber, o.description, l.email, l.lendDate, l.expectedReturnDate, l.admin from lent l, clef c, opens o where l.keyNumber='" + key + "' and l.keyNumber=c.keyNumber and l.copyNumber=c.copyNumber and o.keyNumber = c.keyNumber;")
@@ -449,8 +449,8 @@ def resultDeleteKey():
         key = request.form['key']
 
         try:
-            cursor.execute('DELETE FROM clef WHERE keyNumber=%s AND status!=%s', (key, 'lent'))
-            cursor.execute('UPDATE clef SET active=%s WHERE keyNumber=%s AND status=%s', ('no', key, 'lent'))
+            cursor.execute('DELETE FROM clef WHERE keyNumber=%s AND status!=%s', (key, 'Prêter'))
+            cursor.execute('UPDATE clef SET active=%s WHERE keyNumber=%s AND status=%s', ('no', key, 'Prêter'))
             conn.commit()
             message = 'Key successfully deleted.'
             flash(message, 'success')
@@ -820,7 +820,7 @@ def resultReportKey():
     cursor.execute("select r1.address from room r1 join unlocks u1 on r1.id=u1.roomID where u1.keyNumber='"+keyNumber+"'")
     rooms = cursor.fetchall()
         #1.copyies status = available
-    cursor.execute("select c1.copyNumber, o1.description from clef c1 JOIN opens o1 USING (keyNumber) where c1.keyNumber='"+keyNumber+"' and c1.status='available'")
+    cursor.execute("select c1.copyNumber, o1.description from clef c1 JOIN opens o1 USING (keyNumber) where c1.keyNumber='"+keyNumber+"' and c1.status='Disponible'")
     available = cursor.fetchall()
         #2.copies status = lend
     cursor.execute("select l.copyNumber, o.description, l.email, l.lendDate, l.expectedReturnDate, l.admin from lent l, opens o where l.keyNumber='"+keyNumber+"' and l.keyNumber=o.keyNumber")
@@ -829,7 +829,7 @@ def resultReportKey():
     cursor.execute("select l.copyNumber, o.description, l.email, l.lendDate, l.lossDate, l.admin from losshistory l, opens o where l.keyNumber='"+keyNumber+"' and l.keyNumber=o.keyNumber")
     lost = cursor.fetchall()
         #4.missing
-    cursor.execute("select c.copyNumber, o.description from clef c JOIN opens o USING (keyNumber) where c.keyNumber='"+keyNumber+"' and c.status='missing'")
+    cursor.execute("select c.copyNumber, o.description from clef c JOIN opens o USING (keyNumber) where c.keyNumber='"+keyNumber+"' and c.status='Disparu'")
     missing = cursor.fetchall()
     #render html with key copy in status of lend, available, lost, and missing
     return render_template('resultReportKey.html', active=active, lend = lend, keyNumber = keyNumber, available = available, lost = lost, missing = missing, copyCount = copyCount, rooms=rooms)
@@ -1329,7 +1329,7 @@ def addCopiesResult():
 
         try:
             for copyNumber in range(rangeStart, rangeEnd):
-                cursor.execute("INSERT INTO clef VALUES (%s, %s, %s, %s, %s)", (keyNumber, copyNumber, depositValue, 'Available', 'yes'))
+                cursor.execute("INSERT INTO clef VALUES (%s, %s, %s, %s, %s)", (keyNumber, copyNumber, depositValue, 'Disponible', 'yes'))
 
             conn.commit()
 
