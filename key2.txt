@@ -1,4 +1,0 @@
-UPDATE clef SET status='Disponible' WHERE status='Available';
-UPDATE clef SET status='Prêter' WHERE status='Lent';
-UPDATE clef SET status='Disparu' WHERE status='Missing';
-UPDATE clef SET status='Perdu' WHERE status='Lost';
