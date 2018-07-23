@@ -4,9 +4,9 @@
 {% block main %}
 	<div class="container">
 	<br/>
-  <h1 class="text-center" style="color: #f0ad4e">Perte info confirmation</h1>
+  <h1 class="text-center" style="color: #f0ad4e">Perte d'une clef</h1>
 	<br/>
-	<P class="text-center">The loss penalty for key {{keyNumber}} is $ {{penaltyValue}}, please enter payment method and confirm</P>
+	<P class="text-center">La pénalité pour {{keyNumber}} est $ {{penaltyValue}}, entrer le mode de paiement.</P>
 	<div class="row">
     <div class="col-sm-3"></div>
     <div class="col-sm-6">
@@ -16,10 +16,10 @@
 					<label for="methodPay" class="sr-only">method of Payments</label>
 					<div class="cols-sm-10">
 						<select class="form-control selectpicker" name="methodPay">
-							<option selected disabled value="" class="text-hide">moyen de paiement</option>
-							<option value="debit">Debit</option>
-							<option value="credit">Credit</option>
-							<option value="cash">Cash</option>
+							<option selected disabled value="" class="text-hide">mode de paiement</option>
+							<option value="debit">Débit</option>
+							<option value="credit">Crédit</option>
+							<option value="cash">Argent comptant</option>
 						</select>
 					</div><!--end cols-sm-10-->
 				</div><!--end form-group-->		
@@ -56,7 +56,7 @@
         <div class="form-group"><!--button submit-->
           <div class="cols-sm-10">
           	<div class="text-center">
-              	<button class=" btn btn-lg btn-warning" name="apply" type="submit" onclick="return transactionConfirm()">confirm</button>
+              	<button class=" btn btn-lg btn-warning" name="apply" type="submit" onclick="return transactionConfirm()">Confirmer</button>
             </div><!--end text-center-->
           </div><!--end cols-sm-10-->
         </div><!--end form-group-->

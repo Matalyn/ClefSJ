@@ -4,9 +4,9 @@
 {% block main %}
 	<div class="container">
 		<h3 class="text-center"><strong>FACULTÉ SAINT-JEAN</strong></h3>
-		<h4  class="text-center">Formulaire de Retour de clé</h4>
+		<h4  class="text-center">Formulaire de retour de clef</h4>
 		<br/>
-		<h5>Coordonnées de Return</h5>
+		<h5>Coordonnées du client</h5>
 		<p class="uppercase">
 			<!--name-->
 			{{client[1]}} {{client[2]}}
@@ -16,29 +16,28 @@
 			<br/>{{client[7]}}
 			<br/>{{client[0]}}
 		</p>
-				<p>When returning, print this as a receipt, send this together with the payback check to client.
-				<p>Veuillez prendre connaisance de ces reglements concernant les depots sur les remprunts et retours de cle
+				<p>Veuillez prendre connaisance de ces règlements concernant les dépôts sur les emprunts et retours de clef
 				<br/>
-				<br/>			Un montant de $20.00 est requis en depot pour chaque cle de bureau ou de salle
-				<br/>			Un montant de $80.00 est requis en depot pour la clef de la prte d'entree
-				<br/>
-				<br/>En cas de perte de cle emprunte ou si la cle n'est past remise a la date obiligatoire indiquee, les montants suivants vous seront factures:
-					<br/>
-				<br/>			$100.00 pour chaque clef de bureau ou de salle
-				<br/>			$500.00 pour la clef de la porte d'entree
-				<br/>
-				<br/>De plus dans chaques cas votre depot ne sera pas remis
-				<br/>Le remboursement se fera uniquement par cheque dans les 30 jours suivant le retour de la clef empruntee
+			<br/>			Un montant de $20.00 est requis en dépôt pour chaque clef de bureau ou de salle
+			<br/>			Un montant de $80.00 est requis en dépôt pour la clef de la porte d'entrée
+			<br/>
+			<br/>En cas de perte de clef empruntée ou si la clef n'est pas remise à la date obligatoire indiquée, les montants suivants vous seront facturés:
+			<br/>
+			<br/>			$100.00 pour chaque clef de bureau ou de salle
+			<br/>			$500.00 pour la clef de la porte d'entrée
+			<br/>
+			<br/>De plus dans chaque cas votre dépôt ne sera pas remis
+			<br/>Le remboursement se fera uniquement par chèque dans les 30 jours suivant le retour de la clef empruntée
 				</p>
 		<br/>
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<th>Key Number</th>
-					<th>Deposit Amount Payback</th>
-					<th>Payment Method
-					<th>Lend Date</th>
-					<th>Return Date</th>
+					<th>Numéro de clef</th>
+					<th>Numéro de copie</th>
+					<th>Moyen de paiement</th>
+					<th>Date d'emprunt</th>
+					<th>Date de retour</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -58,9 +57,9 @@
 		</table>
 		<br/>
 		<p>
-			<br/>Signiture de l'emprunteur:						
+			<br/>Signature de l'emprunteur:
 			<br/>Admin: {{currentUser}}
-			<br/>initiales de la receptionniste
+			<br/>Initiales de la receptionniste
 		</p>
 	</div><a class='btn btn-warning' href='#' onclick="printInfo(this)">Print</a>
 {% endblock %}

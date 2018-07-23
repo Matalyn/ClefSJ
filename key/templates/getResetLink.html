@@ -24,12 +24,12 @@
 <div class="container">
   <!--flash message if any-->
   <form class="form-signin" action="{{ url_for('getResetLink') }}" method="post">
-    <h2 class="form-signin-heading text-warning">Reset Password</h2>
-    <label for="email" class="sr-only">Email </label>
+    <h2 class="form-signin-heading text-warning">Réinitialiser votre mot de passe</h2>
+    <label for="email" class="sr-only">Courriel </label>
     <input type="text" name="email" class="form-control" placeholder="Courriel" required autofocus>
     <div class="checkbox">
     </div>
-    <button class="btn btn-primary btn-block btn-md btn-warning" type="submit">Send Link</button>
+    <button class="btn btn-primary btn-block btn-md btn-warning" type="submit">Envoyer un lien</button>
   </form>
   {% if error %}<p class='error' align='center'><strong>Error: </strong> {{ error }}{% endif %}
 </div> <!-- /container -->

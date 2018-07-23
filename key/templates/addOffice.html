@@ -3,7 +3,7 @@
 {% block main %}
 <div class="container">
   <br/>
-  <h1 class="text-center" style="color: #f0ad4e">Ajouter une Office</h1>
+  <h1 class="text-center" style="color: #f0ad4e">Ajouter un bureau</h1>
 	<br/>
   <div class="row">
     <div class="col-sm-3"></div>
@@ -11,21 +11,21 @@
       <form class="" method="post" action="{{url_for('resultAddOffice')}}">
 				<fieldset>
         <div class="form-group">
-          <label for='room' class="sr-only">Room: </label>
+          <label for='room' class="sr-only">Bureau : </label>
           <div class="cols-sm-10">
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
-              <input type="text" class="form-control" name="room" placeholder="room"/>
+              <input type="text" class="form-control" name="room" placeholder="Bureau"/>
             </div><!-- end input-group-->
           </div><!--end cols        <div class="form-group-sm-10-->
         </div><!--end form-group-->
         
         <div class="form-group">
-          <label for='description' class="sr-only">Description: </label>
+          <label for='description' class="sr-only">Description : </label>
           <div class="cols-sm-10">
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-clone" aria-hidden="true"></i></span>
-              <input type="text" class="form-control" name="description" placeholder="description"/>
+              <input type="text" class="form-control" name="description" placeholder="Description"/>
             </div><!-- end input-group-->
           </div><!--end cols-sm-10-->
         </div><!--end form-group-->
@@ -37,7 +37,7 @@
         <div class="form-group"><!--button submit-->
           <div class="cols-sm-10">
               <div class="text-center">
-              <button class=" btn btn-lg btn-warning" name="apply" type="submit">appliquer</button>
+              <button class=" btn btn-lg btn-warning" name="apply" type="submit">Ajouter</button>
               </div><!--end text-center-->
           </div><!--end cols-sm-10-->
         </div><!--end form-group-->

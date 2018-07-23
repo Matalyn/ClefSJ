@@ -5,7 +5,7 @@
 {% block main %}
 <div class="container">
   <br/>
-  <h1 class="text-center" style="color: #f0ad4e">Prêt</h1>
+  <h1 class="text-center" style="color: #f0ad4e">Prét d'une clef</h1>
 	<br/>
   <div class="row">
     <div class="col-sm-3"></div>	
@@ -17,7 +17,7 @@
 					<label for="keyNumber" class="sr-only">keyNumberSelection</label>
 					<div class="cols-sm-10">
 						<select class="form-control selectpicker" data-live-search="true" name="keyNumber">
-							<option selected disabled class="text-hide" value="">Select an available key number to borrow</option>
+							<option selected disabled class="text-hide" value="">Choisissez une clef à emprunter</option>
 							{%for key in keys%}
 							<option value="{{key[0]}}">{{key[0]}}</option>
 							{%endfor%}
@@ -30,7 +30,7 @@
         <div class="form-group"><!--button submit-->
           <div class="cols-sm-10">
           	<div class="text-center">
-            	<button class=" btn btn-lg btn-warning" type="submit">Review its deposit value</button>
+            	<button class=" btn btn-lg btn-warning" type="submit">Suivant</button>
           	</div><!--end text-center-->
           </div><!--end cols-sm-10-->
         </div><!--end form-group-->

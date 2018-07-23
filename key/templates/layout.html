@@ -57,22 +57,22 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
              aria-expanded="false">Clef<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="{{ url_for('lend') }}">Prêt une Clef</a></li>
-            <li><a href="{{ url_for('retrieve') }}">Revenir une Clef</a></li>
-            <li><a href="{{ url_for('loss') }}">Perte une Clef</a></li>
-            <li><a href="{{ url_for('addKey') }}">Ajouter une Clef</a></li>
-            <li><a href="{{ url_for('addCopies') }}">Add Copies</a></li>
-            <li><a href="{{ url_for('deleteKey') }}">Delete a Key</a></li>
+            <li><a href="{{ url_for('lend') }}">Prêt d'une clef</a></li>
+            <li><a href="{{ url_for('retrieve') }}">Retour d'une clef</a></li>
+            <li><a href="{{ url_for('loss') }}">Perte d'une clef</a></li>
+            <li><a href="{{ url_for('addKey') }}">Ajouter une clef</a></li>
+            <li><a href="{{ url_for('addCopies') }}">Ajouter des copies</a></li>
+            <li><a href="{{ url_for('deleteKey') }}">Supprimer une clef</a></li>
           </ul>
         </li><!--end dropdown-->
         <li class="dropdown"><!--begin dropdown client-->
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
              aria-expanded="false">Client<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="{{ url_for('addClient') }}">Ajouter une Client</a></li>
-            <li><a href="{{ url_for('changeClient') }}">Update Client Information</a></li>
-            <li><a href="{{ url_for('activateClient') }}">Activate Client</a></li>
-            <li><a href="{{ url_for('deactivateClient') }}">Deactivate Client</a></li>
+            <li><a href="{{ url_for('addClient') }}">Ajouter un client</a></li>
+            <li><a href="{{ url_for('changeClient') }}">Mettre à jour les coordonées du client</a></li>
+            <li><a href="{{ url_for('activateClient') }}">Activer un client</a></li>
+            <li><a href="{{ url_for('deactivateClient') }}">Désactivater un client</a></li>
           </ul>
         </li><!--end dropdown-->
 
@@ -81,20 +81,20 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
              aria-expanded="false">Bureau<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="{{ url_for('addRoom') }}">Add Room</a></li>
-            <li><a href="{{ url_for('deleteRoom') }}">Delete Room</a></li>
-            <li><a href="{{ url_for('updateRoom') }}">Update Room</a></li>
+            <li><a href="{{ url_for('addRoom') }}">Ajouter un bureau</a></li>
+            <li><a href="{{ url_for('deleteRoom') }}">Supprimer un bureau</a></li>
+            <li><a href="{{ url_for('updateRoom') }}">Mettre à jour un bureau</a></li>
           </ul>
         </li><!--end dropdown-->
 
         <li class="dropdown"><!--begin dropdown office-->
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-             aria-expanded="false">Report<span class="caret"></span></a>
+             aria-expanded="false">Rapports<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="{{ url_for('reportKey') }}">Report by key number</a></li>
-            <li><a href="{{ url_for('reportKeysbyRoom') }}">Report by room</a></li>
-            <li><a href="{{ url_for('reportClient') }}">Report by client</a></li>
-            <li><a href="{{ url_for('reportPassedDueKeys') }}">Report passed due Keys</a></li>
+            <li><a href="{{ url_for('reportKey') }}">Rapport par numéro de clef</a></li>
+            <li><a href="{{ url_for('reportKeysbyRoom') }}">Rapport par bureau</a></li>
+            <li><a href="{{ url_for('reportClient') }}">Rapport par client</a></li>
+            <li><a href="{{ url_for('reportPassedDueKeys') }}">Rapport de clef par date de retour</a></li>
           </ul>
         </li><!--end dropdown-->
 
@@ -102,19 +102,19 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
              aria-expanded="false">Admin<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="{{ url_for('resultAllAdmins') }}">Admins Info</a></li>
-            <li><a href="{{ url_for('addAdmin') }}">Add an Admin</a></li>
-            <li><a href="{{ url_for('updateAdmin') }}">Update an Admin</a></li>
-            <li><a href="{{ url_for('activateAdmin') }}">Activate an Admin</a></li>
-            <li><a href="{{ url_for('deactivateAdmin') }}">Deactivate an Admin</a></li>
+            <li><a href="{{ url_for('resultAllAdmins') }}">Info admin</a></li>
+            <li><a href="{{ url_for('addAdmin') }}">Ajouter un admin</a></li>
+            <li><a href="{{ url_for('updateAdmin') }}">Mettre à jour un admin</a></li>
+            <li><a href="{{ url_for('activateAdmin') }}">Activer un admin</a></li>
+            <li><a href="{{ url_for('deactivateAdmin') }}">Désactiver un admin</a></li>
           </ul>
         </li><!--end dropdown-->
 
         <li class="dropdown"><!--begin dropdown report-->
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-             aria-expanded="false">Profile<span class="caret"></span></a>
+             aria-expanded="false">Profil<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="{{ url_for('changePassword') }}">Change Password</a></li>
+            <li><a href="{{ url_for('changePassword') }}">Changer votre mot de passe</a></li>
           </ul>
         </li><!--end dropdown-->
 
@@ -146,7 +146,7 @@
 <footer class="footer" style="background-color: #f0ad4e">
   <div class="container">
     <a class="pull-right text-muted" style="color: #f8f8f8; text-decoration: none;"
-       href="https://www.ualberta.ca/campus-saint-jean/services/services-technologiques/support-a-distance">Contactez
+       href="https://www.ualberta.ca/campus-saint-jean/services/services-technologiques/support-a-distance" target="_blank">Contactez
       Nous</a>
   </div>
 </footer>
@@ -653,7 +653,7 @@
     }
 
 </script>
-</body>
+  </body>
 
 
 </html>

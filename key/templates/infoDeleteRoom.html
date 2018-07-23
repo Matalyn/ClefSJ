@@ -3,7 +3,7 @@
 {% block main %}
   <div class="container">
     <br/>
-    <h1 class="text-center" style="color: #f0ad4e">delete a room</h1>
+    <h1 class="text-center" style="color: #f0ad4e">Supprimer un bureau</h1>
     <br/>
     <div class="row">
       <div class="col-sm-3"></div>
@@ -11,13 +11,12 @@
         <form class="" method="post" action="{{ url_for('resultDeleteRoom') }}">
           <fieldset>
 
-            <h3>These keys will have their association with room {{ room.1 }} deleted. Are you sure you want to
-              continue?</h3>
+            <h3>Ces clefs auront leur association avec le bureau {{ room.1 }} supprimer. Voulez-vous continuer?</h3>
 
             <table class="table table-hover">
               <thead>
               <tr>
-                <th>Key Number</th>
+                <th>Numéro de clef</th>
               </tr>
               </thead>
               <tbody>
@@ -34,7 +33,7 @@
               <div class="cols-sm-10">
                 <div class="text-center">
                   <button class=" btn btn-lg btn-warning" name="apply" type="submit"
-                          onclick="return transactionConfirm()">Next
+                          onclick="return transactionConfirm()">Suivant
                   </button>
                 </div><!--end text-center-->
               </div><!--end cols-sm-10-->

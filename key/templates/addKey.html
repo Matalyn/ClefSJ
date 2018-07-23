@@ -5,7 +5,7 @@
 {% block main %}
   <div class="container">
     <br/>
-    <h1 class="text-center" style="color: #f0ad4e">Ajouter une clé</h1>
+    <h1 class="text-center" style="color: #f0ad4e">Ajouter une clef</h1>
     <br/>
     <div class="row">
       <div class="col-sm-3"></div>
@@ -17,7 +17,7 @@
               <div class="cols-sm-10">
                 <div class="input-group">
                   <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
-                  <input value="" type="text" class="form-control" name="keyNumber" placeholder="Key Number: "/>
+                  <input value="" type="text" class="form-control" name="keyNumber" placeholder="Numéro de clé: "/>
                 </div><!-- end input-group-->
               </div><!--end cols-sm-10-->
             </div><!--end form-group-->
@@ -26,7 +26,7 @@
               <div class="cols-sm-10">
                 <div class="input-group">
                   <span class="input-group-addon"><i class="fa fa-hourglass-start" aria-hidden="true"></i></span>
-                  <input type="number" class="form-control" name="copyNumberStart" value="" placeholder="Copy Number Starts at: "/>
+                  <input type="number" class="form-control" name="copyNumberStart" value="" placeholder="Les copies commence à numéro : "/>
                 </div><!-- end input-group-->
               </div><!--end cols-sm-10-->
             </div><!--end form-group-->
@@ -35,7 +35,7 @@
               <div class="cols-sm-10">
                 <div class="input-group">
                   <span class="input-group-addon"><i class="fa fa-hourglass-end" aria-hidden="true"></i></span>
-                  <input type="number" class="form-control" name="copyNumberEnd" value="" placeholder="Copy Number Ends at: "/>
+                  <input type="number" class="form-control" name="copyNumberEnd" value="" placeholder="Les copies termine à numéro : "/>
                 </div><!-- end input-group-->
               </div><!--end cols-sm-10-->
             </div><!--end form-group-->
@@ -43,12 +43,11 @@
               <label for="depositValue" class="sr-only">Value:</label>
               <div class="cols-sm-10">
                 <select class="form-control selectpicker" name="depositValue">
-                  <option selected disabled value="" class="text-hide">Select a deposit/loss penalty
-                    Value
+                  <option selected disabled value="" class="text-hide">Sélectionnez un dépot et une pénalité pour perte de clé
                   </option>
                   <option value="0">Not Applicable</option>
-                  <option value="20">Deposit fee 20, Loss penalty 100</option>
-                  <option value="80">Deposit fee 80, Loss penalty 500</option>
+                  <option value="20">Dépôt $ 20, pénalité de perte $ 100</option>
+                  <option value="80">Dépôt $ 80, pénalité de perte $ 500</option>
                 </select>
               </div><!--end cols-sm-10-->
             </div><!--end form-group-->
@@ -56,12 +55,14 @@
               <label for="status" class="sr-only">Status:</label>
               <div class="cols-sm-10">
                 <select class="form-control selectpicker" name="status">
-                  <option disabled value="" class="text-hide">Choose inital key status
+
+                  <option disabled value="" class="text-hide">Choisisser l'état de la clé
+
                   </option>
-                  <option selected>Available</option>
-                  <option>Lending</option>
-                  <option>Missing</option>
-                  <option>Lost</option>
+                  <option selected>Disponible</option>
+                  <option>Prêter</option>
+                  <option>Disparu</option>
+                  <option>Perdu</option>
                 </select>
               </div><!--end cols-sm-10-->
             </div><!--end form-group-->
@@ -102,7 +103,7 @@
               <label for='room' class="sr-only">of room: </label>
               <div class="cols-sm-10">
                 <select class="form-control selectpicker" data-dropup-auto="false" name="room" data-live-seach="true" multiple>
-                  <option selected disabled value="" class="text-hide">Room</option>
+                  <option selected disabled value="" class="text-hide">Objet</option>
                   {% for room in rooms %}
                     <option value="{{ room.0 }}">{{ room.1 }}</option>
                   {% endfor %}
@@ -114,7 +115,7 @@
               <div class="cols-sm-10">
                 <div class="text-center">
                   <button class=" btn btn-lg btn-warning" name="apply" type="submit"
-                          onclick="return transactionConfirm()">Add
+                          onclick="return transactionConfirm()">Ajouter
                   </button>
                 </div><!--end text-center-->
               </div><!--end cols-sm-10-->
